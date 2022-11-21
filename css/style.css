@@ -1,0 +1,117 @@
+.allContent {
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 10% 90%;
+}
+
+.messages-panel {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: 100%;
+}
+
+.contacts-block {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 6rem 6rem calc(100% - 6rem - 6rem);
+  place-items: center;
+}
+
+.message-window {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 6rem calc(100% - 6rem - 6rem) 6rem;
+  place-items: center;
+}
+
+.contacts-block__name-block {
+  width: 100%;
+  height: 100%;
+}
+
+.contacts-block_border-right {
+  border-right: 1px solid #ddd;
+}
+
+.contacts-block__name-block_border-bottom {
+  border-bottom: 1px solid #ddd;
+}
+
+.message-window__current-contact {
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px solid #ddd;
+}
+
+.contacts-block__name-block_vertical-align {
+  display: flex;
+  align-items: center;
+}
+
+.user-name {
+  margin: 0;
+}
+
+.contacts-block__contacts-type_place-buttons {
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.activity__activity-status_text-styling {
+  color: rgb(173, 173, 173);
+  margin: 0;
+}
+
+.message-window__current-contact_align-elements {
+  display: flex;
+  align-items: center;
+}
+
+.current-contact__contact-info_align-elements {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.current-contact__name-block_align-elements {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.message-window__new-message {
+  width: 100%;
+  height: 100%;
+}
+
+.message-window__new-message_wrapper {
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem;
+}
+
+.message-window__new-message_align-elements {
+  display: grid;
+  grid-template-columns: 5% 85% 5% 5%;
+  grid-template-rows: 100%;
+  place-items: center;
+  padding: 0.5rem;
+}
+
+.new-message__emoji,
+.new-message__add-photo {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
