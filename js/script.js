@@ -12,7 +12,7 @@ let chatData = {
   },
 
   loadUserData: function () {
-    $.getJSON("./PAH/assets/chatHistory.json", (data) => {
+    $.getJSON("./assets/chatHistory.json", (data) => {
       this.userName = data.user.username;
       this.userId = data.user.id;
       this.lastLogin = new Date(data.user.last_login);
