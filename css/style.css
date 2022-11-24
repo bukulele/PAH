@@ -77,10 +77,34 @@
   margin: 0;
 }
 
+.contacts-block__contacts-type {
+  position: relative;
+  border-bottom: 1px solid #ddd;
+  width: 100%;
+}
+
 .contacts-block__contacts-type_place-buttons {
   display: flex;
-  gap: 1rem;
+  justify-content: space-around;
+  align-items: center;
   padding: 0.5rem 0;
+  gap: 1rem;
+}
+
+.contacts-type__tab {
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.contacts-type__tab > * {
+  pointer-events: none;
+}
+
+.contacts-type__underline {
+  position: absolute;
+  bottom: 0;
+  border-bottom: 2px solid #00b446;
+  transition: all 0.2s ease-in-out;
 }
 
 .activity__activity-status_text-styling {
@@ -148,7 +172,6 @@
   list-style-type: none;
   width: 100%;
   height: 6rem;
-  border-bottom: 1px solid #ddd;
 }
 .contacts-list__contact:hover {
   background-color: rgb(246, 246, 246);

@@ -53,6 +53,8 @@ let chatData = {
             `);
     }
     $("#contactsList").click(chatData.setSelectedChat);
+    $("#contactsTypeSwitcher").click(chatData.switchContactsType);
+    chatData.placeUnderline($("#primaryTab").get(0));
   },
 
   setSelectedChat: function (event) {
@@ -102,6 +104,24 @@ let chatData = {
     $(".message-window__wrapper").scrollTop(
       $(".message-history__message:last-child")[0].offsetTop
     );
+  },
+
+  switchContactsType: function (event) {
+    if (event.target.id === "primaryTab") {
+      chatData.selectedContactsType = "primary";
+    } else if (event.target.id === "requestsTab") {
+      chatData.selectedContactsType = "requests";
+    }
+    chatData.placeUnderline(event.target);
+  },
+
+  placeUnderline: function (target) {
+    if (target.id === "primaryTab" || target.id === "requestsTab") {
+      $(".contacts-type__underline").css({
+        width: `${target.offsetWidth}px`,
+        left: `${target.offsetLeft}px`,
+      });
+    }
   },
 };
 
