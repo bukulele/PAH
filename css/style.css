@@ -86,6 +86,9 @@
 .activity__activity-status_text-styling {
   color: rgb(173, 173, 173);
   margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .message-window__current-contact_align-elements {
@@ -185,6 +188,8 @@
 }
 
 .contact__last-message {
+  height: 100%;
+  width: 100%;
   justify-self: start;
   align-self: center;
   grid-row-start: 2;
