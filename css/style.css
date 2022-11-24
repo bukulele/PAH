@@ -31,6 +31,24 @@
   place-items: center;
 }
 
+.current-contact__logo,
+.message__sender-image,
+.contact__image {
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.current-contact__logo {
+  min-width: 5rem;
+  min-height: 5rem;
+  max-width: 5rem;
+  max-height: 5rem;
+}
+
 .contacts-block__name-block {
   width: 100%;
   height: 100%;
@@ -145,6 +163,10 @@
 }
 
 .contact__image {
+  min-width: 4rem;
+  min-height: 4rem;
+  max-width: 4rem;
+  max-height: 4rem;
   justify-self: center;
   align-self: center;
   grid-row-start: 1;
@@ -190,11 +212,12 @@
   min-height: 2rem;
   height: fit-content;
   margin: 0.5rem;
-  padding: 1rem;
-  width: 300px;
+  max-width: 300px;
   height: fit-content;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 1rem;
 }
 
 .message__output {
@@ -203,5 +226,25 @@
 
 .message__input {
   align-self: flex-start;
+}
+
+.message__input > .message__text {
   background-color: rgb(246, 246, 246);
+}
+
+.message__sender-image {
+  min-width: 4rem;
+  min-height: 4rem;
+  max-width: 4rem;
+  max-height: 4rem;
+}
+
+.message__sender-image_hidden {
+  display: none;
+}
+
+.message__text {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
 }

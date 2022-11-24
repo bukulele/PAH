@@ -31,10 +31,11 @@ let chatData = {
       $("#contactsList").append(`
             <li id=${id} class="contacts-list__contact">
                   <div class="contact__container">
-                    <div class="contact__image"><span
-                      class="glyphicon glyphicon-user"
-                      aria-hidden="true"
-                    ></span></div>
+                    <div class="contact__image"><img src="${
+                      chatData.conversations[id].photo.length
+                        ? chatData.conversations[id].photo
+                        : "./assets/logo_sq.png"
+                    }" class="img-responsive"></div>
                     <div class="contact__name"><b>${
                       chatData.conversations[id].username
                     }</b></div>
@@ -60,6 +61,13 @@ let chatData = {
   },
 
   showContactData: function () {
+    $("#currentContactLogo").html(
+      `<img class="img-responsive" src="${
+        chatData.conversations[chatData.selectedChat].photo.length
+          ? chatData.conversations[chatData.selectedChat].photo
+          : "./assets/logo_sq.png"
+      }">`
+    );
     $("#currentContactName").html(
       `<b>${chatData.conversations[chatData.selectedChat].username}</b>`
     );
@@ -70,14 +78,25 @@ let chatData = {
   },
 
   showConversation: function () {
-    // console.log(chatData.selectedChat);
     $("#messageHistory").html("");
     for (let message of chatData.conversations[chatData.selectedChat]
       .messages) {
       $("#messageHistory").append(`
         <div class="message-history__message message__${
           message.sender == chatData.selectedChat ? "input" : "output"
-        }">${message.message}</div>
+        }"><div class="message__sender-image ${
+        message.sender == chatData.selectedChat
+          ? ""
+          : "message__sender-image_hidden"
+      }"><img src="${
+        message.sender == chatData.selectedChat
+          ? chatData.conversations[chatData.selectedChat].photo.length
+            ? chatData.conversations[chatData.selectedChat].photo
+            : "./assets/logo_sq.png"
+          : ""
+      }" class="img-responsive"></div><div class="message__text">${
+        message.message
+      }</div></div>
         `);
     }
     $(".message-window__wrapper").scrollTop(

@@ -3,14 +3,14 @@
     "id": 132,
     "username": "john doe",
     "last_login": "2022-11-20T16:18:18.000",
-    "photo": ""
+    "photo": "./assets/images/cat1.jpeg"
   },
   "conversations": {
     "14653": {
       "following": false,
       "username": "kisa",
       "settings": "accepted",
-      "photo": "",
+      "photo": "./assets/images/cat2.jpeg",
       "messages": [
         {
           "date": "2022-11-20T16:10:18.000",
@@ -24,7 +24,7 @@
         },
         {
           "date": "2022-11-20T16:12:18.000",
-          "message": "me too",
+          "message": "me too me too me too me toome too me too me too me too me too me too me too me too me toome toome toome toome toome too me too me too me too me too me too me too",
           "sender": "14653"
         },
         {
@@ -44,7 +44,7 @@
       "following": true,
       "username": "Ivan",
       "settings": "restricted",
-      "photo": "",
+      "photo": "./assets/images/cat3.jpeg",
       "messages": [
         {
           "date": "2022-11-20T16:10:18.000",
@@ -73,7 +73,7 @@
       "following": true,
       "username": "Кирилл Петрович",
       "settings": "mutual",
-      "photo": "",
+      "photo": "./assets/images/cat4.jpeg",
       "messages": [
         {
           "date": "2022-11-20T16:10:18.000",
@@ -97,7 +97,7 @@
       "following": true,
       "username": "gangsta",
       "settings": "restricted",
-      "photo": "",
+      "photo": "./assets/images/cat5.jpeg",
       "messages": [],
       "last_login": "2022-11-20T16:18:18.000"
     },
