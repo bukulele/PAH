@@ -276,3 +276,16 @@
   border: 1px solid #ddd;
   border-radius: 10px;
 }
+
+.custom-badge {
+  background-color: #00b446;
+  border-radius: 9999px;
+  color: white;
+  font-weight: bolder;
+  font-size: 1rem;
+  padding: 0.2rem 0.4rem;
+}
+
+.custom-badge_hidden {
+  display: none;
+}

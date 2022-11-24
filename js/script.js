@@ -6,6 +6,7 @@ let chatData = {
   conversations: null,
   selectedContactsType: "primary",
   selectedChat: null,
+  requestsNumber: 0,
 
   init: function () {
     chatData.loadUserData();
@@ -27,6 +28,7 @@ let chatData = {
   updateUserData: function () {
     $("#userName").html(`<b>${chatData.userName}</b>`);
     chatData.updateConversationsList();
+    chatData.calculateRequestsNumber();
   },
 
   updateConversationsList: function () {
@@ -135,6 +137,26 @@ let chatData = {
         width: `${target.offsetWidth}px`,
         left: `${target.offsetLeft}px`,
       });
+    }
+  },
+
+  calculateRequestsNumber: function () {
+    for (let id in chatData.conversations) {
+      if (!chatData.conversations[id].following) {
+        chatData.requestsNumber++;
+      }
+    }
+    chatData.addRequestsBadge();
+  },
+
+  addRequestsBadge: function () {
+    if ($("#requestsNumber").hasClass("custom-badge_hidden")) {
+      $("#requestsNumber").removeClass("custom-badge_hidden");
+    }
+    if (chatData.requestsNumber > 0) {
+      $("#requestsNumber").html(chatData.requestsNumber);
+    } else {
+      $("#requestsNumber").addClass("custom-badge_hidden");
     }
   },
 };
