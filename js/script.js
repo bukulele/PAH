@@ -9,6 +9,9 @@ let chatData = {
 
   init: function () {
     chatData.loadUserData();
+    $("#contactsList").click(chatData.setSelectedChat);
+    $("#contactsTypeSwitcher").click(chatData.switchContactsType);
+    chatData.placeUnderline($("#primaryTab").get(0));
   },
 
   loadUserData: function () {
@@ -27,34 +30,44 @@ let chatData = {
   },
 
   updateConversationsList: function () {
+    $("#contactsList").html("");
     for (let id in chatData.conversations) {
-      $("#contactsList").append(`
-            <li id=${id} class="contacts-list__contact">
-                  <div class="contact__container">
-                    <div class="contact__image"><img src="${
-                      chatData.conversations[id].photo.length
-                        ? chatData.conversations[id].photo
-                        : "./assets/logo_sq.png"
-                    }" class="img-responsive"></div>
-                    <div class="contact__name"><b>${
-                      chatData.conversations[id].username
-                    }</b></div>
-                    <div class="contact__last-message"><p class="small activity__activity-status_text-styling">
-                      ${
-                        chatData.conversations[id].messages.length
-                          ? chatData.conversations[id].messages[
-                              chatData.conversations[id].messages.length - 1
-                            ].message
-                          : ""
-                      }
-                    </p></div>
-                  </div>
-                </li>
-            `);
+      if (chatData.selectedContactsType === "primary") {
+        if (chatData.conversations[id].following) {
+          chatData.fulfillContactsList(id);
+        }
+      } else if (chatData.selectedContactsType === "requests") {
+        if (!chatData.conversations[id].following) {
+          chatData.fulfillContactsList(id);
+        }
+      }
     }
-    $("#contactsList").click(chatData.setSelectedChat);
-    $("#contactsTypeSwitcher").click(chatData.switchContactsType);
-    chatData.placeUnderline($("#primaryTab").get(0));
+  },
+
+  fulfillContactsList: function (id) {
+    $("#contactsList").append(`
+          <li id=${id} class="contacts-list__contact">
+                <div class="contact__container">
+                  <div class="contact__image"><img src="${
+                    chatData.conversations[id].photo.length
+                      ? chatData.conversations[id].photo
+                      : "./assets/logo_sq.png"
+                  }" class="img-responsive"></div>
+                  <div class="contact__name"><b>${
+                    chatData.conversations[id].username
+                  }</b></div>
+                  <div class="contact__last-message"><p class="small activity__activity-status_text-styling">
+                    ${
+                      chatData.conversations[id].messages.length
+                        ? chatData.conversations[id].messages[
+                            chatData.conversations[id].messages.length - 1
+                          ].message
+                        : ""
+                    }
+                  </p></div>
+                </div>
+              </li>
+          `);
   },
 
   setSelectedChat: function (event) {
@@ -113,6 +126,7 @@ let chatData = {
       chatData.selectedContactsType = "requests";
     }
     chatData.placeUnderline(event.target);
+    chatData.updateConversationsList();
   },
 
   placeUnderline: function (target) {
