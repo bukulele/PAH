@@ -7,12 +7,15 @@ let chatData = {
   selectedContactsType: "primary",
   selectedChat: null,
   requestsNumber: 0,
+  newMessageInputScrollHeight: 0,
 
   init: function () {
     chatData.loadUserData();
     $("#contactsList").click(chatData.setSelectedChat);
     $("#contactsTypeSwitcher").click(chatData.switchContactsType);
     chatData.placeUnderline($("#primaryTab").get(0));
+    chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
+    $("#newMessageInput").on("input", chatData.controlNewMessageInputHeight);
   },
 
   loadUserData: function () {
@@ -157,6 +160,21 @@ let chatData = {
       $("#requestsNumber").html(chatData.requestsNumber);
     } else {
       $("#requestsNumber").addClass("custom-badge_hidden");
+    }
+  },
+
+  setNewMessageInputScrollHeight: function (target) {
+    console.log(target);
+    chatData.newMessageInputScrollHeight = target.scrollHeight;
+  },
+
+  controlNewMessageInputHeight: function (e) {
+    console.log(e.target.value);
+    if (
+      e.target.scrollHeight < chatData.newMessageInputScrollHeight * 5 &&
+      e.target.scrollHeight > chatData.newMessageInputScrollHeight
+    ) {
+      $("#newMessageInput").css({ height: e.target.scrollHeight });
     }
   },
 };
