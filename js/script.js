@@ -76,8 +76,14 @@ let chatData = {
   },
 
   setSelectedChat: function (event) {
-    chatData.selectedChat = event.target.id;
-    chatData.showContactData();
+    if (event.target.className.includes("contacts-list__contact")) {
+      chatData.selectedChat = event.target.id;
+      $(".contacts-list__contact").removeClass(
+        "contacts-list__contact_selected"
+      );
+      $(`#${event.target.id}`).addClass("contacts-list__contact_selected");
+      chatData.showContactData();
+    }
   },
 
   showContactData: function () {

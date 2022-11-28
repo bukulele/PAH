@@ -191,8 +191,13 @@
 .contacts-list__contact:hover {
   background-color: rgb(246, 246, 246);
 }
+
 .contacts-list__contact > * {
   pointer-events: none;
+}
+
+.contacts-list__contact_selected {
+  background-color: rgb(246, 246, 246);
 }
 
 .contact__container {
