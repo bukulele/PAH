@@ -14,8 +14,6 @@ let chatData = {
     $("#contactsList").click(chatData.setSelectedChat);
     $("#contactsTypeSwitcher").click(chatData.switchContactsType);
     chatData.placeUnderline($("#primaryTab").get(0));
-    chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
-    $("#newMessageInput").on("input", chatData.controlInput);
   },
 
   loadUserData: function () {
@@ -296,6 +294,8 @@ let chatData = {
     </div>
   </div>
     `);
+    $("#newMessageInput").on("input", chatData.controlInput);
+    chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
   },
 };
 
