@@ -306,6 +306,7 @@
 }
 
 .new-message__sendButton {
+  display: none;
   background-color: transparent;
   border: none;
   font-weight: bold;
