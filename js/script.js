@@ -56,9 +56,10 @@ let chatData = {
                       ? chatData.conversations[id].photo
                       : "./assets/logo_sq.png"
                   }" class="img-responsive"></div>
-                  <div class="contact__name"><b>${
+                  <div class="contact__name"><p class="name name_text-styling">${
                     chatData.conversations[id].username
-                  }</b></div>
+                  }</p></div>
+                  <div class="contact__last-message-date"><p class="small last-message-date_text-styling">22/10/22</p></div>
                   <div class="contact__last-message"><p class="small activity__activity-status_text-styling">
                     ${
                       chatData.conversations[id].messages.length

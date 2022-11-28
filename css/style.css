@@ -143,6 +143,11 @@
   text-overflow: ellipsis;
 }
 
+.last-message-date_text-styling {
+  color: rgb(173, 173, 173);
+  margin: 0;
+}
+
 .message-window__current-contact_align-elements {
   display: flex;
   align-items: center;
@@ -229,7 +234,7 @@
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: 20% 80%;
+  grid-template-columns: 20% minmax(60%, auto) minmax(10%, auto);
   grid-template-rows: 50% 50%;
 }
 
@@ -247,12 +252,36 @@
 }
 
 .contact__name {
+  padding-right: 0.5rem;
+  width: 100%;
   justify-self: start;
   align-self: center;
   grid-row-start: 1;
   grid-row-end: 2;
   grid-column-start: 2;
   grid-column-end: 3;
+}
+
+.name_text-styling {
+  font-weight: bold;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.contact__last-message-date {
+  height: 100%;
+  width: 100%;
+  justify-self: end;
+  align-self: center;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  grid-column-start: 3;
+  grid-column-end: 4;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .contact__last-message {
@@ -263,7 +292,7 @@
   grid-row-start: 2;
   grid-row-end: 3;
   grid-column-start: 2;
-  grid-column-end: 3;
+  grid-column-end: 4;
 }
 
 .message-window__wrapper {
