@@ -151,14 +151,14 @@
 
 .message-window__new-message_align-elements {
   display: grid;
-  grid-template-columns: 5% 85% 5% 5%;
+  grid-template-columns: 5% 85% 10%;
   grid-template-rows: 100%;
   place-items: center;
   padding: 0.5rem;
 }
 
 .new-message__emoji,
-.new-message__add-photo {
+.new-message__send-message-photo {
   width: 2rem;
   height: 2rem;
   display: flex;
@@ -303,4 +303,11 @@
 
 .custom-badge_hidden {
   display: none;
+}
+
+.new-message__sendButton {
+  background-color: transparent;
+  border: none;
+  font-weight: bold;
+  color: #00b446;
 }
