@@ -164,17 +164,19 @@ let chatData = {
   },
 
   setNewMessageInputScrollHeight: function (target) {
-    console.log(target);
     chatData.newMessageInputScrollHeight = target.scrollHeight;
   },
 
   controlNewMessageInputHeight: function (e) {
-    console.log(e.target.value);
     if (
       e.target.scrollHeight < chatData.newMessageInputScrollHeight * 5 &&
       e.target.scrollHeight > chatData.newMessageInputScrollHeight
     ) {
-      $("#newMessageInput").css({ height: e.target.scrollHeight });
+      $("#newMessageInput")
+        .css({
+          height: chatData.newMessageInputScrollHeight,
+        })
+        .css({ height: e.target.scrollHeight });
     }
   },
 };
