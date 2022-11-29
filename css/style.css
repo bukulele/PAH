@@ -366,6 +366,7 @@
 }
 
 .message-date__text {
+  white-space: nowrap;
   margin: 0;
   color: rgb(173, 173, 173);
   font-size: smaller;
