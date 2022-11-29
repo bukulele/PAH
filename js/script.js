@@ -294,9 +294,9 @@ let chatData = {
 
   createEmojiPicker: function (element) {
     chatData.emojiTrigger = element;
-    picmo.createPicker({
-      rootElement: chatData.emojiTrigger,
-    });
+    // picmo.createPicker({
+    //   rootElement: chatData.emojiTrigger,
+    // });
   },
 
   showMessageWindow: function () {
