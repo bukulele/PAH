@@ -104,7 +104,9 @@ let chatData = {
       `<b>${chatData.conversations[chatData.selectedChat].username}</b>`
     );
     $("#currentContactActivity").html(
-      `Active: ${chatData.conversations[chatData.selectedChat].last_login}`
+      `Active: ${chatData.defineDateFormat(
+        chatData.conversations[chatData.selectedChat].last_login
+      )}`
     );
     chatData.showConversation();
   },
