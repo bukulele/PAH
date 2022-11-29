@@ -8,6 +8,7 @@ let chatData = {
   selectedChat: null,
   requestsNumber: 0,
   newMessageInputScrollHeight: 0,
+  emojiTrigger: null,
 
   init: function () {
     chatData.loadUserData();
@@ -291,6 +292,13 @@ let chatData = {
     return formattedDate;
   },
 
+  createEmojiPicker: function (element) {
+    chatData.emojiTrigger = element;
+    picmo.createPicker({
+      rootElement: chatData.emojiTrigger,
+    });
+  },
+
   showMessageWindow: function () {
     $(".message-window").html(`
     <div
@@ -378,6 +386,7 @@ let chatData = {
     `);
     $("#newMessageInput").on("input", chatData.controlInput);
     chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
+    chatData.createEmojiPicker($(".new-message__emoji").get(0));
   },
 };
 
