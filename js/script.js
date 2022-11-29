@@ -59,7 +59,13 @@ let chatData = {
                   <div class="contact__name"><p class="name name_text-styling">${
                     chatData.conversations[id].username
                   }</p></div>
-                  <div class="contact__last-message-date"><p class="small last-message-date_text-styling">22/10/22</p></div>
+                  <div class="contact__last-message-date"><p class="small last-message-date_text-styling">${chatData.defineDateFormat(
+                    chatData.conversations[id].messages.length
+                      ? chatData.conversations[id].messages[
+                          chatData.conversations[id].messages.length - 1
+                        ].date
+                      : null
+                  )}</p></div>
                   <div class="contact__last-message"><p class="small activity__activity-status_text-styling">
                     ${
                       chatData.conversations[id].messages.length
@@ -208,6 +214,52 @@ let chatData = {
         $("#sendPhotoIcon").fadeIn(150);
       });
     }
+  },
+
+  defineDateFormat: function (date) {
+    const today = new Date();
+    const weekDays = {
+      0: "Sun",
+      1: "Mon",
+      2: "Tue",
+      3: "Wed",
+      4: "Thu",
+      5: "Fri",
+      6: "Sat",
+    };
+    let messageDate = new Date(date);
+    let formattedDate;
+
+    if (
+      today.getDate() === messageDate.getDate() &&
+      Number(today) - Number(messageDate) < 24 * 60 * 60 * 1000
+    ) {
+      formattedDate = `${
+        messageDate.getHours() < 10
+          ? "0" + messageDate.getHours()
+          : messageDate.getHours()
+      }:${
+        messageDate.getMinutes() < 10
+          ? "0" + messageDate.getMinutes()
+          : messageDate.getMinutes()
+      }`;
+    } else if (
+      Number(today) - Number(messageDate) > 24 * 60 * 60 * 1000 &&
+      Number(today) - Number(messageDate) < 24 * 60 * 60 * 1000 * 7
+    ) {
+      formattedDate = weekDays[messageDate.getDay()];
+    } else {
+      formattedDate = `${
+        messageDate.getDate() < 10
+          ? "0" + messageDate.getDate()
+          : messageDate.getDate()
+      }/${
+        messageDate.getMonth() + 1 < 10
+          ? "0" + (messageDate.getMonth() + 1)
+          : messageDate.getMonth() + 1
+      }/${String(messageDate.getFullYear()).substring(2)}`;
+    }
+    return formattedDate;
   },
 
   showMessageWindow: function () {
