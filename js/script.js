@@ -118,7 +118,11 @@ let chatData = {
       $("#messageHistory").append(`
         <div class="message-history__message message__${
           message.sender == chatData.selectedChat ? "input" : "output"
-        }"><div class="message__sender-image ${
+        }"><div class="message__message-date message__message-date_${
+        message.sender == chatData.selectedChat ? "input" : "output"
+      }"><p class="message-date__text">${chatData.formatMessageDate(
+        message.date
+      )}</p></div><div class="message__sender-image ${
         message.sender == chatData.selectedChat
           ? ""
           : "message__sender-image_hidden"
@@ -261,6 +265,29 @@ let chatData = {
           : messageDate.getMonth() + 1
       }/${String(messageDate.getFullYear()).substring(2)}`;
     }
+    return formattedDate;
+  },
+
+  formatMessageDate: function (date) {
+    const messageDate = new Date(date);
+    const formattedDate = `${
+      messageDate.getDate() < 10
+        ? "0" + messageDate.getDate()
+        : messageDate.getDate()
+    }/${
+      messageDate.getMonth() + 1 < 10
+        ? "0" + (messageDate.getMonth() + 1)
+        : messageDate.getMonth() + 1
+    }/${String(messageDate.getFullYear()).substring(2)} : ${
+      messageDate.getHours() < 10
+        ? "0" + messageDate.getHours()
+        : messageDate.getHours()
+    }:${
+      messageDate.getMinutes() < 10
+        ? "0" + messageDate.getMinutes()
+        : messageDate.getMinutes()
+    }`;
+
     return formattedDate;
   },
 
