@@ -109,28 +109,25 @@ let chatData = {
         chatData.conversations[chatData.selectedChat].last_login
       )}`
     );
-    chatData.showConversation();
+    chatData.showConversation(chatData.selectedChat);
   },
 
-  showConversation: function () {
+  showConversation: function (selectedChat) {
     $("#messageHistory").html("");
-    for (let message of chatData.conversations[chatData.selectedChat]
-      .messages) {
+    for (let message of chatData.conversations[selectedChat].messages) {
       $("#messageHistory").append(`
         <div class="message-history__message message__${
-          message.sender == chatData.selectedChat ? "input" : "output"
+          message.sender == selectedChat ? "input" : "output"
         }"><div class="message__message-date message__message-date_${
-        message.sender == chatData.selectedChat ? "input" : "output"
+        message.sender == selectedChat ? "input" : "output"
       }"><p class="message-date__text">${chatData.formatMessageDate(
         message.date
       )}</p></div><div class="message__sender-image ${
-        message.sender == chatData.selectedChat
-          ? ""
-          : "message__sender-image_hidden"
+        message.sender == selectedChat ? "" : "message__sender-image_hidden"
       }"><img src="${
         message.sender == chatData.selectedChat
-          ? chatData.conversations[chatData.selectedChat].photo.length
-            ? chatData.conversations[chatData.selectedChat].photo
+          ? chatData.conversations[selectedChat].photo.length
+            ? chatData.conversations[selectedChat].photo
             : "./assets/logo_sq.png"
           : ""
       }" class="img-responsive"></div><div class="message__text">${
@@ -331,6 +328,22 @@ let chatData = {
     $(".message-window__emoji-block-wrapper").fadeOut();
   },
 
+  sendMessage: function () {
+    const dateNow = new Date();
+    chatData.conversations[chatData.selectedChat].messages.push({
+      date: dateNow,
+      message: $("#newMessageInput").val(),
+      sender: chatData.userId,
+    });
+    chatData.showConversation(chatData.selectedChat);
+    $("#newMessageInput").val("");
+    chatData.controlInput($("#newMessageInput").get(0));
+  },
+
+  addPicture: function () {
+    console.log("picture");
+  },
+
   showMessageWindow: function () {
     $(".message-window").html(`
     <div
@@ -422,6 +435,8 @@ let chatData = {
     chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
     $(".new-message__emoji").click(chatData.showEmojiBlock);
     $(".message-window__emoji-block-wrapper").click(chatData.hideEmojiBlock);
+    $("#sendMessageButton").click(chatData.sendMessage);
+    $("#sendPhotoIcon").click(chatData.addPicture);
   },
 };
 
