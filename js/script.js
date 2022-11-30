@@ -186,9 +186,9 @@ let chatData = {
     chatData.newMessageInputScrollHeight = target.scrollHeight;
   },
 
-  controlInput: function (e) {
-    chatData.controlNewMessageInputHeight(e.target);
-    chatData.switchSendMessageButton(e.target);
+  controlInput: function (target) {
+    chatData.controlNewMessageInputHeight(target);
+    chatData.switchSendMessageButton(target);
   },
 
   controlNewMessageInputHeight: function (target) {
@@ -294,19 +294,26 @@ let chatData = {
 
   createEmojiPicker: function (element) {
     chatData.emojiTrigger = element;
-    picmo.createPicker({
+    const emojiPicker = picmo.createPicker({
       emojiSize: "2.5rem",
       rootElement: chatData.emojiTrigger,
       showPreview: false,
     });
+
+    emojiPicker.addEventListener("emoji:select", (selection) => {
+      chatData.addSelectedEmoji(selection);
+    });
+  },
+
+  addSelectedEmoji: function (selection) {
+    $("#newMessageInput").val(function (index, value) {
+      return value + selection.emoji;
+    });
+    chatData.controlInput($("#newMessageInput").get(0));
   },
 
   showEmojiBlock: function () {
     const emojiButtonPosition = $(".new-message__emoji").offset();
-    // const emojiWindowHeight = $(".message-window__emoji-block").height();
-
-    console.log(emojiButtonPosition);
-    // console.log(emojiWindowHeight);
 
     $(".message-window__emoji-block-wrapper")
       .html(
@@ -321,12 +328,7 @@ let chatData = {
   },
 
   hideEmojiBlock: function () {
-    $(".message-window__emoji-block-wrapper").fadeOut(200, function () {
-      // $(".message-window__emoji-block").offset({
-      //   top: 0,
-      //   left: 0,
-      // });
-    });
+    $(".message-window__emoji-block-wrapper").fadeOut();
   },
 
   showMessageWindow: function () {
@@ -416,9 +418,8 @@ let chatData = {
     </div>
   </div>
     `);
-    $("#newMessageInput").on("input", chatData.controlInput);
+    $("#newMessageInput").on("input", (e) => chatData.controlInput(e.target));
     chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
-    // chatData.createEmojiPicker($(".message-window__emoji-block").get(0));
     $(".new-message__emoji").click(chatData.showEmojiBlock);
     $(".message-window__emoji-block-wrapper").click(chatData.hideEmojiBlock);
   },
