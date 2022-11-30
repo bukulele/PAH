@@ -174,6 +174,7 @@
 }
 
 .message-window__new-message_wrapper {
+  position: relative;
   width: 100%;
   height: 100%;
   padding: 0.5rem;
@@ -189,11 +190,20 @@
 
 .new-message__emoji,
 .new-message__send-message-photo {
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  padding: 0;
   width: 2rem;
   height: 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.emoji__icon {
+  width: 100%;
+  height: 100%;
 }
 
 .new-message__input-field {
@@ -202,8 +212,28 @@
   resize: none;
 }
 
+.message-window__emoji-block-wrapper {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: transparent;
+}
+
+.message-window__emoji-block {
+  position: absolute;
+  width: 288px;
+  height: 319px;
+}
+
 .new-message__input-field:focus-visible {
   outline: none;
+}
+
+.new-message__emoji * {
+  pointer-events: none;
 }
 
 .contacts-block__contacts-list {
