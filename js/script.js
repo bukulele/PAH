@@ -121,30 +121,36 @@ let chatData = {
 
   showConversation: function (selectedChat) {
     $("#messageHistory").html("");
-    for (let message of chatData.conversations[selectedChat].messages) {
-      $("#messageHistory").append(`
-        <div class="message-history__message message__${
+    if (chatData.conversations[selectedChat].messages.length) {
+      for (let message of chatData.conversations[selectedChat].messages) {
+        $("#messageHistory").append(`
+          <div class="message-history__message message__${
+            message.sender == selectedChat ? "input" : "output"
+          }"><div class="message__message-date message__message-date_${
           message.sender == selectedChat ? "input" : "output"
-        }"><div class="message__message-date message__message-date_${
-        message.sender == selectedChat ? "input" : "output"
-      }"><p class="message-date__text">${chatData.formatMessageDate(
-        message.date
-      )}</p></div><div class="message__sender-image ${
-        message.sender == selectedChat ? "" : "message__sender-image_hidden"
-      }"><img src="${
-        message.sender == chatData.selectedChat
-          ? chatData.conversations[selectedChat].photo.length
-            ? chatData.conversations[selectedChat].photo
-            : "./assets/logo_sq.png"
-          : ""
-      }" class="img-responsive"></div><div class="message__text">${
-        message.message
-      }</div></div>
-        `);
+        }"><p class="message-date__text">${chatData.formatMessageDate(
+          message.date
+        )}</p></div><div class="message__sender-image ${
+          message.sender == selectedChat ? "" : "message__sender-image_hidden"
+        }"><img src="${
+          message.sender == chatData.selectedChat
+            ? chatData.conversations[selectedChat].photo.length
+              ? chatData.conversations[selectedChat].photo
+              : "./assets/logo_sq.png"
+            : ""
+        }" class="img-responsive"></div><div class="message__text">${
+          message.message
+        }</div></div>
+          `);
+      }
+      $(".message-window__wrapper").scrollTop(
+        $(".message-history__message:last-child")[0].offsetTop
+      );
+    } else {
+      $("#messageHistory").html(
+        `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
+      );
     }
-    $(".message-window__wrapper").scrollTop(
-      $(".message-history__message:last-child")[0].offsetTop
-    );
   },
 
   switchContactsType: function (event) {
@@ -228,49 +234,53 @@ let chatData = {
   },
 
   defineDateFormat: function (date) {
-    const today = new Date();
-    const weekDays = {
-      0: "Sun",
-      1: "Mon",
-      2: "Tue",
-      3: "Wed",
-      4: "Thu",
-      5: "Fri",
-      6: "Sat",
-    };
-    let messageDate = new Date(date);
-    let formattedDate;
+    if (date) {
+      const today = new Date();
+      const weekDays = {
+        0: "Sun",
+        1: "Mon",
+        2: "Tue",
+        3: "Wed",
+        4: "Thu",
+        5: "Fri",
+        6: "Sat",
+      };
+      let messageDate = new Date(date);
+      let formattedDate;
 
-    if (
-      today.getDate() === messageDate.getDate() &&
-      Number(today) - Number(messageDate) < 24 * 60 * 60 * 1000
-    ) {
-      formattedDate = `${
-        messageDate.getHours() < 10
-          ? "0" + messageDate.getHours()
-          : messageDate.getHours()
-      }:${
-        messageDate.getMinutes() < 10
-          ? "0" + messageDate.getMinutes()
-          : messageDate.getMinutes()
-      }`;
-    } else if (
-      Number(today) - Number(messageDate) > 24 * 60 * 60 * 1000 &&
-      Number(today) - Number(messageDate) < 24 * 60 * 60 * 1000 * 7
-    ) {
-      formattedDate = weekDays[messageDate.getDay()];
+      if (
+        today.getDate() === messageDate.getDate() &&
+        Number(today) - Number(messageDate) < 24 * 60 * 60 * 1000
+      ) {
+        formattedDate = `${
+          messageDate.getHours() < 10
+            ? "0" + messageDate.getHours()
+            : messageDate.getHours()
+        }:${
+          messageDate.getMinutes() < 10
+            ? "0" + messageDate.getMinutes()
+            : messageDate.getMinutes()
+        }`;
+      } else if (
+        Number(today) - Number(messageDate) > 24 * 60 * 60 * 1000 &&
+        Number(today) - Number(messageDate) < 24 * 60 * 60 * 1000 * 7
+      ) {
+        formattedDate = weekDays[messageDate.getDay()];
+      } else {
+        formattedDate = `${
+          messageDate.getDate() < 10
+            ? "0" + messageDate.getDate()
+            : messageDate.getDate()
+        }/${
+          messageDate.getMonth() + 1 < 10
+            ? "0" + (messageDate.getMonth() + 1)
+            : messageDate.getMonth() + 1
+        }/${String(messageDate.getFullYear()).substring(2)}`;
+      }
+      return formattedDate;
     } else {
-      formattedDate = `${
-        messageDate.getDate() < 10
-          ? "0" + messageDate.getDate()
-          : messageDate.getDate()
-      }/${
-        messageDate.getMonth() + 1 < 10
-          ? "0" + (messageDate.getMonth() + 1)
-          : messageDate.getMonth() + 1
-      }/${String(messageDate.getFullYear()).substring(2)}`;
+      return "";
     }
-    return formattedDate;
   },
 
   formatMessageDate: function (date) {
@@ -445,6 +455,7 @@ let chatData = {
         </button>
         <svg
           id="sendPhotoIcon"
+          class="new-message__send-photo-icon"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 512 512"
         >
