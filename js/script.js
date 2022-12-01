@@ -9,8 +9,11 @@ let chatData = {
   requestsNumber: 0,
   newMessageInputScrollHeight: 0,
   emojiTrigger: null,
+  windowWidth: null,
 
   init: function () {
+    chatData.windowWidth = $(window).get(0).innerWidth;
+    $(window).resize(chatData.handleWindowWidth);
     chatData.loadUserData();
     $("#contactsList").click(chatData.setSelectedChat);
     $("#contactsTypeSwitcher").click(chatData.switchContactsType);
@@ -90,6 +93,10 @@ let chatData = {
       $(`#${event.target.id}`).addClass("contacts-list__contact_selected");
       chatData.showMessageWindow();
       chatData.showContactData();
+    }
+    if (chatData.windowWidth <= 680) {
+      $(".contacts-block").css({ display: "none" });
+      $(".message-window").css({ display: "grid" });
     }
   },
 
@@ -348,13 +355,28 @@ let chatData = {
     console.log($("#addPicture").get(0).files[0]);
   },
 
+  handleWindowWidth: function (e) {
+    chatData.windowWidth = e.target.innerWidth;
+  },
+
+  backToContacts: function () {
+    $(".contacts-block").css({ display: "grid" });
+    $(".message-window").css({ display: "none" });
+  },
+
   showMessageWindow: function () {
     $(".message-window").html(`
     <div
-    class="message-window__current-contact message-window__current-contact_border-bottom message-window__current-contact_align-elements row"
+    class="message-window__current-contact message-window__current-contact_border-bottom message-window__current-contact_align-elements"
   >
+    <div id="backToContacts" class="message-window__back-to-contacts">
+      <span
+        class="glyphicon glyphicon-menu-left"
+        aria-hidden="true"
+      ></span>
+    </div>
     <div
-      class="current-contact__contact-info col-sm-11 current-contact__contact-info_align-elements"
+      class="current-contact__contact-info current-contact__contact-info_align-elements"
     >
       <div
         id="currentContactLogo"
@@ -375,7 +397,7 @@ let chatData = {
         </div>
       </div>
     </div>
-    <div class="current-contact__manage-block col-sm-1">
+    <div class="current-contact__manage-block">
       <div class="manage-block__info">
         <span
           class="glyphicon glyphicon-info-sign"
@@ -447,6 +469,7 @@ let chatData = {
     $("#sendMessageButton").click(chatData.sendMessage);
     $("#sendPhotoIcon").click(chatData.addPicture);
     $("#addPicture").on("input", () => chatData.sendPicture());
+    $("#backToContacts").click(chatData.backToContacts);
   },
 };
 
