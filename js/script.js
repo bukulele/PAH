@@ -12,6 +12,8 @@ let chatData = {
   windowWidth: null,
 
   init: function () {
+    // console.log(document.documentElement.clientHeight);
+    console.log($(document).get());
     chatData.windowWidth = $(window).get(0).innerWidth;
     $(window).resize(chatData.handleWindowWidth);
     chatData.loadUserData();
