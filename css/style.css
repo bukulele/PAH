@@ -254,6 +254,11 @@
   pointer-events: none;
 }
 
+.contacts-block__contacts-list-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
 .contacts-block__contacts-list {
   width: 100%;
   height: 100%;
