@@ -342,11 +342,10 @@ let chatData = {
 
   addPicture: function () {
     $("#addPicture").click();
-    chatData.showPictureInConsole();
   },
 
-  showPictureInConsole: function () {
-    console.log($("#addPicture").get(0).files);
+  sendPicture: function () {
+    console.log($("#addPicture").get(0).files[0]);
   },
 
   showMessageWindow: function () {
@@ -447,6 +446,7 @@ let chatData = {
     $(".message-window__emoji-block-wrapper").click(chatData.hideEmojiBlock);
     $("#sendMessageButton").click(chatData.sendMessage);
     $("#sendPhotoIcon").click(chatData.addPicture);
+    $("#addPicture").on("input", () => chatData.sendPicture());
   },
 };
 
