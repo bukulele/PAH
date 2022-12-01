@@ -276,6 +276,11 @@ $this->registerCss(<<<CSS
   pointer-events: none;
 }
 
+.contacts-block__contacts-list-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
 .contacts-block__contacts-list {
   width: 100%;
   height: 100%;
@@ -498,8 +503,6 @@ $this->registerCss(<<<CSS
     align-items: center;
   }
 }
-
-
 CSS);
 
 ?>
@@ -536,7 +539,9 @@ CSS);
                 ></span>
               </div>
             </div>
-            <ul id="contactsList" class="contacts-block__contacts-list"></ul>
+            <div class="contacts-block__contacts-list-wrapper">
+              <ul id="contactsList" class="contacts-block__contacts-list"></ul>
+            </div>
           </div>
           <div class="message-window message-window_positioning">
             <div class="message-window__start-new-chat">
@@ -562,8 +567,6 @@ $this->registerJs(<<<'JS'
   windowWidth: null,
 
   init: function () {
-    // console.log(document.documentElement.clientHeight);
-    // console.log($(document).get());
     chatData.windowWidth = $(window).get(0).innerWidth;
     $(window).resize(chatData.handleWindowWidth);
     chatData.loadUserData();
