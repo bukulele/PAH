@@ -107,6 +107,10 @@ $this->registerCss(<<<CSS
 .contacts-block__name-block {
   width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
 }
 
 .contacts-block_border-right {
@@ -222,7 +226,7 @@ $this->registerCss(<<<CSS
 
 .message-window__new-message_align-elements {
   display: grid;
-  grid-template-columns: 5% 85% 10%;
+  grid-template-columns: 10% 80% 10%;
   grid-template-rows: 100%;
   place-items: center;
   padding: 0.5rem;
@@ -274,6 +278,11 @@ $this->registerCss(<<<CSS
 
 .new-message__emoji * {
   pointer-events: none;
+}
+
+.new-message__send-photo-icon {
+  width: 100%;
+  height: 100%;
 }
 
 .contacts-block__contacts-list-wrapper {
@@ -358,6 +367,7 @@ $this->registerCss(<<<CSS
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  padding-right: 0.2rem;
 }
 
 .contact__last-message {
@@ -386,6 +396,15 @@ $this->registerCss(<<<CSS
   padding: 0;
 }
 
+.message-history__empty-chat {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem;
+}
+
 .message-history__message {
   position: relative;
   padding-top: 2rem;
@@ -397,6 +416,15 @@ $this->registerCss(<<<CSS
   justify-content: space-around;
   align-items: flex-end;
   gap: 1rem;
+}
+
+.empty-chat__message {
+  margin: 0;
+  padding: 1rem;
+  border-radius: 2rem;
+  background-color: rgb(99, 99, 99);
+  color: white;
+  font-weight: bold;
 }
 
 .message__output {
@@ -502,21 +530,25 @@ $this->registerCss(<<<CSS
     justify-content: center;
     align-items: center;
   }
+
+  .contacts-block_border-right {
+    border-right: none;
+  }
 }
 CSS);
 
 ?>
 
-<div class="allContent">
+      <div class="allContent">
         <div class="messages-panel">
           <div class="contacts-block contacts-block_border-right">
             <div
-              class="contacts-block__name-block contacts-block__name-block_border-bottom contacts-block__name-block_vertical-align container-fluid row"
+              class="contacts-block__name-block contacts-block__name-block_border-bottom contacts-block__name-block_vertical-align"
             >
-              <div class="name-block__name col-sm-10">
+              <div class="name-block__name">
                 <p id="userName" class="text-center user-name"></p>
               </div>
-              <div class="name-block__new-chat col-sm-2">
+              <div class="name-block__new-chat">
                 <span
                   class="glyphicon glyphicon-edit"
                   aria-hidden="true"
@@ -613,7 +645,7 @@ $this->registerJs(<<<'JS'
                   <div class="contact__image"><img src="${
                     chatData.conversations[id].photo.length
                       ? chatData.conversations[id].photo
-                      : "./assets/logo_sq.png"
+                      : "/static/i/messaging/logo_sq.png"
                   }" class="img-responsive"></div>
                   <div class="contact__name"><p class="name name_text-styling">${
                     chatData.conversations[id].username
@@ -660,7 +692,7 @@ $this->registerJs(<<<'JS'
       `<img class="img-responsive" src="${
         chatData.conversations[chatData.selectedChat].photo.length
           ? chatData.conversations[chatData.selectedChat].photo
-          : "./assets/logo_sq.png"
+          : "/static/i/messaging/logo_sq.png"
       }">`
     );
     $("#currentContactName").html(
@@ -676,30 +708,36 @@ $this->registerJs(<<<'JS'
 
   showConversation: function (selectedChat) {
     $("#messageHistory").html("");
-    for (let message of chatData.conversations[selectedChat].messages) {
-      $("#messageHistory").append(`
-        <div class="message-history__message message__${
+    if (chatData.conversations[selectedChat].messages.length) {
+      for (let message of chatData.conversations[selectedChat].messages) {
+        $("#messageHistory").append(`
+          <div class="message-history__message message__${
+            message.sender == selectedChat ? "input" : "output"
+          }"><div class="message__message-date message__message-date_${
           message.sender == selectedChat ? "input" : "output"
-        }"><div class="message__message-date message__message-date_${
-        message.sender == selectedChat ? "input" : "output"
-      }"><p class="message-date__text">${chatData.formatMessageDate(
-        message.date
-      )}</p></div><div class="message__sender-image ${
-        message.sender == selectedChat ? "" : "message__sender-image_hidden"
-      }"><img src="${
-        message.sender == chatData.selectedChat
-          ? chatData.conversations[selectedChat].photo.length
-            ? chatData.conversations[selectedChat].photo
-            : "./assets/logo_sq.png"
-          : ""
-      }" class="img-responsive"></div><div class="message__text">${
-        message.message
-      }</div></div>
-        `);
+        }"><p class="message-date__text">${chatData.formatMessageDate(
+          message.date
+        )}</p></div><div class="message__sender-image ${
+          message.sender == selectedChat ? "" : "message__sender-image_hidden"
+        }"><img src="${
+          message.sender == chatData.selectedChat
+            ? chatData.conversations[selectedChat].photo.length
+              ? chatData.conversations[selectedChat].photo
+              : "/static/i/messaging/logo_sq.png"
+            : ""
+        }" class="img-responsive"></div><div class="message__text">${
+          message.message
+        }</div></div>
+          `);
+      }
+      $(".message-window__wrapper").scrollTop(
+        $(".message-history__message:last-child")[0].offsetTop
+      );
+    } else {
+      $("#messageHistory").html(
+        `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
+      );
     }
-    $(".message-window__wrapper").scrollTop(
-      $(".message-history__message:last-child")[0].offsetTop
-    );
   },
 
   switchContactsType: function (event) {
@@ -783,49 +821,53 @@ $this->registerJs(<<<'JS'
   },
 
   defineDateFormat: function (date) {
-    const today = new Date();
-    const weekDays = {
-      0: "Sun",
-      1: "Mon",
-      2: "Tue",
-      3: "Wed",
-      4: "Thu",
-      5: "Fri",
-      6: "Sat",
-    };
-    let messageDate = new Date(date);
-    let formattedDate;
+    if (date) {
+      const today = new Date();
+      const weekDays = {
+        0: "Sun",
+        1: "Mon",
+        2: "Tue",
+        3: "Wed",
+        4: "Thu",
+        5: "Fri",
+        6: "Sat",
+      };
+      let messageDate = new Date(date);
+      let formattedDate;
 
-    if (
-      today.getDate() === messageDate.getDate() &&
-      Number(today) - Number(messageDate) < 24 * 60 * 60 * 1000
-    ) {
-      formattedDate = `${
-        messageDate.getHours() < 10
-          ? "0" + messageDate.getHours()
-          : messageDate.getHours()
-      }:${
-        messageDate.getMinutes() < 10
-          ? "0" + messageDate.getMinutes()
-          : messageDate.getMinutes()
-      }`;
-    } else if (
-      Number(today) - Number(messageDate) > 24 * 60 * 60 * 1000 &&
-      Number(today) - Number(messageDate) < 24 * 60 * 60 * 1000 * 7
-    ) {
-      formattedDate = weekDays[messageDate.getDay()];
+      if (
+        today.getDate() === messageDate.getDate() &&
+        Number(today) - Number(messageDate) < 24 * 60 * 60 * 1000
+      ) {
+        formattedDate = `${
+          messageDate.getHours() < 10
+            ? "0" + messageDate.getHours()
+            : messageDate.getHours()
+        }:${
+          messageDate.getMinutes() < 10
+            ? "0" + messageDate.getMinutes()
+            : messageDate.getMinutes()
+        }`;
+      } else if (
+        Number(today) - Number(messageDate) > 24 * 60 * 60 * 1000 &&
+        Number(today) - Number(messageDate) < 24 * 60 * 60 * 1000 * 7
+      ) {
+        formattedDate = weekDays[messageDate.getDay()];
+      } else {
+        formattedDate = `${
+          messageDate.getDate() < 10
+            ? "0" + messageDate.getDate()
+            : messageDate.getDate()
+        }/${
+          messageDate.getMonth() + 1 < 10
+            ? "0" + (messageDate.getMonth() + 1)
+            : messageDate.getMonth() + 1
+        }/${String(messageDate.getFullYear()).substring(2)}`;
+      }
+      return formattedDate;
     } else {
-      formattedDate = `${
-        messageDate.getDate() < 10
-          ? "0" + messageDate.getDate()
-          : messageDate.getDate()
-      }/${
-        messageDate.getMonth() + 1 < 10
-          ? "0" + (messageDate.getMonth() + 1)
-          : messageDate.getMonth() + 1
-      }/${String(messageDate.getFullYear()).substring(2)}`;
+      return "";
     }
-    return formattedDate;
   },
 
   formatMessageDate: function (date) {
@@ -1000,6 +1042,7 @@ $this->registerJs(<<<'JS'
         </button>
         <svg
           id="sendPhotoIcon"
+          class="new-message__send-photo-icon"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 512 512"
         >
