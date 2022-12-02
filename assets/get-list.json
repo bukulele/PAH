@@ -1,0 +1,39 @@
+{
+  "success": true,
+  "errorMessage": null,
+  "payload": {
+    "conversations": {
+      "3": {
+        "conversationId": 3,
+        "status": 1,
+        "type": 0,
+        "createdAt": "2022-11-22 11:51:57",
+        "updatedAt": "2022-12-02 08:37:25",
+        "title": "Test Conv with Nik"
+      }
+    },
+    "lastMessages": {
+      "3": {
+        "id": "9",
+        "conversationId": 3,
+        "ownerId": 284408,
+        "type": 0,
+        "replyOnId": "8",
+        "createdAt": "2022-12-02 08:40:34",
+        "updatedAt": "2022-12-02 08:41:18",
+        "message": "Reply on #8"
+      }
+    },
+    "participants": {
+      "3": {
+        "203134": {
+          "id": 203134,
+          "username": "kon6diter",
+          "created_at": "2019-08-01 00:38:55",
+          "lastvisit_at": "2022-11-10 12:40:25",
+          "avatar_src": "//www.gravatar.com/avatar/a9349b6fb6c1776fe9529279c686fec0?s=50&d=mm&r=g"
+        }
+      }
+    }
+  }
+}

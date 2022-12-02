@@ -615,6 +615,10 @@ $this->registerJs(<<<'JS'
       this.userPhoto = data.user.photo;
       this.conversations = data.conversations;
     }).done(chatData.updateUserData);
+
+        $.ajax({url: "/conversation/get-list", method: "GET"}).done((res) => console.log(res))
+        $.ajax({url: "/conversation/get-list", method: "GET"}).done((res) => console.log(res))
+
   },
 
   updateUserData: function () {

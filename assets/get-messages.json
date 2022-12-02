@@ -1,0 +1,39 @@
+{
+  "success": true,
+  "errorMessage": null,
+  "payload": {
+    "messages": {
+      "7": {
+        "id": "7",
+        "conversationId": 3,
+        "ownerId": 284408,
+        "type": 0,
+        "replyOnId": null,
+        "createdAt": "2022-12-02 08:40:33",
+        "updatedAt": null,
+        "message": "Hi from start"
+      },
+      "8": {
+        "id": "8",
+        "conversationId": 3,
+        "ownerId": 203134,
+        "type": 0,
+        "replyOnId": null,
+        "createdAt": "2022-12-02 08:40:33",
+        "updatedAt": "2022-12-02 08:41:19",
+        "message": "Hello Nik"
+      },
+      "9": {
+        "id": "9",
+        "conversationId": 3,
+        "ownerId": 284408,
+        "type": 0,
+        "replyOnId": "8",
+        "createdAt": "2022-12-02 08:40:34",
+        "updatedAt": "2022-12-02 08:41:18",
+        "message": "Reply on #8"
+      }
+    },
+    "cursorLastSeenId": 9
+  }
+}
