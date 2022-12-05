@@ -1,6 +1,6 @@
 let chatData = {
   userName: "{username}",
-  userId: 284408,
+  userId: 0,
   lastLogin: null,
   userPhoto: "",
   conversations: null,
@@ -35,7 +35,12 @@ let chatData = {
 
     $("#userName").html(`<b>${chatData.userName}</b>`);
 
-    // $.ajax({url: "/conversation/GET"}).done((res) => console.log(res))
+    //     $.ajax({url: "/conversation/get-list", method: "GET"}).done((data) => {
+    //       this.userId = $("#pah_user_id").val();
+    //       this.conversations = data.payload.conversations;
+    // this.lastMessages = data.payload.lastMessages;
+    // this.participants = data.payload.participants;
+    //     }).done(chatData.updateUserData);
   },
 
   updateUserData: function () {
@@ -117,55 +122,62 @@ let chatData = {
     $("#currentContactActivity").html(
       `Active: ${chatData.defineDateFormat(participantsArray[0].lastvisit_at)}`
     );
-    chatData.showConversation(chatData.selectedChat);
+    chatData.showConversation();
   },
 
-  showConversation: function (selectedChat) {
+  showConversation: function () {
     //add possibility for group chats
     let participantsArray = Object.values(
       chatData.participants[chatData.selectedChat]
     );
 
-    let messages = null;
+    // let messages = null;
     $.getJSON("./assets/get-messages.json", (data) => {
-      messages = data.payload.messages;
-    }).done(function () {
-      $("#messageHistory").html("");
-      if (messages) {
-        for (let messageId in messages) {
-          $("#messageHistory").append(`
+      return data;
+    })
+      // $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}`, (data) => {
+      //   return data.payload.messages;
+      // })
+      .done(function (data) {
+        let messages = data.payload.messages;
+        $("#messageHistory").html("");
+        if (messages) {
+          for (let messageId in messages) {
+            $("#messageHistory").append(`
             <div class="message-history__message message__${
               messages[messageId].ownerId == chatData.userId
                 ? "output"
                 : "input"
             }"><div class="message__message-date message__message-date_${
-            messages[messageId].ownerId == chatData.userId ? "output" : "input"
-          }"><p class="message-date__text">${chatData.formatMessageDate(
-            messages[messageId].createdAt
-          )}</p></div><div class="message__sender-image ${
-            messages[messageId].ownerId == chatData.userId
-              ? "message__sender-image_hidden"
-              : ""
-          }"><img src="${
-            messages[messageId].ownerId == chatData.userId
-              ? ""
-              : participantsArray[0].avatar_src.length
-              ? participantsArray[0].avatar_src
-              : "./assets/logo_sq.png"
-          }" class="img-responsive"></div><div class="message__text">${
-            messages[messageId].message
-          }</div></div>
+              messages[messageId].ownerId == chatData.userId
+                ? "output"
+                : "input"
+            }"><p class="message-date__text">${chatData.formatMessageDate(
+              messages[messageId].createdAt
+            )}</p></div><div class="message__sender-image ${
+              messages[messageId].ownerId == chatData.userId
+                ? "message__sender-image_hidden"
+                : ""
+            }"><img src="${
+              messages[messageId].ownerId == chatData.userId
+                ? ""
+                : participantsArray[0].avatar_src.length
+                ? participantsArray[0].avatar_src
+                : "./assets/logo_sq.png"
+            }" class="img-responsive"></div><div class="message__text">${
+              messages[messageId].message
+            }</div></div>
             `);
+          }
+          $(".message-window__wrapper").scrollTop(
+            $(".message-history__message:last-child")[0].offsetTop
+          );
+        } else {
+          $("#messageHistory").html(
+            `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
+          );
         }
-        $(".message-window__wrapper").scrollTop(
-          $(".message-history__message:last-child")[0].offsetTop
-        );
-      } else {
-        $("#messageHistory").html(
-          `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
-        );
-      }
-    });
+      });
   },
 
   switchContactsType: function (event) {

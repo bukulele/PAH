@@ -536,7 +536,6 @@ $this->registerCss(<<<CSS
   }
 }
 CSS);
-
 ?>
 
       <div class="allContent">
@@ -586,11 +585,13 @@ CSS);
 
 $this->registerJs(<<<'JS'
   let chatData = {
-  userName: "",
+  userName: "{username}",
   userId: 0,
   lastLogin: null,
   userPhoto: "",
   conversations: null,
+  lastMessages: null,
+  participants: null,
   selectedContactsType: "primary",
   selectedChat: null,
   requestsNumber: 0,
@@ -608,21 +609,29 @@ $this->registerJs(<<<'JS'
   },
 
   loadUserData: function () {
-    $.getJSON("/chat/chat-history", (data) => {
-      this.userName = data.user.username;
-      this.userId = data.user.id;
-      this.lastLogin = new Date(data.user.last_login);
-      this.userPhoto = data.user.photo;
-      this.conversations = data.conversations;
+    // $.getJSON("./assets/get-list.json", (data) => {
+    //   // this.userName = data.user.username;
+    //   // this.userId = $("#pah_user_id").attr("value");
+    //   // this.lastLogin = new Date(data.user.last_login);
+    //   // this.userPhoto = data.user.photo;
+    //   this.conversations = data.payload.conversations;
+    //   this.lastMessages = data.payload.lastMessages;
+    //   this.participants = data.payload.participants;
+    // }).done(chatData.updateUserData);
+    
+    
+    $.ajax({url: "/conversation/get-list", method: "GET"}).done((data) => {
+      this.userId = $("#pah_user_id").attr("value");
+      this.conversations = data.payload.conversations;
+this.lastMessages = data.payload.lastMessages;
+this.participants = data.payload.participants;
     }).done(chatData.updateUserData);
 
-        $.ajax({url: "/conversation/get-list", method: "GET"}).done((res) => console.log(res))
-        $.ajax({url: "/conversation/get-list", method: "GET"}).done((res) => console.log(res))
+    $("#userName").html(`<b>${chatData.userName}</b>`);
 
   },
 
   updateUserData: function () {
-    $("#userName").html(`<b>${chatData.userName}</b>`);
     chatData.updateConversationsList();
     chatData.calculateRequestsNumber();
   },
@@ -631,11 +640,11 @@ $this->registerJs(<<<'JS'
     $("#contactsList").html("");
     for (let id in chatData.conversations) {
       if (chatData.selectedContactsType === "primary") {
-        if (chatData.conversations[id].following) {
+        if (chatData.conversations[id].status === 1) {
           chatData.fulfillContactsList(id);
         }
       } else if (chatData.selectedContactsType === "requests") {
-        if (!chatData.conversations[id].following) {
+        if (!chatData.conversations[id].status === 0) {
           chatData.fulfillContactsList(id);
         }
       }
@@ -643,36 +652,30 @@ $this->registerJs(<<<'JS'
   },
 
   fulfillContactsList: function (id) {
-    $("#contactsList").append(`
-          <li id=${id} class="contacts-list__contact">
-                <div class="contact__container">
-                  <div class="contact__image"><img src="${
-                    chatData.conversations[id].photo.length
-                      ? chatData.conversations[id].photo
-                      : "/static/i/messaging/logo_sq.png"
-                  }" class="img-responsive"></div>
-                  <div class="contact__name"><p class="name name_text-styling">${
-                    chatData.conversations[id].username
-                  }</p></div>
-                  <div class="contact__last-message-date"><p class="small last-message-date_text-styling">${chatData.defineDateFormat(
-                    chatData.conversations[id].messages.length
-                      ? chatData.conversations[id].messages[
-                          chatData.conversations[id].messages.length - 1
-                        ].date
-                      : null
-                  )}</p></div>
-                  <div class="contact__last-message"><p class="small activity__activity-status_text-styling">
-                    ${
-                      chatData.conversations[id].messages.length
-                        ? chatData.conversations[id].messages[
-                            chatData.conversations[id].messages.length - 1
-                          ].message
-                        : ""
-                    }
-                  </p></div>
-                </div>
-              </li>
-          `);
+    //add possibility for group chats
+
+    for (let userId in chatData.participants[id]) {
+      $("#contactsList").append(`
+            <li id="${id}" class="contacts-list__contact">
+                  <div class="contact__container">
+                    <div class="contact__image"><img src="${
+                      chatData.participants[id][userId].avatar_src.length
+                        ? chatData.participants[id][userId].avatar_src
+                        : "./assets/logo_sq.png"
+                    }" class="img-responsive"></div>
+                    <div class="contact__name"><p class="name name_text-styling">${
+                      chatData.participants[id][userId].username
+                    }</p></div>
+                    <div class="contact__last-message-date"><p class="small last-message-date_text-styling">${chatData.defineDateFormat(
+                      chatData.lastMessages[id].updatedAt
+                    )}</p></div>
+                    <div class="contact__last-message"><p class="small activity__activity-status_text-styling">
+                      ${chatData.lastMessages[id].message}
+                    </p></div>
+                  </div>
+                </li>
+            `);
+    }
   },
 
   setSelectedChat: function (event) {
@@ -692,56 +695,74 @@ $this->registerJs(<<<'JS'
   },
 
   showContactData: function () {
+    let participantsArray = Object.values(
+      chatData.participants[chatData.selectedChat]
+    );
+    //add possibility for group chats
     $("#currentContactLogo").html(
       `<img class="img-responsive" src="${
-        chatData.conversations[chatData.selectedChat].photo.length
-          ? chatData.conversations[chatData.selectedChat].photo
-          : "/static/i/messaging/logo_sq.png"
+        participantsArray[0].avatar_src.length
+          ? participantsArray[0].avatar_src
+          : "./assets/logo_sq.png"
       }">`
     );
-    $("#currentContactName").html(
-      `<b>${chatData.conversations[chatData.selectedChat].username}</b>`
-    );
+    $("#currentContactName").html(`<b>${participantsArray[0].username}</b>`);
     $("#currentContactActivity").html(
-      `Active: ${chatData.defineDateFormat(
-        chatData.conversations[chatData.selectedChat].last_login
-      )}`
+      `Active: ${chatData.defineDateFormat(participantsArray[0].lastvisit_at)}`
     );
-    chatData.showConversation(chatData.selectedChat);
+    chatData.showConversation();
   },
 
-  showConversation: function (selectedChat) {
-    $("#messageHistory").html("");
-    if (chatData.conversations[selectedChat].messages.length) {
-      for (let message of chatData.conversations[selectedChat].messages) {
-        $("#messageHistory").append(`
-          <div class="message-history__message message__${
-            message.sender == selectedChat ? "input" : "output"
-          }"><div class="message__message-date message__message-date_${
-          message.sender == selectedChat ? "input" : "output"
-        }"><p class="message-date__text">${chatData.formatMessageDate(
-          message.date
-        )}</p></div><div class="message__sender-image ${
-          message.sender == selectedChat ? "" : "message__sender-image_hidden"
-        }"><img src="${
-          message.sender == chatData.selectedChat
-            ? chatData.conversations[selectedChat].photo.length
-              ? chatData.conversations[selectedChat].photo
-              : "/static/i/messaging/logo_sq.png"
-            : ""
-        }" class="img-responsive"></div><div class="message__text">${
-          message.message
-        }</div></div>
-          `);
+  showConversation: function () {
+    //add possibility for group chats
+    let participantsArray = Object.values(
+      chatData.participants[chatData.selectedChat]
+    );
+
+    // $.getJSON("./assets/get-messages.json", (data) => {
+    //   return data;
+    // })
+        $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}`, (data) => {
+      return data;
+    })
+    .done(function (data) {
+      let messages = data.payload.messages
+      $("#messageHistory").html("");
+      if (messages) {
+        for (let messageId in messages) {
+          $("#messageHistory").append(`
+            <div class="message-history__message message__${
+              messages[messageId].ownerId == chatData.userId
+                ? "output"
+                : "input"
+            }"><div class="message__message-date message__message-date_${
+            messages[messageId].ownerId == chatData.userId ? "output" : "input"
+          }"><p class="message-date__text">${chatData.formatMessageDate(
+            messages[messageId].createdAt
+          )}</p></div><div class="message__sender-image ${
+            messages[messageId].ownerId == chatData.userId
+              ? "message__sender-image_hidden"
+              : ""
+          }"><img src="${
+            messages[messageId].ownerId == chatData.userId
+              ? ""
+              : participantsArray[0].avatar_src.length
+              ? participantsArray[0].avatar_src
+              : "./assets/logo_sq.png"
+          }" class="img-responsive"></div><div class="message__text">${
+            messages[messageId].message
+          }</div></div>
+            `);
+        }
+        $(".message-window__wrapper").scrollTop(
+          $(".message-history__message:last-child")[0].offsetTop
+        );
+      } else {
+        $("#messageHistory").html(
+          `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
+        );
       }
-      $(".message-window__wrapper").scrollTop(
-        $(".message-history__message:last-child")[0].offsetTop
-      );
-    } else {
-      $("#messageHistory").html(
-        `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
-      );
-    }
+    });
   },
 
   switchContactsType: function (event) {
@@ -765,7 +786,7 @@ $this->registerJs(<<<'JS'
 
   calculateRequestsNumber: function () {
     for (let id in chatData.conversations) {
-      if (!chatData.conversations[id].following) {
+      if (!chatData.conversations[id].status === 0) {
         chatData.requestsNumber++;
       }
     }
