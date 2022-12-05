@@ -23,15 +23,6 @@ let chatData = {
   },
 
   loadUserData: function () {
-    // load contacts list
-    // $.getJSON("./assets/chatHistory.json", (data) => {
-    //   this.userName = data.user.username;
-    //   this.userId = data.user.id;
-    //   this.lastLogin = new Date(data.user.last_login);
-    //   this.userPhoto = data.user.photo;
-    //   this.conversations = data.conversations;
-    // }).done(chatData.updateUserData);
-
     $.getJSON("./assets/get-list.json", (data) => {
       // this.userName = data.user.username;
       // this.userId = $("#pah_user_id").val();
@@ -65,17 +56,6 @@ let chatData = {
         }
       }
     }
-    // for (let id in chatData.conversations) {
-    //   if (chatData.selectedContactsType === "primary") {
-    //     if (chatData.conversations[id].following) {
-    //       chatData.fulfillContactsList(id);
-    //     }
-    //   } else if (chatData.selectedContactsType === "requests") {
-    //     if (!chatData.conversations[id].following) {
-    //       chatData.fulfillContactsList(id);
-    //     }
-    //   }
-    // }
   },
 
   fulfillContactsList: function (id) {
@@ -209,7 +189,7 @@ let chatData = {
 
   calculateRequestsNumber: function () {
     for (let id in chatData.conversations) {
-      if (!chatData.conversations[id].following) {
+      if (!chatData.conversations[id].status === 0) {
         chatData.requestsNumber++;
       }
     }
