@@ -9,7 +9,7 @@
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-02 08:40:33",
+        "createdAt": "2022-12-02T08:40:33.000Z",
         "updatedAt": null,
         "message": "Hi from start"
       },
@@ -19,8 +19,8 @@
         "ownerId": 203134,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-02 08:40:33",
-        "updatedAt": "2022-12-02 08:41:19",
+        "createdAt": "2022-12-02T08:40:33.000Z",
+        "updatedAt": "2022-12-02T08:41:19.000Z",
         "message": "Hello Nik"
       },
       "9": {
@@ -29,8 +29,8 @@
         "ownerId": 284408,
         "type": 0,
         "replyOnId": "8",
-        "createdAt": "2022-12-02 08:40:34",
-        "updatedAt": "2022-12-02 08:41:18",
+        "createdAt": "2022-12-02T08:40:34.000Z",
+        "updatedAt": "2022-12-02T08:41:18.000Z",
         "message": "Reply on #8"
       }
     },

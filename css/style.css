@@ -51,15 +51,6 @@
   align-items: center;
 }
 
-.start-new-chat__start-button {
-  border: none;
-  border-radius: 10px;
-  padding: 0.5rem 1rem;
-  color: white;
-  font-weight: bold;
-  background-color: #00b446;
-}
-
 .start-new-chat__start-button:hover {
   background-color: #4dd681;
 }
@@ -396,7 +387,8 @@
   gap: 1rem;
 }
 
-.empty-chat__message {
+.empty-chat__message,
+.start-new-chat__select-chat {
   margin: 0;
   padding: 1rem;
   border-radius: 2rem;

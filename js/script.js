@@ -24,8 +24,8 @@ let chatData = {
 
   loadUserData: function () {
     $.getJSON("./assets/get-list.json", (data) => {
+      this.userId = $("#pah_user_id").attr("value");
       // this.userName = data.user.username;
-      // this.userId = $("#pah_user_id").val();
       // this.lastLogin = new Date(data.user.last_login);
       // this.userPhoto = data.user.photo;
       this.conversations = data.payload.conversations;
@@ -374,14 +374,26 @@ let chatData = {
 
   sendMessage: function () {
     const dateNow = new Date();
-    chatData.conversations[chatData.selectedChat].messages.push({
-      date: dateNow,
-      message: $("#newMessageInput").val(),
-      sender: chatData.userId,
-    });
-    chatData.showConversation(chatData.selectedChat);
-    $("#newMessageInput").val("");
-    chatData.controlInput($("#newMessageInput").get(0));
+    // chatData.conversations[chatData.selectedChat].messages.push({
+    //   date: dateNow,
+    //   message: $("#newMessageInput").val(),
+    //   sender: chatData.userId,
+    // });
+    $.ajax({
+      type: "POST",
+      url: "/conversation/new-message",
+      data: {
+        message: $("#newMessageInput").val(),
+        conversationId: chatData.selectedChat,
+      },
+      dataType: "json",
+    })
+      .done(() => {
+        chatData.showConversation();
+        $("#newMessageInput").val("");
+        chatData.controlInput($("#newMessageInput").get(0));
+      })
+      .fail((error) => alert(error));
   },
 
   addPicture: function () {
@@ -468,7 +480,7 @@ let chatData = {
         placeholder="Message..."
         class="new-message__input-field"
         rows="1"
-        maxlength="1000"
+        maxlength="750"
       ></textarea>
       <div
         id="sendMessageOrPhoto"

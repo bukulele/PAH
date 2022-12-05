@@ -73,15 +73,6 @@ $this->registerCss(<<<CSS
   align-items: center;
 }
 
-.start-new-chat__start-button {
-  border: none;
-  border-radius: 10px;
-  padding: 0.5rem 1rem;
-  color: white;
-  font-weight: bold;
-  background-color: #00b446;
-}
-
 .start-new-chat__start-button:hover {
   background-color: #4dd681;
 }
@@ -418,7 +409,8 @@ $this->registerCss(<<<CSS
   gap: 1rem;
 }
 
-.empty-chat__message {
+.empty-chat__message,
+.start-new-chat__select-chat {
   margin: 0;
   padding: 1rem;
   border-radius: 2rem;
@@ -535,10 +527,11 @@ $this->registerCss(<<<CSS
     border-right: none;
   }
 }
+
 CSS);
 ?>
 
-      <div class="allContent">
+<div class="allContent">
         <div class="messages-panel">
           <div class="contacts-block contacts-block_border-right">
             <div
@@ -576,7 +569,7 @@ CSS);
           </div>
           <div class="message-window message-window_positioning">
             <div class="message-window__start-new-chat">
-              <button class="start-new-chat__start-button">Send message</button>
+              <p class="start-new-chat__select-chat">Please select a chat</p>
             </div>
           </div>
         </div>
@@ -584,7 +577,7 @@ CSS);
 <?php
 
 $this->registerJs(<<<'JS'
-  let chatData = {
+ let chatData = {
   userName: "{username}",
   userId: 0,
   lastLogin: null,
@@ -610,25 +603,23 @@ $this->registerJs(<<<'JS'
 
   loadUserData: function () {
     // $.getJSON("./assets/get-list.json", (data) => {
+    //   this.userId = $("#pah_user_id").attr("value");
     //   // this.userName = data.user.username;
-    //   // this.userId = $("#pah_user_id").attr("value");
     //   // this.lastLogin = new Date(data.user.last_login);
     //   // this.userPhoto = data.user.photo;
     //   this.conversations = data.payload.conversations;
     //   this.lastMessages = data.payload.lastMessages;
     //   this.participants = data.payload.participants;
     // }).done(chatData.updateUserData);
-    
-    
-    $.ajax({url: "/conversation/get-list", method: "GET"}).done((data) => {
-      this.userId = $("#pah_user_id").attr("value");
-      this.conversations = data.payload.conversations;
-this.lastMessages = data.payload.lastMessages;
-this.participants = data.payload.participants;
-    }).done(chatData.updateUserData);
 
     $("#userName").html(`<b>${chatData.userName}</b>`);
 
+        $.ajax({url: "/conversation/get-list", method: "GET"}).done((data) => {
+          this.userId = $("#pah_user_id").attr("value");
+          this.conversations = data.payload.conversations;
+    this.lastMessages = data.payload.lastMessages;
+    this.participants = data.payload.participants;
+        }).done(chatData.updateUserData);
   },
 
   updateUserData: function () {
@@ -719,50 +710,53 @@ this.participants = data.payload.participants;
       chatData.participants[chatData.selectedChat]
     );
 
+    // let messages = null;
     // $.getJSON("./assets/get-messages.json", (data) => {
     //   return data;
     // })
-        $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}`, (data) => {
-      return data;
-    })
-    .done(function (data) {
-      let messages = data.payload.messages
-      $("#messageHistory").html("");
-      if (messages) {
-        for (let messageId in messages) {
-          $("#messageHistory").append(`
+      $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}`, (data) => {
+        return data.payload.messages;
+      })
+      .done(function (data) {
+        let messages = data.payload.messages;
+        $("#messageHistory").html("");
+        if (messages) {
+          for (let messageId in messages) {
+            $("#messageHistory").append(`
             <div class="message-history__message message__${
               messages[messageId].ownerId == chatData.userId
                 ? "output"
                 : "input"
             }"><div class="message__message-date message__message-date_${
-            messages[messageId].ownerId == chatData.userId ? "output" : "input"
-          }"><p class="message-date__text">${chatData.formatMessageDate(
-            messages[messageId].createdAt
-          )}</p></div><div class="message__sender-image ${
-            messages[messageId].ownerId == chatData.userId
-              ? "message__sender-image_hidden"
-              : ""
-          }"><img src="${
-            messages[messageId].ownerId == chatData.userId
-              ? ""
-              : participantsArray[0].avatar_src.length
-              ? participantsArray[0].avatar_src
-              : "./assets/logo_sq.png"
-          }" class="img-responsive"></div><div class="message__text">${
-            messages[messageId].message
-          }</div></div>
+              messages[messageId].ownerId == chatData.userId
+                ? "output"
+                : "input"
+            }"><p class="message-date__text">${chatData.formatMessageDate(
+              messages[messageId].createdAt
+            )}</p></div><div class="message__sender-image ${
+              messages[messageId].ownerId == chatData.userId
+                ? "message__sender-image_hidden"
+                : ""
+            }"><img src="${
+              messages[messageId].ownerId == chatData.userId
+                ? ""
+                : participantsArray[0].avatar_src.length
+                ? participantsArray[0].avatar_src
+                : "./assets/logo_sq.png"
+            }" class="img-responsive"></div><div class="message__text">${
+              messages[messageId].message
+            }</div></div>
             `);
+          }
+          $(".message-window__wrapper").scrollTop(
+            $(".message-history__message:last-child")[0].offsetTop
+          );
+        } else {
+          $("#messageHistory").html(
+            `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
+          );
         }
-        $(".message-window__wrapper").scrollTop(
-          $(".message-history__message:last-child")[0].offsetTop
-        );
-      } else {
-        $("#messageHistory").html(
-          `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
-        );
-      }
-    });
+      });
   },
 
   switchContactsType: function (event) {
@@ -959,14 +953,26 @@ this.participants = data.payload.participants;
 
   sendMessage: function () {
     const dateNow = new Date();
-    chatData.conversations[chatData.selectedChat].messages.push({
-      date: dateNow,
-      message: $("#newMessageInput").val(),
-      sender: chatData.userId,
-    });
-    chatData.showConversation(chatData.selectedChat);
-    $("#newMessageInput").val("");
-    chatData.controlInput($("#newMessageInput").get(0));
+    // chatData.conversations[chatData.selectedChat].messages.push({
+    //   date: dateNow,
+    //   message: $("#newMessageInput").val(),
+    //   sender: chatData.userId,
+    // });
+    $.ajax({
+      type: "POST",
+      url: "/conversation/new-message",
+      data: {
+        message: $("#newMessageInput").val(),
+        conversationId: chatData.selectedChat,
+      },
+      dataType: "json"
+    })
+      .done(() => {
+        chatData.showConversation();
+        $("#newMessageInput").val("");
+        chatData.controlInput($("#newMessageInput").get(0));
+      })
+      .fail((error) => console.log(error));
   },
 
   addPicture: function () {
@@ -1053,7 +1059,7 @@ this.participants = data.payload.participants;
         placeholder="Message..."
         class="new-message__input-field"
         rows="1"
-        maxlength="1000"
+        maxlength="750"
       ></textarea>
       <div
         id="sendMessageOrPhoto"
