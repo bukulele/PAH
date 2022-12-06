@@ -195,6 +195,36 @@ $this->registerCss(<<<CSS
   align-items: center;
 }
 
+.manage-block__manage-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.manage-buttons__button {
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  color: white;
+  font-weight: bold;
+}
+
+.manage-buttons__accept-button {
+  background-color: #00b446;
+}
+
+.manage-buttons__accept-button:hover {
+  background-color: #4dd681;
+}
+
+.manage-buttons__delete-button {
+  background-color: #b40000;
+}
+
+.manage-buttons__delete-button:hover {
+  background-color: #d64d4d;
+}
+
 .current-contact__name-block_align-elements {
   display: flex;
   flex-direction: column;
@@ -612,15 +642,15 @@ let chatData = {
     //   this.participants = data.payload.participants;
     //   this.userData = data.payload.userData;
     // }).done(chatData.updateUserData);
-    
+
     $("#userName").html(`<b>${chatData.userName}</b>`);
-    
-    $.ajax({url: "/conversation/get-list", method: "GET"}).done((data) => {
-      this.userId = $("#pah_user_id").attr("value");
-      this.conversations = data.payload.conversations;
-      this.lastMessages = data.payload.lastMessages;
-      this.participants = data.payload.participants;
-      this.userData = data.payload.userData;
+
+        $.ajax({url: "/conversation/get-list", method: "GET"}).done((data) => {
+          this.userId = $("#pah_user_id").attr("value");
+          this.conversations = data.payload.conversations;
+    this.lastMessages = data.payload.lastMessages;
+    this.participants = data.payload.participants;
+    this.userData = data.payload.userData;
         }).done(chatData.updateUserData);
   },
 
@@ -714,8 +744,28 @@ let chatData = {
           chatData.userData[userId].lastvisit_at
         )}`
       );
-      chatData.showConversation();
     }
+
+    if (chatData.conversations[chatData.selectedChat].status === 1) {
+      $(".manage-block__manage-buttons").html(`
+      <button class="manage-buttons__button manage-buttons__delete-button"><span
+      class="glyphicon glyphicon-trash"
+      aria-hidden="true"
+    ></span></button>
+      `);
+    } else if (chatData.conversations[chatData.selectedChat].status === 0) {
+      $(".manage-block__manage-buttons").html(`
+      <button class="manage-buttons__button manage-buttons__accept-button">Accept</button>
+      <button class="manage-buttons__button manage-buttons__delete-button"><span
+      class="glyphicon glyphicon-trash"
+      aria-hidden="true"
+    ></span></button>
+      `);
+    }
+
+    $(".manage-buttons__accept-button").click(chatData.activateChat);
+    $(".manage-buttons__delete-button").click(chatData.deleteChat);
+    chatData.showConversation();
   },
 
   showConversation: function () {
@@ -1006,6 +1056,47 @@ let chatData = {
     $(".message-window").css({ display: "none" });
   },
 
+  activateChat: function () {
+    $.ajax({
+      type: "POST",
+      url: "/conversation/activate",
+      data: {
+        conversationId: chatData.selectedChat,
+      },
+      dataType: "json",
+    })
+      .done(() => {
+        chatData.refreshData();
+      })
+      .fail((error) => alert(error));
+  },
+
+  deleteChat: function () {
+    $.ajax({
+      type: "POST",
+      url: "/conversation/delete",
+      data: {
+        conversationId: chatData.selectedChat,
+      },
+      dataType: "json",
+    })
+      .done(() => {
+        chatData.loadUserData();
+      })
+      .fail((error) => alert(error));
+  },
+
+  refreshData: function () {
+    chatData.conversations = null;
+    chatData.lastMessages = null;
+    chatData.participants = null;
+    chatData.selectedContactsType = "primary";
+    chatData.selectedChat = null;
+    chatData.requestsNumber = 0;
+
+    chatData.loadUserData();
+  },
+
   showMessageWindow: function () {
     $(".message-window").html(`
     <div
@@ -1040,11 +1131,7 @@ let chatData = {
       </div>
     </div>
     <div class="current-contact__manage-block">
-      <div class="manage-block__info">
-        <span
-          class="glyphicon glyphicon-info-sign"
-          aria-hidden="true"
-        ></span>
+      <div class="manage-block__manage-buttons">
       </div>
     </div>
   </div>

@@ -153,6 +153,9 @@ let chatData = {
     ></span></button>
       `);
     }
+
+    $(".manage-buttons__accept-button").click(chatData.activateChat);
+    $(".manage-buttons__delete-button").click(chatData.deleteChat);
     chatData.showConversation();
   },
 
@@ -442,6 +445,47 @@ let chatData = {
   backToContacts: function () {
     $(".contacts-block").css({ display: "grid" });
     $(".message-window").css({ display: "none" });
+  },
+
+  activateChat: function () {
+    $.ajax({
+      type: "POST",
+      url: "/conversation/activate",
+      data: {
+        conversationId: chatData.selectedChat,
+      },
+      dataType: "json",
+    })
+      .done(() => {
+        chatData.refreshData();
+      })
+      .fail((error) => alert(error));
+  },
+
+  deleteChat: function () {
+    $.ajax({
+      type: "POST",
+      url: "/conversation/delete",
+      data: {
+        conversationId: chatData.selectedChat,
+      },
+      dataType: "json",
+    })
+      .done(() => {
+        chatData.loadUserData();
+      })
+      .fail((error) => alert(error));
+  },
+
+  refreshData: function () {
+    chatData.conversations = null;
+    chatData.lastMessages = null;
+    chatData.participants = null;
+    chatData.selectedContactsType = "primary";
+    chatData.selectedChat = null;
+    chatData.requestsNumber = 0;
+
+    chatData.loadUserData();
   },
 
   showMessageWindow: function () {
