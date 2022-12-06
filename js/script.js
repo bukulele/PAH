@@ -135,8 +135,25 @@ let chatData = {
           chatData.userData[userId].lastvisit_at
         )}`
       );
-      chatData.showConversation();
     }
+
+    if (chatData.conversations[chatData.selectedChat].status === 1) {
+      $(".manage-block__manage-buttons").html(`
+      <button class="manage-buttons__button manage-buttons__delete-button"><span
+      class="glyphicon glyphicon-trash"
+      aria-hidden="true"
+    ></span></button>
+      `);
+    } else if (chatData.conversations[chatData.selectedChat].status === 0) {
+      $(".manage-block__manage-buttons").html(`
+      <button class="manage-buttons__button manage-buttons__accept-button">Accept</button>
+      <button class="manage-buttons__button manage-buttons__delete-button"><span
+      class="glyphicon glyphicon-trash"
+      aria-hidden="true"
+    ></span></button>
+      `);
+    }
+    chatData.showConversation();
   },
 
   showConversation: function () {
@@ -461,11 +478,7 @@ let chatData = {
       </div>
     </div>
     <div class="current-contact__manage-block">
-      <div class="manage-block__info">
-        <span
-          class="glyphicon glyphicon-info-sign"
-          aria-hidden="true"
-        ></span>
+      <div class="manage-block__manage-buttons">
       </div>
     </div>
   </div>
