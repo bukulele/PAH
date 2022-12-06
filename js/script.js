@@ -37,10 +37,11 @@ let chatData = {
     $("#userName").html(`<b>${chatData.userName}</b>`);
 
     //     $.ajax({url: "/conversation/get-list", method: "GET"}).done((data) => {
-    //       this.userId = $("#pah_user_id").val();
+    //       this.userId = $("#pah_user_id").attr("value");
     //       this.conversations = data.payload.conversations;
     // this.lastMessages = data.payload.lastMessages;
     // this.participants = data.payload.participants;
+    // this.userData = data.payload.userData;
     //     }).done(chatData.updateUserData);
   },
 
@@ -214,7 +215,7 @@ let chatData = {
 
   calculateRequestsNumber: function () {
     for (let id in chatData.conversations) {
-      if (!chatData.conversations[id].status === 0) {
+      if (chatData.conversations[id].status === 0) {
         chatData.requestsNumber++;
       }
     }
