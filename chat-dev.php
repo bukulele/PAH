@@ -219,6 +219,9 @@ $this->registerCss(<<<CSS
 
 .manage-buttons__delete-button {
   background-color: #b40000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .manage-buttons__delete-button:hover {
@@ -557,6 +560,7 @@ $this->registerCss(<<<CSS
     border-right: none;
   }
 }
+
 
 CSS);
 ?>
@@ -1081,7 +1085,7 @@ let chatData = {
       dataType: "json",
     })
       .done(() => {
-        chatData.loadUserData();
+        chatData.refreshData();
       })
       .fail((error) => alert(error));
   },
@@ -1093,8 +1097,17 @@ let chatData = {
     chatData.selectedContactsType = "primary";
     chatData.selectedChat = null;
     chatData.requestsNumber = 0;
-
+    chatData.placeUnderline($("#primaryTab").get(0));
+    chatData.removeMessageWindow();
     chatData.loadUserData();
+  },
+
+  removeMessageWindow: function () {
+    $(".message-window").html(`
+      <div class="message-window__start-new-chat">
+        <p class="start-new-chat__select-chat">Please select a chat</p>
+      </div>
+    `);
   },
 
   showMessageWindow: function () {

@@ -197,6 +197,9 @@
 
 .manage-buttons__delete-button {
   background-color: #b40000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .manage-buttons__delete-button:hover {
