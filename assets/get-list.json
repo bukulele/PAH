@@ -7,32 +7,118 @@
         "conversationId": 3,
         "status": 1,
         "type": 0,
-        "createdAt": "2022-11-22T11:51:57.000Z",
-        "updatedAt": "2022-12-02T08:37:25.000Z",
+        "createdAt": "2022-11-22 11:51:57",
+        "updatedAt": "2022-12-05 15:28:58",
         "title": "Test Conv with Nik"
+      },
+      "18": {
+        "conversationId": 18,
+        "status": 0,
+        "type": 0,
+        "createdAt": "2022-12-06 08:28:45",
+        "updatedAt": "2022-12-06 08:28:45",
+        "title": null
+      },
+      "19": {
+        "conversationId": 19,
+        "status": 0,
+        "type": 0,
+        "createdAt": "2022-12-06 08:34:01",
+        "updatedAt": "2022-12-06 08:34:01",
+        "title": null
       }
     },
     "lastMessages": {
       "3": {
-        "id": "9",
+        "id": "22",
         "conversationId": 3,
         "ownerId": 284408,
         "type": 0,
-        "replyOnId": "8",
-        "createdAt": "2022-12-02T08:40:34.000Z",
-        "updatedAt": "2022-12-02T08:41:18.000Z",
-        "message": "Reply on #8"
+        "replyOnId": null,
+        "createdAt": "2022-12-05 15:28:58",
+        "updatedAt": null,
+        "message": "hoho"
+      },
+      "18": {
+        "id": "24",
+        "conversationId": 18,
+        "ownerId": 284408,
+        "type": 0,
+        "replyOnId": null,
+        "createdAt": "2022-12-06 08:28:45",
+        "updatedAt": null,
+        "message": "Hi newby"
+      },
+      "19": {
+        "id": "25",
+        "conversationId": 19,
+        "ownerId": 285319,
+        "type": 0,
+        "replyOnId": null,
+        "createdAt": "2022-12-06 08:34:01",
+        "updatedAt": null,
+        "message": "Hi"
       }
     },
     "participants": {
       "3": {
         "203134": {
-          "id": 203134,
-          "username": "kon6diter",
-          "created_at": "2019-08-01T00:38:55.000Z",
-          "lastvisit_at": "2022-11-10T12:40:25.000Z",
-          "avatar_src": "//www.gravatar.com/avatar/a9349b6fb6c1776fe9529279c686fec0?s=50&d=mm&r=g"
+          "userId": 203134,
+          "role": 1,
+          "lastSeenMessageId": "18"
+        },
+        "284408": {
+          "userId": 284408,
+          "role": 1,
+          "lastSeenMessageId": "22"
         }
+      },
+      "18": {
+        "284408": {
+          "userId": 284408,
+          "role": 1,
+          "lastSeenMessageId": "0"
+        },
+        "285319": {
+          "userId": 285319,
+          "role": 9,
+          "lastSeenMessageId": "0"
+        }
+      },
+      "19": {
+        "284408": {
+          "userId": 284408,
+          "role": 9,
+          "lastSeenMessageId": "0"
+        },
+        "285319": {
+          "userId": 285319,
+          "role": 1,
+          "lastSeenMessageId": "0"
+        }
+      }
+    },
+    "userData": {
+      "203134": {
+        "id": 203134,
+        "username": "kon6diter",
+        "created_at": "2019-08-01 00:38:55",
+        "lastvisit_at": "2022-12-05 14:11:46",
+        "avatar_src": "//www.gravatar.com/avatar/a9349b6fb6c1776fe9529279c686fec0?s=50&d=mm&r=g"
+      },
+      "284408": {
+        "id": 284408,
+        "username": "zonough",
+        "created_at": "2022-11-23 14:20:33",
+        "lastvisit_at": "2022-12-02 08:07:50",
+        "avatar_src": "//www.gravatar.com/avatar/50f5893fcb685fc314c2aa28dc9e935c?s=50&d=mm&r=g"
+      },
+      "285319": {
+        "id": 285319,
+        "username": "devkitass",
+        "created_at": "2022-12-05 12:35:43",
+        "lastvisit_at": "2022-12-06 08:31:45",
+        "avatar_src": "//www.gravatar.com/avatar/f8f3682ba61395c75a6c6766146d8e3b?s=50&d=mm&r=g"
       }
     }
   }

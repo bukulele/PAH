@@ -615,7 +615,7 @@ $this->registerJs(<<<'JS'
     $("#userName").html(`<b>${chatData.userName}</b>`);
 
         $.ajax({url: "/conversation/get-list", method: "GET"}).done((data) => {
-          this.userId = $("#pah_user_id").attr("value");
+          this.userId = $("#pah_user_id").val();
           this.conversations = data.payload.conversations;
     this.lastMessages = data.payload.lastMessages;
     this.participants = data.payload.participants;
@@ -635,7 +635,7 @@ $this->registerJs(<<<'JS'
           chatData.fulfillContactsList(id);
         }
       } else if (chatData.selectedContactsType === "requests") {
-        if (!chatData.conversations[id].status === 0) {
+        if (chatData.conversations[id].status === 0) {
           chatData.fulfillContactsList(id);
         }
       }
@@ -658,7 +658,7 @@ $this->registerJs(<<<'JS'
                       chatData.participants[id][userId].username
                     }</p></div>
                     <div class="contact__last-message-date"><p class="small last-message-date_text-styling">${chatData.defineDateFormat(
-                      chatData.lastMessages[id].updatedAt
+                      chatData.lastMessages[id].createdAt
                     )}</p></div>
                     <div class="contact__last-message"><p class="small activity__activity-status_text-styling">
                       ${chatData.lastMessages[id].message}
@@ -710,14 +710,14 @@ $this->registerJs(<<<'JS'
       chatData.participants[chatData.selectedChat]
     );
 
-    // let messages = null;
     // $.getJSON("./assets/get-messages.json", (data) => {
     //   return data;
     // })
       $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}`, (data) => {
-        return data.payload.messages;
+        return data;
       })
       .done(function (data) {
+        console.log(data)
         let messages = data.payload.messages;
         $("#messageHistory").html("");
         if (messages) {
@@ -965,14 +965,14 @@ $this->registerJs(<<<'JS'
         message: $("#newMessageInput").val(),
         conversationId: chatData.selectedChat,
       },
-      dataType: "json"
+      dataType: "json",
     })
       .done(() => {
         chatData.showConversation();
         $("#newMessageInput").val("");
         chatData.controlInput($("#newMessageInput").get(0));
       })
-      .fail((error) => console.log(error));
+      .fail((error) => alert(error));
   },
 
   addPicture: function () {

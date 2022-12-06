@@ -31,6 +31,7 @@ let chatData = {
       this.conversations = data.payload.conversations;
       this.lastMessages = data.payload.lastMessages;
       this.participants = data.payload.participants;
+      this.userData = data.payload.userData;
     }).done(chatData.updateUserData);
 
     $("#userName").html(`<b>${chatData.userName}</b>`);
@@ -56,7 +57,7 @@ let chatData = {
           chatData.fulfillContactsList(id);
         }
       } else if (chatData.selectedContactsType === "requests") {
-        if (!chatData.conversations[id].status === 0) {
+        if (chatData.conversations[id].status === 0) {
           chatData.fulfillContactsList(id);
         }
       }
@@ -64,22 +65,26 @@ let chatData = {
   },
 
   fulfillContactsList: function (id) {
+    let participantsArray = Object.keys(chatData.participants[id]).filter(
+      (id) => id !== chatData.userId
+    );
     //add possibility for group chats
 
-    for (let userId in chatData.participants[id]) {
+    if (participantsArray.length === 1) {
+      let userId = participantsArray[0];
       $("#contactsList").append(`
             <li id="${id}" class="contacts-list__contact">
                   <div class="contact__container">
                     <div class="contact__image"><img src="${
-                      chatData.participants[id][userId].avatar_src.length
-                        ? chatData.participants[id][userId].avatar_src
+                      chatData.userData[userId].avatar_src.length
+                        ? chatData.userData[userId].avatar_src
                         : "./assets/logo_sq.png"
                     }" class="img-responsive"></div>
                     <div class="contact__name"><p class="name name_text-styling">${
-                      chatData.participants[id][userId].username
+                      chatData.userData[userId].username
                     }</p></div>
                     <div class="contact__last-message-date"><p class="small last-message-date_text-styling">${chatData.defineDateFormat(
-                      chatData.lastMessages[id].updatedAt
+                      chatData.lastMessages[id].createdAt
                     )}</p></div>
                     <div class="contact__last-message"><p class="small activity__activity-status_text-styling">
                       ${chatData.lastMessages[id].message}
@@ -107,22 +112,30 @@ let chatData = {
   },
 
   showContactData: function () {
-    let participantsArray = Object.values(
+    let participantsArray = Object.keys(
       chatData.participants[chatData.selectedChat]
-    );
+    ).filter((id) => id !== chatData.userId);
     //add possibility for group chats
-    $("#currentContactLogo").html(
-      `<img class="img-responsive" src="${
-        participantsArray[0].avatar_src.length
-          ? participantsArray[0].avatar_src
-          : "./assets/logo_sq.png"
-      }">`
-    );
-    $("#currentContactName").html(`<b>${participantsArray[0].username}</b>`);
-    $("#currentContactActivity").html(
-      `Active: ${chatData.defineDateFormat(participantsArray[0].lastvisit_at)}`
-    );
-    chatData.showConversation();
+
+    if (participantsArray.length === 1) {
+      let userId = participantsArray[0];
+      $("#currentContactLogo").html(
+        `<img class="img-responsive" src="${
+          chatData.userData[userId].avatar_src.length
+            ? chatData.userData[userId].avatar_src
+            : "./assets/logo_sq.png"
+        }">`
+      );
+      $("#currentContactName").html(
+        `<b>${chatData.userData[userId].username}</b>`
+      );
+      $("#currentContactActivity").html(
+        `Active: ${chatData.defineDateFormat(
+          chatData.userData[userId].lastvisit_at
+        )}`
+      );
+      chatData.showConversation();
+    }
   },
 
   showConversation: function () {
@@ -131,12 +144,11 @@ let chatData = {
       chatData.participants[chatData.selectedChat]
     );
 
-    // let messages = null;
     $.getJSON("./assets/get-messages.json", (data) => {
       return data;
     })
       // $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}`, (data) => {
-      //   return data.payload.messages;
+      //   return data;
       // })
       .done(function (data) {
         let messages = data.payload.messages;
@@ -161,8 +173,9 @@ let chatData = {
             }"><img src="${
               messages[messageId].ownerId == chatData.userId
                 ? ""
-                : participantsArray[0].avatar_src.length
-                ? participantsArray[0].avatar_src
+                : chatData.userData[messages[messageId].ownerId].avatar_src
+                    .length
+                ? chatData.userData[messages[messageId].ownerId].avatar_src
                 : "./assets/logo_sq.png"
             }" class="img-responsive"></div><div class="message__text">${
               messages[messageId].message
