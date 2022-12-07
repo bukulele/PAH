@@ -1,5 +1,4 @@
 let chatData = {
-  userName: "{username}",
   userId: 0,
   lastLogin: null,
   userPhoto: "",
@@ -38,8 +37,6 @@ let chatData = {
       this.participants = data.payload.participants;
       this.userData = data.payload.userData;
     }).done(chatData.updateUserData);
-
-    $("#userName").html(`<b>${chatData.userName}</b>`);
 
     //     $.ajax({url: "/conversation/get-list", method: "GET", ifModified: true}).done((data) => {
     //       this.userId = $("#pah_user_id").attr("value");
