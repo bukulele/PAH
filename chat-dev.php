@@ -189,16 +189,14 @@ $this->registerCss(<<<CSS
   padding: 1rem;
 }
 
-.current-contact__manage-block {
+.message-window__manage-buttons,
+.message-window__waiting-for-confirmation {
+  width: 100%;
+  height: 100%;
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-}
-
-.manage-block__manage-buttons {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .manage-buttons__button {
@@ -750,23 +748,6 @@ let chatData = {
       );
     }
 
-    if (chatData.conversations[chatData.selectedChat].status === 1) {
-      $(".manage-block__manage-buttons").html(`
-      <button class="manage-buttons__button manage-buttons__delete-button"><span
-      class="glyphicon glyphicon-trash"
-      aria-hidden="true"
-    ></span></button>
-      `);
-    } else if (chatData.conversations[chatData.selectedChat].status === 0) {
-      $(".manage-block__manage-buttons").html(`
-      <button class="manage-buttons__button manage-buttons__accept-button">Accept</button>
-      <button class="manage-buttons__button manage-buttons__delete-button"><span
-      class="glyphicon glyphicon-trash"
-      aria-hidden="true"
-    ></span></button>
-      `);
-    }
-
     $(".manage-buttons__accept-button").click(chatData.activateChat);
     $(".manage-buttons__delete-button").click(chatData.deleteChat);
     chatData.showConversation();
@@ -774,9 +755,9 @@ let chatData = {
 
   showConversation: function () {
     //add possibility for group chats
-    let participantsArray = Object.values(
-      chatData.participants[chatData.selectedChat]
-    );
+    // let participantsArray = Object.values(
+    //   chatData.participants[chatData.selectedChat]
+    // );
 
     // $.getJSON("./assets/get-messages.json", (data) => {
     //   return data;
@@ -1110,8 +1091,94 @@ let chatData = {
     `);
   },
 
+  showNewMessageBlock: function (id) {
+    // add an option for group chat
+    let participantsArray = Object.keys(chatData.participants[id]).filter(
+      (id) => id !== chatData.userId
+    );
+
+    if (participantsArray.length === 1) {
+      if (
+        chatData.conversations[chatData.selectedChat].status === 1 &&
+        chatData.participants[chatData.selectedChat][chatData.userId].role === 1
+      ) {
+        $(".message-window__new-message_wrapper").html(`
+        <div class="message-window__emoji-block-wrapper">
+        </div>
+          <div
+            class="message-window__new-message message-window__new-message_align-elements"
+          >
+        <button class="new-message__emoji">
+        <svg class="emoji__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+          <path
+            d="M256 352C293.2 352 319.2 334.5 334.4 318.1C343.3 308.4 358.5 307.7 368.3 316.7C378 325.7 378.6 340.9 369.6 350.6C347.7 374.5 309.7 400 256 400C202.3 400 164.3 374.5 142.4 350.6C133.4 340.9 133.1 325.7 143.7 316.7C153.5 307.7 168.7 308.4 177.6 318.1C192.8 334.5 218.8 352 256 352zM208.4 208C208.4 225.7 194 240 176.4 240C158.7 240 144.4 225.7 144.4 208C144.4 190.3 158.7 176 176.4 176C194 176 208.4 190.3 208.4 208zM304.4 208C304.4 190.3 318.7 176 336.4 176C354 176 368.4 190.3 368.4 208C368.4 225.7 354 240 336.4 240C318.7 240 304.4 225.7 304.4 208zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"
+          />
+          </svg>
+          </button>
+          <textarea
+        id="newMessageInput"
+        placeholder="Message..."
+        class="new-message__input-field"
+        rows="1"
+        maxlength="750"
+      ></textarea>
+      <div
+        id="sendMessageOrPhoto"
+        class="new-message__send-message-photo"
+        >
+        <button
+        id="sendMessageButton"
+          class="new-message__sendButton"
+          >
+          Send
+          </button>
+          <svg
+          id="sendPhotoIcon"
+          class="new-message__send-photo-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+        >
+          <!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+          <path
+            d="M152 120c-26.51 0-48 21.49-48 48s21.49 48 48 48s48-21.49 48-48S178.5 120 152 120zM447.1 32h-384C28.65 32-.0091 60.65-.0091 96v320c0 35.35 28.65 64 63.1 64h384c35.35 0 64-28.65 64-64V96C511.1 60.65 483.3 32 447.1 32zM463.1 409.3l-136.8-185.9C323.8 218.8 318.1 216 312 216c-6.113 0-11.82 2.768-15.21 7.379l-106.6 144.1l-37.09-46.1c-3.441-4.279-8.934-6.809-14.77-6.809c-5.842 0-11.33 2.529-14.78 6.809l-75.52 93.81c0-.0293 0 .0293 0 0L47.99 96c0-8.822 7.178-16 16-16h384c8.822 0 16 7.178 16 16V409.3z"
+          />
+        </svg>
+        <input
+          type="file"
+          id="addPicture"
+          accept="image/*"
+          style="display:none" />
+          </div>
+          `);
+      } else if (
+        chatData.conversations[chatData.selectedChat].status === 0 &&
+        chatData.participants[chatData.selectedChat][chatData.userId].role === 9
+      ) {
+        $(".message-window__new-message_wrapper").html(`
+          <div class="message-window__manage-buttons">
+          <button class="manage-buttons__button manage-buttons__accept-button">Accept</button>
+          <button class="manage-buttons__button manage-buttons__delete-button">Decline</button>
+          </div>
+          `);
+      } else if (
+        chatData.conversations[chatData.selectedChat].status === 0 &&
+        chatData.participants[chatData.selectedChat][chatData.userId].role === 1
+      ) {
+        $(".message-window__new-message_wrapper").html(`
+          <div class="message-window__waiting-for-confirmation">
+          <p>Please wait for the confirmation from ${
+            chatData.userData[participantsArray[0]].username
+          } to continue the chat</p>
+          </div>
+          `);
+      }
+    }
+  },
+
   showMessageWindow: function () {
     $(".message-window").html(`
+
     <div
     class="message-window__current-contact message-window__current-contact_border-bottom message-window__current-contact_align-elements"
   >
@@ -1143,10 +1210,6 @@ let chatData = {
         </div>
       </div>
     </div>
-    <div class="current-contact__manage-block">
-      <div class="manage-block__manage-buttons">
-      </div>
-    </div>
   </div>
   <div class="message-window__wrapper">
     <div
@@ -1155,63 +1218,21 @@ let chatData = {
     ></div>
   </div>
   <div class="message-window__new-message_wrapper">
-  <div class="message-window__emoji-block-wrapper">
-  </div>
-    <div
-      class="message-window__new-message message-window__new-message_align-elements"
-    >
-      <button class="new-message__emoji">
-        <svg class="emoji__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
-          <path
-            d="M256 352C293.2 352 319.2 334.5 334.4 318.1C343.3 308.4 358.5 307.7 368.3 316.7C378 325.7 378.6 340.9 369.6 350.6C347.7 374.5 309.7 400 256 400C202.3 400 164.3 374.5 142.4 350.6C133.4 340.9 133.1 325.7 143.7 316.7C153.5 307.7 168.7 308.4 177.6 318.1C192.8 334.5 218.8 352 256 352zM208.4 208C208.4 225.7 194 240 176.4 240C158.7 240 144.4 225.7 144.4 208C144.4 190.3 158.7 176 176.4 176C194 176 208.4 190.3 208.4 208zM304.4 208C304.4 190.3 318.7 176 336.4 176C354 176 368.4 190.3 368.4 208C368.4 225.7 354 240 336.4 240C318.7 240 304.4 225.7 304.4 208zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"
-          />
-        </svg>
-      </button>
-      <textarea
-        id="newMessageInput"
-        placeholder="Message..."
-        class="new-message__input-field"
-        rows="1"
-        maxlength="750"
-      ></textarea>
-      <div
-        id="sendMessageOrPhoto"
-        class="new-message__send-message-photo"
-      >
-        <button
-          id="sendMessageButton"
-          class="new-message__sendButton"
-        >
-          Send
-        </button>
-        <svg
-          id="sendPhotoIcon"
-          class="new-message__send-photo-icon"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512"
-        >
-          <!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
-          <path
-            d="M152 120c-26.51 0-48 21.49-48 48s21.49 48 48 48s48-21.49 48-48S178.5 120 152 120zM447.1 32h-384C28.65 32-.0091 60.65-.0091 96v320c0 35.35 28.65 64 63.1 64h384c35.35 0 64-28.65 64-64V96C511.1 60.65 483.3 32 447.1 32zM463.1 409.3l-136.8-185.9C323.8 218.8 318.1 216 312 216c-6.113 0-11.82 2.768-15.21 7.379l-106.6 144.1l-37.09-46.1c-3.441-4.279-8.934-6.809-14.77-6.809c-5.842 0-11.33 2.529-14.78 6.809l-75.52 93.81c0-.0293 0 .0293 0 0L47.99 96c0-8.822 7.178-16 16-16h384c8.822 0 16 7.178 16 16V409.3z"
-          />
-        </svg>
-        <input
-          type="file"
-          id="addPicture"
-          accept="image/*"
-          style="display:none" />
-      </div>
     </div>
   </div>
     `);
-    $("#newMessageInput").on("input", (e) => chatData.controlInput(e.target));
-    chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
-    $(".new-message__emoji").click(chatData.showEmojiBlock);
-    $(".message-window__emoji-block-wrapper").click(chatData.hideEmojiBlock);
-    $("#sendMessageButton").click(chatData.sendMessage);
-    $("#sendPhotoIcon").click(chatData.addPicture);
-    $("#addPicture").on("input", () => chatData.sendPicture());
+
+    chatData.showNewMessageBlock(chatData.selectedChat);
+
+    if ($("#newMessageInput").get(0)) {
+      $("#newMessageInput").on("input", (e) => chatData.controlInput(e.target));
+      chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
+      $(".new-message__emoji").click(chatData.showEmojiBlock);
+      $(".message-window__emoji-block-wrapper").click(chatData.hideEmojiBlock);
+      $("#sendMessageButton").click(chatData.sendMessage);
+      $("#sendPhotoIcon").click(chatData.addPicture);
+      $("#addPicture").on("input", () => chatData.sendPicture());
+    }
     $("#backToContacts").click(chatData.backToContacts);
   },
 };

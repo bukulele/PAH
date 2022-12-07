@@ -167,16 +167,14 @@
   padding: 1rem;
 }
 
-.current-contact__manage-block {
+.message-window__manage-buttons,
+.message-window__waiting-for-confirmation {
+  width: 100%;
+  height: 100%;
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-}
-
-.manage-block__manage-buttons {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .manage-buttons__button {
