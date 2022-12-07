@@ -7,6 +7,30 @@
   padding: 2rem;
 }
 
+.createNewMessage__wrapper {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.createNewMessage__container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background-color: white;
+}
+
+.name-block__new-chat * {
+  pointer-events: none;
+}
+
 .messages-panel {
   border: 1px solid #ddd;
   border-radius: 10px;

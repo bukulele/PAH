@@ -29,6 +29,30 @@ $this->registerCss(<<<CSS
   padding: 2rem;
 }
 
+.createNewMessage__wrapper {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.createNewMessage__container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background-color: white;
+}
+
+.name-block__new-chat * {
+  pointer-events: none;
+}
+
 .messages-panel {
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -559,7 +583,6 @@ $this->registerCss(<<<CSS
   }
 }
 
-
 CSS);
 ?>
 
@@ -624,6 +647,7 @@ let chatData = {
   emojiTrigger: null,
   windowWidth: null,
   updateTimerId: null,
+  createNewMessageOk: false,
 
   init: function () {
     chatData.windowWidth = $(window).get(0).innerWidth;
@@ -632,6 +656,9 @@ let chatData = {
     $("#contactsList").click(chatData.setSelectedChat);
     $("#contactsTypeSwitcher").click(chatData.switchContactsType);
     chatData.placeUnderline($("#primaryTab").get(0));
+
+    //remove later?
+    $(".name-block__new-chat").click(chatData.createNewChat);
   },
 
   loadUserData: function () {
@@ -693,7 +720,9 @@ let chatData = {
     if (participantsArray.length === 1) {
       let userId = participantsArray[0];
       $("#contactsList").append(`
-            <li id="${id}" class="contacts-list__contact">
+            <li id="${id}" class="contacts-list__contact ${
+        id === chatData.selectedChat ? "contacts-list__contact_selected" : ""
+      }">
                   <div class="contact__container">
                     <div class="contact__image"><img src="${
                       chatData.userData[userId].avatar_src.length
@@ -770,9 +799,7 @@ let chatData = {
     // $.getJSON("./assets/get-messages.json", (data) => {
     //   return data;
     // })
-      $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}`, (data) => {
-        return data;
-      })
+      $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}`)
       .done(function (data) {
         let messages = data.payload.messages;
         $("#messageHistory").html("");
@@ -1092,7 +1119,45 @@ let chatData = {
   },
 
   updateData: function () {
+    chatData.requestsNumber = 0;
     chatData.loadUserData();
+    $.ajax(
+      `/conversation/get-messages?conversationId=${chatData.selectedChat}`
+    ).done(function (data) {
+      let messages = data.payload.messages;
+      $("#messageHistory").html("");
+      if (messages) {
+        for (let messageId in messages) {
+          $("#messageHistory").append(`
+                <div class="message-history__message message__${
+                  messages[messageId].ownerId == chatData.userId
+                    ? "output"
+                    : "input"
+                }"><div class="message__message-date message__message-date_${
+            messages[messageId].ownerId == chatData.userId ? "output" : "input"
+          }"><p class="message-date__text">${chatData.formatMessageDate(
+            messages[messageId].createdAt
+          )}</p></div><div class="message__sender-image ${
+            messages[messageId].ownerId == chatData.userId
+              ? "message__sender-image_hidden"
+              : ""
+          }"><img src="${
+            messages[messageId].ownerId == chatData.userId
+              ? ""
+              : chatData.userData[messages[messageId].ownerId].avatar_src.length
+              ? chatData.userData[messages[messageId].ownerId].avatar_src
+              : "./assets/logo_sq.png"
+          }" class="img-responsive"></div><div class="message__text">${
+            messages[messageId].message
+          }</div></div>
+                `);
+        }
+      } else {
+        $("#messageHistory").html(
+          `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
+        );
+      }
+    });
   },
 
   removeMessageWindow: function () {
@@ -1102,6 +1167,60 @@ let chatData = {
       </div>
     `);
   },
+
+  //where it should be?
+
+  createNewChat: function () {
+    $(".allContent").append(`
+        <div class="createNewMessage__wrapper">
+          <div class="createNewMessage__container">
+            <input id="newMessageUidInput" type="text" placeholder="type user id" />
+            <input id="newlyCreatedMessageInput" type="text" placeholder="type the message" />
+            <button id="sendCreatedMessage">Send</button>
+            <button id="closeCreateNewMessage">Close</button>
+          </div>
+        </div>
+      `);
+
+    $("#newlyCreatedMessageInput").on("input", (e) =>
+      chatData.controlNewMessageInput(e.target)
+    );
+    $("#sendCreatedMessage").click(chatData.sendNewlyCreatedMessage);
+    $("#closeCreateNewMessage").click(() =>
+      $(".createNewMessage__wrapper").remove()
+    );
+  },
+
+  controlNewMessageInput: function (target) {
+    if (target.value.length >= 1 && $("#newMessageUidInput").val() >= 1) {
+      chatData.createNewMessageOk = true;
+    } else {
+      chatData.createNewMessageOk = false;
+    }
+  },
+
+  sendNewlyCreatedMessage: function () {
+    if (chatData.createNewMessageOk) {
+      $.ajax({
+        type: "POST",
+        url: "/conversation/new-dialog",
+        data: {
+          message: $("#newlyCreatedMessageInput").val(),
+          companionId: $("#newMessageUidInput").val(),
+        },
+        dataType: "json",
+      })
+        .done(() => {
+          $(".createNewMessage__wrapper").remove();
+          chatData.refreshData();
+        })
+        .fail((error) => alert(error));
+    } else {
+      alert("incorrect input!");
+    }
+  },
+
+  //
 
   showNewMessageBlock: function (id) {
     // add an option for group chat
