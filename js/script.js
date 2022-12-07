@@ -12,6 +12,7 @@ let chatData = {
   newMessageInputScrollHeight: 0,
   emojiTrigger: null,
   windowWidth: null,
+  updateTimerId: null,
 
   init: function () {
     chatData.windowWidth = $(window).get(0).innerWidth;
@@ -36,13 +37,20 @@ let chatData = {
 
     $("#userName").html(`<b>${chatData.userName}</b>`);
 
-    //     $.ajax({url: "/conversation/get-list", method: "GET"}).done((data) => {
+    //     $.ajax({url: "/conversation/get-list", method: "GET", ifModified: true}).done((data) => {
     //       this.userId = $("#pah_user_id").attr("value");
     //       this.conversations = data.payload.conversations;
     // this.lastMessages = data.payload.lastMessages;
     // this.participants = data.payload.participants;
     // this.userData = data.payload.userData;
     //     }).done(chatData.updateUserData);
+
+    if (chatData.updateTimerId) {
+      clearTimeout(chatData.updateTimerId);
+      this.updateTimerId = setTimeout(chatData.updateData, 15000);
+    } else {
+      this.updateTimerId = setTimeout(chatData.updateData, 15000);
+    }
   },
 
   updateUserData: function () {
@@ -469,6 +477,11 @@ let chatData = {
     chatData.requestsNumber = 0;
     chatData.placeUnderline($("#primaryTab").get(0));
     chatData.removeMessageWindow();
+    chatData.loadUserData();
+  },
+
+  updateData: function () {
+    chatData.requestsNumber = 0;
     chatData.loadUserData();
   },
 
