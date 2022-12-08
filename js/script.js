@@ -15,6 +15,24 @@ let chatData = {
   createNewMessageOk: false,
 
   init: function () {
+    if (window.localStorage.pahChat_conversations) {
+      this.conversations = JSON.parse(
+        window.localStorage.pahChat_conversations
+      );
+    }
+
+    if (window.localStorage.pahChat_lastMessages) {
+      this.lastMessages = JSON.parse(window.localStorage.pahChat_lastMessages);
+    }
+
+    if (window.localStorage.pahChat_participants) {
+      this.participants = JSON.parse(window.localStorage.pahChat_participants);
+    }
+
+    if (window.localStorage.pahChat_userData) {
+      this.userData = JSON.parse(window.localStorage.pahChat_userData);
+    }
+
     chatData.windowWidth = $(window).get(0).innerWidth;
     $(window).resize(chatData.handleWindowWidth);
     chatData.loadUserData();
@@ -26,18 +44,70 @@ let chatData = {
   },
 
   loadUserData: function () {
+    console.log(window.localStorage);
     $.getJSON("./assets/get-list.json", (data) => {
       this.userId = $("#pah_user_id").attr("value");
-      // this.userName = data.user.username;
-      // this.lastLogin = new Date(data.user.last_login);
-      // this.userPhoto = data.user.photo;
-      this.conversations = data.payload.conversations;
-      this.lastMessages = data.payload.lastMessages;
-      this.participants = data.payload.participants;
-      this.userData = data.payload.userData;
+      let conversationsLoaded = data.payload.conversations;
+      let lastMessagesLoaded = data.payload.lastMessages;
+      let participantsLoaded = data.payload.participants;
+      let userDataLoaded = data.payload.userData;
+
+      // if (window.localStorage.pahChat) {
+      if (
+        window.localStorage.pahChat_conversations &&
+        window.localStorage.pahChat_conversations !==
+          JSON.stringify(conversationsLoaded)
+      ) {
+        window.localStorage.pahChat_conversations =
+          JSON.stringify(conversationsLoaded);
+        this.conversations = conversationsLoaded;
+      } else {
+        window.localStorage.pahChat_conversations =
+          JSON.stringify(conversationsLoaded);
+        this.conversations = conversationsLoaded;
+      }
+
+      if (
+        window.localStorage.pahChat_lastMessages &&
+        window.localStorage.pahChat_lastMessages !==
+          JSON.stringify(lastMessagesLoaded)
+      ) {
+        window.localStorage.pahChat_lastMessages =
+          JSON.stringify(lastMessagesLoaded);
+        this.lastMessages = lastMessagesLoaded;
+      } else {
+        window.localStorage.pahChat_lastMessages =
+          JSON.stringify(lastMessagesLoaded);
+        this.lastMessages = lastMessagesLoaded;
+      }
+
+      if (
+        window.localStorage.pahChat_participants &&
+        window.localStorage.pahChat_participants !==
+          JSON.stringify(participantsLoaded)
+      ) {
+        window.localStorage.pahChat_participants =
+          JSON.stringify(participantsLoaded);
+        this.participants = participantsLoaded;
+      } else {
+        window.localStorage.pahChat_participants =
+          JSON.stringify(participantsLoaded);
+        this.participants = participantsLoaded;
+      }
+
+      if (
+        window.localStorage.pahChat_userData &&
+        window.localStorage.pahChat_userData !== JSON.stringify(userDataLoaded)
+      ) {
+        window.localStorage.pahChat_userData = JSON.stringify(userDataLoaded);
+        this.userData = userDataLoaded;
+      } else {
+        window.localStorage.pahChat_userData = JSON.stringify(userDataLoaded);
+        this.userData = userDataLoaded;
+      }
     }).done(chatData.updateUserData);
 
-    //     $.ajax({url: "/conversation/get-list", method: "GET", ifModified: true}).done((data) => {
+    //     $.ajax({url: "/conversation/get-list", method: "GET"}).done((data) => {
     //       this.userId = $("#pah_user_id").attr("value");
     //       this.conversations = data.payload.conversations;
     // this.lastMessages = data.payload.lastMessages;
