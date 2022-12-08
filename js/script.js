@@ -20,7 +20,6 @@ let chatData = {
     chatData.loadUserData();
     $("#contactsList").click(chatData.setSelectedChat);
     $("#contactsTypeSwitcher").click(chatData.switchContactsType);
-    chatData.placeUnderline($("#primaryTab").get(0));
 
     //remove later?
     $(".name-block__new-chat").click(chatData.createNewChat);
@@ -243,6 +242,7 @@ let chatData = {
     } else {
       $("#requestsNumber").addClass("custom-badge_hidden");
     }
+    chatData.placeUnderline($("#primaryTab").get(0));
   },
 
   setNewMessageInputScrollHeight: function (target) {
