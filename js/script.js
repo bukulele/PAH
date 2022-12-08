@@ -394,8 +394,11 @@ let chatData = {
       });
   },
 
-  hideEmojiBlock: function () {
-    $(".message-window__emoji-block-wrapper").fadeOut();
+  hideEmojiBlock: function (e) {
+    console.log(e);
+    if (e.target.id === "emojiBlockWrapper") {
+      $(".message-window__emoji-block-wrapper").fadeOut();
+    }
   },
 
   sendMessage: function () {
@@ -597,7 +600,7 @@ let chatData = {
         chatData.participants[chatData.selectedChat][chatData.userId].role === 1
       ) {
         $(".message-window__new-message_wrapper").html(`
-        <div class="message-window__emoji-block-wrapper">
+        <div id="emojiBlockWrapper" class="message-window__emoji-block-wrapper">
         </div>
           <div
             class="message-window__new-message message-window__new-message_align-elements"
