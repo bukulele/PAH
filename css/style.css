@@ -344,7 +344,7 @@
   grid-template-columns: 20% minmax(60%, auto) minmax(10%, auto);
   grid-template-rows: 50% 50%;
   column-gap: 0.5rem;
-  padding: 0 0.5rem;
+  padding: 0 1rem;
 }
 
 .contact__image {
@@ -534,6 +534,7 @@
 
   .contact__container {
     grid-template-columns: 15% minmax(65%, auto) minmax(10%, auto);
+    padding: 0 0.5rem;
   }
 
   .messages-panel {
