@@ -13,25 +13,42 @@ let chatData = {
   windowWidth: null,
   updateTimerId: null,
   createNewMessageOk: false,
+  conversationsListToUpdate: false,
+  calculateRequestsNumberToUpdate: false,
 
   init: function () {
     if (window.localStorage.pahChat_conversations) {
-      this.conversations = JSON.parse(
+      chatData.conversations = JSON.parse(
         window.localStorage.pahChat_conversations
       );
+    } else {
+      window.localStorage.pahChat_conversations = "";
     }
 
     if (window.localStorage.pahChat_lastMessages) {
-      this.lastMessages = JSON.parse(window.localStorage.pahChat_lastMessages);
+      chatData.lastMessages = JSON.parse(
+        window.localStorage.pahChat_lastMessages
+      );
+    } else {
+      window.localStorage.pahChat_lastMessages = "";
     }
 
     if (window.localStorage.pahChat_participants) {
-      this.participants = JSON.parse(window.localStorage.pahChat_participants);
+      chatData.participants = JSON.parse(
+        window.localStorage.pahChat_participants
+      );
+    } else {
+      window.localStorage.pahChat_participants = "";
     }
 
     if (window.localStorage.pahChat_userData) {
-      this.userData = JSON.parse(window.localStorage.pahChat_userData);
+      chatData.userData = JSON.parse(window.localStorage.pahChat_userData);
+    } else {
+      window.localStorage.pahChat_userData = "";
     }
+
+    chatData.conversationsListToUpdate = true;
+    chatData.calculateRequestsNumberToUpdate = true;
 
     chatData.windowWidth = $(window).get(0).innerWidth;
     $(window).resize(chatData.handleWindowWidth);
@@ -44,7 +61,6 @@ let chatData = {
   },
 
   loadUserData: function () {
-    console.log(window.localStorage);
     $.getJSON("./assets/get-list.json", (data) => {
       this.userId = $("#pah_user_id").attr("value");
       let conversationsLoaded = data.payload.conversations;
@@ -54,56 +70,41 @@ let chatData = {
 
       // if (window.localStorage.pahChat) {
       if (
-        window.localStorage.pahChat_conversations &&
         window.localStorage.pahChat_conversations !==
-          JSON.stringify(conversationsLoaded)
+        JSON.stringify(conversationsLoaded)
       ) {
         window.localStorage.pahChat_conversations =
           JSON.stringify(conversationsLoaded);
         this.conversations = conversationsLoaded;
-      } else {
-        window.localStorage.pahChat_conversations =
-          JSON.stringify(conversationsLoaded);
-        this.conversations = conversationsLoaded;
+        chatData.conversationsListToUpdate = true;
       }
 
       if (
-        window.localStorage.pahChat_lastMessages &&
         window.localStorage.pahChat_lastMessages !==
-          JSON.stringify(lastMessagesLoaded)
+        JSON.stringify(lastMessagesLoaded)
       ) {
         window.localStorage.pahChat_lastMessages =
           JSON.stringify(lastMessagesLoaded);
         this.lastMessages = lastMessagesLoaded;
-      } else {
-        window.localStorage.pahChat_lastMessages =
-          JSON.stringify(lastMessagesLoaded);
-        this.lastMessages = lastMessagesLoaded;
+        chatData.conversationsListToUpdate = true;
       }
 
       if (
-        window.localStorage.pahChat_participants &&
         window.localStorage.pahChat_participants !==
-          JSON.stringify(participantsLoaded)
+        JSON.stringify(participantsLoaded)
       ) {
         window.localStorage.pahChat_participants =
           JSON.stringify(participantsLoaded);
         this.participants = participantsLoaded;
-      } else {
-        window.localStorage.pahChat_participants =
-          JSON.stringify(participantsLoaded);
-        this.participants = participantsLoaded;
+        chatData.calculateRequestsNumberToUpdate = true;
       }
 
       if (
-        window.localStorage.pahChat_userData &&
         window.localStorage.pahChat_userData !== JSON.stringify(userDataLoaded)
       ) {
         window.localStorage.pahChat_userData = JSON.stringify(userDataLoaded);
         this.userData = userDataLoaded;
-      } else {
-        window.localStorage.pahChat_userData = JSON.stringify(userDataLoaded);
-        this.userData = userDataLoaded;
+        chatData.conversationsListToUpdate = true;
       }
     }).done(chatData.updateUserData);
 
@@ -124,8 +125,12 @@ let chatData = {
   },
 
   updateUserData: function () {
-    chatData.updateConversationsList();
-    chatData.calculateRequestsNumber();
+    if (chatData.conversationsListToUpdate) {
+      chatData.updateConversationsList();
+    }
+    if (chatData.calculateRequestsNumberToUpdate) {
+      chatData.calculateRequestsNumber();
+    }
   },
 
   updateConversationsList: function () {
@@ -141,6 +146,7 @@ let chatData = {
         }
       }
     }
+    chatData.conversationsListToUpdate = false;
   },
 
   fulfillContactsList: function (id) {
@@ -301,6 +307,7 @@ let chatData = {
       }
     }
     chatData.addRequestsBadge();
+    chatData.calculateRequestsNumberToUpdate = false;
   },
 
   addRequestsBadge: function () {
