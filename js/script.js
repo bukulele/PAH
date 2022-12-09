@@ -285,25 +285,27 @@ let chatData = {
   },
 
   loadConversation: function (showNewConversation) {
-    $.getJSON("./assets/get-messages.json", (data) => {
-      return data;
-    })
-      // $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}`)
-      .done(function (data) {
-        if (showNewConversation) {
-          chatData.messages = Object.values(data.payload.messages);
-          chatData.showConversation();
-        } else {
-          let loadedMessages = Object.values(data.payload.messages);
-          let i = loadedMessages.length - 1;
+    if (chatData.selectedChat) {
+      $.getJSON("./assets/get-messages.json", (data) => {
+        return data;
+      })
+        // $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}`)
+        .done(function (data) {
+          if (showNewConversation) {
+            chatData.messages = Object.values(data.payload.messages);
+            chatData.showConversation();
+          } else {
+            let loadedMessages = Object.values(data.payload.messages);
+            let i = loadedMessages.length - 1;
 
-          while (!chatData.messages[i]) {
-            i--;
+            while (!chatData.messages[i]) {
+              i--;
+            }
+            chatData.messages = Object.values(data.payload.messages);
+            chatData.updateConversation(i + 1);
           }
-          chatData.messages = Object.values(data.payload.messages);
-          chatData.updateConversation(i + 1);
-        }
-      });
+        });
+    }
   },
 
   showConversation: function () {
@@ -335,9 +337,7 @@ let chatData = {
         }</div></div>
             `);
       });
-      $(".message-window__wrapper").scrollTop(
-        $(".message-history__message:last-child")[0].offsetTop
-      );
+      chatData.messageHistoryScrollDown();
     } else {
       $("#messageHistory").html(
         `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
@@ -371,6 +371,24 @@ let chatData = {
       `);
       i++;
     }
+  },
+
+  checkMessageHistoryScrollPosition: function () {
+    let fullHeight = $("#messageHistory").height();
+    let scrollPosition = $(".message-window__wrapper").scrollTop();
+    let visibleHeight = $(".message-window__wrapper").height();
+
+    if ((visibleHeight + scrollPosition) / fullHeight <= 0.9) {
+      $(".message-window__scroll-down-button").fadeIn();
+    } else {
+      $(".message-window__scroll-down-button").fadeOut();
+    }
+  },
+
+  messageHistoryScrollDown: function () {
+    $(".message-window__wrapper").scrollTop(
+      $(".message-history__message:last-child")[0].offsetTop
+    );
   },
 
   switchContactsType: function (event) {
@@ -655,9 +673,6 @@ let chatData = {
   },
 
   refreshData: function () {
-    chatData.conversations = null;
-    chatData.lastMessages = null;
-    chatData.participants = null;
     chatData.selectedContactsType = "primary";
     chatData.selectedChat = null;
     chatData.requestsNumber = 0;
@@ -779,6 +794,9 @@ let chatData = {
           </button>
           </div>
           `);
+        $(".message-window__scroll-down-button").click(
+          chatData.messageHistoryScrollDown
+        );
       } else if (
         chatData.conversations[chatData.selectedChat].status === 0 &&
         chatData.participants[chatData.selectedChat][chatData.userId].role === 9
@@ -863,6 +881,10 @@ let chatData = {
       $("#addPicture").on("input", () => chatData.sendPicture());
     }
     $("#backToContacts").click(chatData.backToContacts);
+    $(".message-window__wrapper").on(
+      "scroll",
+      chatData.checkMessageHistoryScrollPosition
+    );
   },
 };
 

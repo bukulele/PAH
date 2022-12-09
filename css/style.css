@@ -411,17 +411,18 @@
 }
 
 .message-window__scroll-down-button {
-  /* display: none; */
   position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: none;
   top: -4rem;
   right: 3rem;
   width: 4rem;
   height: 4rem;
   border-radius: 50%;
   border: none;
+}
+
+.message-window__scroll-down-button * {
+  pointer-events: none;
 }
 
 .message-window__message-history {
