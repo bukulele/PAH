@@ -1,7 +1,5 @@
 let chatData = {
   userId: 0,
-  lastLogin: null,
-  userPhoto: "",
   conversations: null,
   lastMessages: null,
   participants: null,
@@ -15,6 +13,11 @@ let chatData = {
   createNewMessageOk: false,
   conversationsListToUpdate: false,
   calculateRequestsNumberToUpdate: false,
+  checkOpenedDialogToUpdate: false,
+  messages: null,
+  conversationToUpdate: false,
+  lastMessageId: 0,
+  lastMessageText: "",
 
   init: function () {
     if (window.localStorage.pahChat_conversations) {
@@ -67,8 +70,6 @@ let chatData = {
       let lastMessagesLoaded = data.payload.lastMessages;
       let participantsLoaded = data.payload.participants;
       let userDataLoaded = data.payload.userData;
-
-      // if (window.localStorage.pahChat) {
       if (
         window.localStorage.pahChat_conversations !==
         JSON.stringify(conversationsLoaded)
@@ -87,6 +88,7 @@ let chatData = {
           JSON.stringify(lastMessagesLoaded);
         this.lastMessages = lastMessagesLoaded;
         chatData.conversationsListToUpdate = true;
+        chatData.conversationToUpdate = true;
       }
 
       if (
@@ -97,6 +99,7 @@ let chatData = {
           JSON.stringify(participantsLoaded);
         this.participants = participantsLoaded;
         chatData.calculateRequestsNumberToUpdate = true;
+        chatData.checkOpenedDialogToUpdate = true;
       }
 
       if (
@@ -109,11 +112,49 @@ let chatData = {
     }).done(chatData.updateUserData);
 
     //     $.ajax({url: "/conversation/get-list", method: "GET"}).done((data) => {
-    //       this.userId = $("#pah_user_id").attr("value");
-    //       this.conversations = data.payload.conversations;
-    // this.lastMessages = data.payload.lastMessages;
-    // this.participants = data.payload.participants;
-    // this.userData = data.payload.userData;
+    // this.userId = $("#pah_user_id").attr("value");
+    // let conversationsLoaded = data.payload.conversations;
+    // let lastMessagesLoaded = data.payload.lastMessages;
+    // let participantsLoaded = data.payload.participants;
+    // let userDataLoaded = data.payload.userData;
+    // if (
+    //   window.localStorage.pahChat_conversations !==
+    //   JSON.stringify(conversationsLoaded)
+    // ) {
+    //   window.localStorage.pahChat_conversations =
+    //     JSON.stringify(conversationsLoaded);
+    //   this.conversations = conversationsLoaded;
+    //   chatData.conversationsListToUpdate = true;
+    // }
+
+    // if (
+    //   window.localStorage.pahChat_lastMessages !==
+    //   JSON.stringify(lastMessagesLoaded)
+    // ) {
+    //   window.localStorage.pahChat_lastMessages =
+    //     JSON.stringify(lastMessagesLoaded);
+    //   this.lastMessages = lastMessagesLoaded;
+    //   chatData.conversationsListToUpdate = true;
+    // }
+
+    // if (
+    //   window.localStorage.pahChat_participants !==
+    //   JSON.stringify(participantsLoaded)
+    // ) {
+    //   window.localStorage.pahChat_participants =
+    //     JSON.stringify(participantsLoaded);
+    //   this.participants = participantsLoaded;
+    //   chatData.calculateRequestsNumberToUpdate = true;
+    //   chatData.checkOpenedDialogToUpdate = true;
+    // }
+
+    // if (
+    //   window.localStorage.pahChat_userData !== JSON.stringify(userDataLoaded)
+    // ) {
+    //   window.localStorage.pahChat_userData = JSON.stringify(userDataLoaded);
+    //   this.userData = userDataLoaded;
+    //   chatData.conversationsListToUpdate = true;
+    // }
     //     }).done(chatData.updateUserData);
 
     if (chatData.updateTimerId) {
@@ -130,6 +171,21 @@ let chatData = {
     }
     if (chatData.calculateRequestsNumberToUpdate) {
       chatData.calculateRequestsNumber();
+    }
+    if (chatData.checkOpenedDialogToUpdate) {
+      chatData.checkOpenedDialog();
+    }
+  },
+
+  checkOpenedDialog: function () {
+    if (
+      ($(".message-window__manage-buttons").get(0) ||
+        $(".message-window__waiting-for-confirmation").get(0)) &&
+      chatData.conversations[chatData.selectedChat].status === 1
+    ) {
+      chatData.selectedContactsType = "primary";
+      chatData.showNewMessageBlock();
+      chatData.checkOpenedDialogToUpdate = false;
     }
   },
 
@@ -225,7 +281,29 @@ let chatData = {
 
     $(".manage-buttons__accept-button").click(chatData.activateChat);
     $(".manage-buttons__delete-button").click(chatData.deleteChat);
-    chatData.showConversation();
+    chatData.loadConversation(true);
+  },
+
+  loadConversation: function (showNewConversation) {
+    $.getJSON("./assets/get-messages.json", (data) => {
+      return data;
+    })
+      // $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}`)
+      .done(function (data) {
+        if (showNewConversation) {
+          chatData.messages = Object.values(data.payload.messages);
+          chatData.showConversation();
+        } else {
+          let loadedMessages = Object.values(data.payload.messages);
+          let i = loadedMessages.length - 1;
+
+          while (!chatData.messages[i]) {
+            i--;
+          }
+          chatData.messages = Object.values(data.payload.messages);
+          chatData.updateConversation(i + 1);
+        }
+      });
   },
 
   showConversation: function () {
@@ -234,51 +312,65 @@ let chatData = {
     //   chatData.participants[chatData.selectedChat]
     // );
 
-    $.getJSON("./assets/get-messages.json", (data) => {
-      return data;
-    })
-      // $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}`)
-      .done(function (data) {
-        let messages = data.payload.messages;
-        $("#messageHistory").html("");
-        if (messages) {
-          for (let messageId in messages) {
-            $("#messageHistory").append(`
+    $("#messageHistory").html("");
+    if (chatData.messages) {
+      chatData.messages.forEach((item) => {
+        $("#messageHistory").append(`
             <div class="message-history__message message__${
-              messages[messageId].ownerId == chatData.userId
-                ? "output"
-                : "input"
+              item.ownerId == chatData.userId ? "output" : "input"
             }"><div class="message__message-date message__message-date_${
-              messages[messageId].ownerId == chatData.userId
-                ? "output"
-                : "input"
-            }"><p class="message-date__text">${chatData.formatMessageDate(
-              messages[messageId].createdAt
-            )}</p></div><div class="message__sender-image ${
-              messages[messageId].ownerId == chatData.userId
-                ? "message__sender-image_hidden"
-                : ""
-            }"><img src="${
-              messages[messageId].ownerId == chatData.userId
-                ? ""
-                : chatData.userData[messages[messageId].ownerId].avatar_src
-                    .length
-                ? chatData.userData[messages[messageId].ownerId].avatar_src
-                : "./assets/logo_sq.png"
-            }" class="img-responsive"></div><div class="message__text">${
-              messages[messageId].message
-            }</div></div>
+          item.ownerId == chatData.userId ? "output" : "input"
+        }"><p class="message-date__text">${chatData.formatMessageDate(
+          item.createdAt
+        )}</p></div><div class="message__sender-image ${
+          item.ownerId == chatData.userId ? "message__sender-image_hidden" : ""
+        }"><img src="${
+          item.ownerId == chatData.userId
+            ? ""
+            : chatData.userData[item.ownerId].avatar_src.length
+            ? chatData.userData[item.ownerId].avatar_src
+            : "./assets/logo_sq.png"
+        }" class="img-responsive"></div><div class="message__text">${
+          item.message
+        }</div></div>
             `);
-          }
-          $(".message-window__wrapper").scrollTop(
-            $(".message-history__message:last-child")[0].offsetTop
-          );
-        } else {
-          $("#messageHistory").html(
-            `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
-          );
-        }
       });
+      $(".message-window__wrapper").scrollTop(
+        $(".message-history__message:last-child")[0].offsetTop
+      );
+    } else {
+      $("#messageHistory").html(
+        `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
+      );
+    }
+  },
+
+  updateConversation: function (i) {
+    //add scroll down button
+    while (i < chatData.messages.length) {
+      $("#messageHistory").append(`
+      <div class="message-history__message message__${
+        chatData.messages[i].ownerId == chatData.userId ? "output" : "input"
+      }"><div class="message__message-date message__message-date_${
+        chatData.messages[i].ownerId == chatData.userId ? "output" : "input"
+      }"><p class="message-date__text">${chatData.formatMessageDate(
+        chatData.messages[i].createdAt
+      )}</p></div><div class="message__sender-image ${
+        chatData.messages[i].ownerId == chatData.userId
+          ? "message__sender-image_hidden"
+          : ""
+      }"><img src="${
+        chatData.messages[i].ownerId == chatData.userId
+          ? ""
+          : chatData.userData[chatData.messages[i].ownerId].avatar_src.length
+          ? chatData.userData[chatData.messages[i].ownerId].avatar_src
+          : "./assets/logo_sq.png"
+      }" class="img-responsive"></div><div class="message__text">${
+        chatData.messages[i].message
+      }</div></div>
+      `);
+      i++;
+    }
   },
 
   switchContactsType: function (event) {
@@ -508,7 +600,7 @@ let chatData = {
       dataType: "json",
     })
       .done(() => {
-        chatData.showConversation();
+        chatData.loadConversation(true);
         $("#newMessageInput").val("");
         chatData.controlInput($("#newMessageInput").get(0));
       })
@@ -577,43 +669,7 @@ let chatData = {
   updateData: function () {
     chatData.requestsNumber = 0;
     chatData.loadUserData();
-    $.ajax(
-      `/conversation/get-messages?conversationId=${chatData.selectedChat}`
-    ).done(function (data) {
-      let messages = data.payload.messages;
-      $("#messageHistory").html("");
-      if (messages) {
-        for (let messageId in messages) {
-          $("#messageHistory").append(`
-                <div class="message-history__message message__${
-                  messages[messageId].ownerId == chatData.userId
-                    ? "output"
-                    : "input"
-                }"><div class="message__message-date message__message-date_${
-            messages[messageId].ownerId == chatData.userId ? "output" : "input"
-          }"><p class="message-date__text">${chatData.formatMessageDate(
-            messages[messageId].createdAt
-          )}</p></div><div class="message__sender-image ${
-            messages[messageId].ownerId == chatData.userId
-              ? "message__sender-image_hidden"
-              : ""
-          }"><img src="${
-            messages[messageId].ownerId == chatData.userId
-              ? ""
-              : chatData.userData[messages[messageId].ownerId].avatar_src.length
-              ? chatData.userData[messages[messageId].ownerId].avatar_src
-              : "./assets/logo_sq.png"
-          }" class="img-responsive"></div><div class="message__text">${
-            messages[messageId].message
-          }</div></div>
-                `);
-        }
-      } else {
-        $("#messageHistory").html(
-          `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
-        );
-      }
-    });
+    chatData.loadConversation(false);
   },
 
   removeMessageWindow: function () {
@@ -690,6 +746,7 @@ let chatData = {
         chatData.participants[chatData.selectedChat][chatData.userId].role === 1
       ) {
         $(".message-window__new-message_wrapper").html(`
+        <button class="message-window__scroll-down-button"><span class="glyphicon glyphicon-menu-down"></span></button>
         <div id="emojiBlockWrapper" class="message-window__emoji-block-wrapper">
         </div>
           <div
@@ -783,10 +840,11 @@ let chatData = {
     </div>
   </div>
   <div class="message-window__wrapper">
-    <div
-      id="messageHistory"
-      class="message-window__message-history"
-    ></div>
+  <div
+  id="messageHistory"
+  class="message-window__message-history"
+  >
+  </div>
   </div>
   <div class="message-window__new-message_wrapper">
     </div>

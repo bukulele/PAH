@@ -55,7 +55,7 @@ $this->registerCss(<<<CSS
 
 .messages-panel {
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 4px;
   margin: 0;
   width: 100%;
   height: 100%;
@@ -69,7 +69,7 @@ $this->registerCss(<<<CSS
   width: 100%;
   display: grid;
   grid-template-columns: 100%;
-  grid-template-rows: 6rem 6rem calc(100% - 6rem - 6rem);
+  grid-template-rows: 6rem 3rem calc(100% - 3rem - 6rem);
   place-items: center;
 }
 
@@ -140,6 +140,7 @@ $this->registerCss(<<<CSS
   width: 100%;
   height: 100%;
   border-bottom: 1px solid #ddd;
+  padding: 0 2rem;
 }
 
 .contacts-block__name-block_vertical-align {
@@ -197,7 +198,6 @@ $this->registerCss(<<<CSS
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
 }
 
 .message-window__back-to-contacts {
@@ -210,7 +210,6 @@ $this->registerCss(<<<CSS
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
 }
 
 .message-window__manage-buttons,
@@ -225,7 +224,7 @@ $this->registerCss(<<<CSS
 
 .manage-buttons__button {
   border: none;
-  border-radius: 10px;
+  border-radius: 4px;
   padding: 0.5rem 1rem;
   color: white;
   font-weight: bold;
@@ -258,7 +257,7 @@ $this->registerCss(<<<CSS
 
 .message-window__new-message {
   border: 1px solid #ddd;
-  border-radius: 6rem;
+  border-radius: 4px;
   width: 100%;
   height: 100%;
 }
@@ -284,8 +283,8 @@ $this->registerCss(<<<CSS
   border-radius: 50%;
   background-color: transparent;
   padding: 0;
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -367,6 +366,7 @@ $this->registerCss(<<<CSS
   grid-template-columns: 20% minmax(60%, auto) minmax(10%, auto);
   grid-template-rows: 50% 50%;
   column-gap: 0.5rem;
+  padding: 0 1rem;
 }
 
 .contact__image {
@@ -374,7 +374,6 @@ $this->registerCss(<<<CSS
   min-height: 4rem;
   max-width: 4rem;
   max-height: 4rem;
-  justify-self: center;
   align-self: center;
   grid-row-start: 1;
   grid-row-end: 3;
@@ -439,7 +438,7 @@ $this->registerCss(<<<CSS
   justify-content: flex-end;
   width: 100%;
   height: fit-content;
-  padding: 0;
+  padding: 0 2rem;
 }
 
 .message-history__empty-chat {
@@ -468,7 +467,7 @@ $this->registerCss(<<<CSS
 .start-new-chat__select-chat {
   margin: 0;
   padding: 1rem;
-  border-radius: 2rem;
+  border-radius: 4px;
   background-color: rgb(99, 99, 99);
   color: white;
   font-weight: bold;
@@ -500,7 +499,7 @@ $this->registerCss(<<<CSS
 .message__text {
   padding: 1rem;
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 4px;
 }
 
 .message__message-date {
@@ -555,6 +554,11 @@ $this->registerCss(<<<CSS
     padding: 1rem;
   }
 
+  .contact__container {
+    grid-template-columns: 15% minmax(65%, auto) minmax(10%, auto);
+    padding: 0 0.5rem;
+  }
+
   .messages-panel {
     width: 365px;
     display: flex;
@@ -564,6 +568,10 @@ $this->registerCss(<<<CSS
 
   .message-window {
     display: none;
+  }
+
+  .message-window__current-contact {
+    padding: 0 1rem;
   }
 
   .message-window__current-contact_align-elements {
@@ -581,7 +589,12 @@ $this->registerCss(<<<CSS
   .contacts-block_border-right {
     border-right: none;
   }
+
+  .message-window__message-history {
+    padding: 0 1rem;
+  }
 }
+
 
 CSS);
 ?>
@@ -589,6 +602,22 @@ CSS);
 <div class="allContent">
         <div class="messages-panel">
           <div class="contacts-block contacts-block_border-right">
+            <div
+              id="contactsTypeSwitcher"
+              class="contacts-block__contacts-type contacts-block__contacts-type_place-buttons"
+            >
+              <div id="primaryTab" class="contacts-type__tab">
+                <b>PRIMARY</b>
+              </div>
+              <div id="requestsTab" class="contacts-type__tab">
+                Requests
+                <span
+                  id="requestsNumber"
+                  class="custom-badge custom-badge_hidden"
+                ></span>
+              </div>
+              <div class="contacts-type__underline"></div>
+            </div>
             <div
               class="contacts-block__name-block contacts-block__name-block_border-bottom contacts-block__name-block_vertical-align"
             >
@@ -599,22 +628,6 @@ CSS);
                 <span
                   class="glyphicon glyphicon-edit"
                   aria-hidden="true"
-                ></span>
-              </div>
-            </div>
-            <div
-              id="contactsTypeSwitcher"
-              class="contacts-block__contacts-type contacts-block__contacts-type_place-buttons"
-            >
-              <div class="contacts-type__underline"></div>
-              <div id="primaryTab" class="contacts-type__tab">
-                <b>PRIMARY</b>
-              </div>
-              <div id="requestsTab" class="contacts-type__tab">
-                Requests
-                <span
-                  id="requestsNumber"
-                  class="custom-badge custom-badge_hidden"
                 ></span>
               </div>
             </div>
@@ -633,10 +646,7 @@ CSS);
 
 $this->registerJs(<<<'JS'
 let chatData = {
-  userName: "{username}",
   userId: 0,
-  lastLogin: null,
-  userPhoto: "",
   conversations: null,
   lastMessages: null,
   participants: null,
@@ -648,14 +658,53 @@ let chatData = {
   windowWidth: null,
   updateTimerId: null,
   createNewMessageOk: false,
+  conversationsListToUpdate: false,
+  calculateRequestsNumberToUpdate: false,
+  checkOpenedDialogToUpdate: false,
+  messages: null,
+  conversationToUpdate: false,
+  lastMessageId: 0,
+  lastMessageText: "",
 
   init: function () {
+    if (window.localStorage.pahChat_conversations) {
+      chatData.conversations = JSON.parse(
+        window.localStorage.pahChat_conversations
+      );
+    } else {
+      window.localStorage.pahChat_conversations = "";
+    }
+
+    if (window.localStorage.pahChat_lastMessages) {
+      chatData.lastMessages = JSON.parse(
+        window.localStorage.pahChat_lastMessages
+      );
+    } else {
+      window.localStorage.pahChat_lastMessages = "";
+    }
+
+    if (window.localStorage.pahChat_participants) {
+      chatData.participants = JSON.parse(
+        window.localStorage.pahChat_participants
+      );
+    } else {
+      window.localStorage.pahChat_participants = "";
+    }
+
+    if (window.localStorage.pahChat_userData) {
+      chatData.userData = JSON.parse(window.localStorage.pahChat_userData);
+    } else {
+      window.localStorage.pahChat_userData = "";
+    }
+
+    chatData.conversationsListToUpdate = true;
+    chatData.calculateRequestsNumberToUpdate = true;
+
     chatData.windowWidth = $(window).get(0).innerWidth;
     $(window).resize(chatData.handleWindowWidth);
     chatData.loadUserData();
     $("#contactsList").click(chatData.setSelectedChat);
     $("#contactsTypeSwitcher").click(chatData.switchContactsType);
-    chatData.placeUnderline($("#primaryTab").get(0));
 
     //remove later?
     $(".name-block__new-chat").click(chatData.createNewChat);
@@ -664,23 +713,95 @@ let chatData = {
   loadUserData: function () {
     // $.getJSON("./assets/get-list.json", (data) => {
     //   this.userId = $("#pah_user_id").attr("value");
-    //   // this.userName = data.user.username;
-    //   // this.lastLogin = new Date(data.user.last_login);
-    //   // this.userPhoto = data.user.photo;
-    //   this.conversations = data.payload.conversations;
-    //   this.lastMessages = data.payload.lastMessages;
-    //   this.participants = data.payload.participants;
-    //   this.userData = data.payload.userData;
+    //   let conversationsLoaded = data.payload.conversations;
+    //   let lastMessagesLoaded = data.payload.lastMessages;
+    //   let participantsLoaded = data.payload.participants;
+    //   let userDataLoaded = data.payload.userData;
+    //   if (
+    //     window.localStorage.pahChat_conversations !==
+    //     JSON.stringify(conversationsLoaded)
+    //   ) {
+    //     window.localStorage.pahChat_conversations =
+    //       JSON.stringify(conversationsLoaded);
+    //     this.conversations = conversationsLoaded;
+    //     chatData.conversationsListToUpdate = true;
+    //   }
+
+    //   if (
+    //     window.localStorage.pahChat_lastMessages !==
+    //     JSON.stringify(lastMessagesLoaded)
+    //   ) {
+    //     window.localStorage.pahChat_lastMessages =
+    //       JSON.stringify(lastMessagesLoaded);
+    //     this.lastMessages = lastMessagesLoaded;
+    //     chatData.conversationsListToUpdate = true;
+    //     chatData.conversationToUpdate = true;
+    //   }
+
+    //   if (
+    //     window.localStorage.pahChat_participants !==
+    //     JSON.stringify(participantsLoaded)
+    //   ) {
+    //     window.localStorage.pahChat_participants =
+    //       JSON.stringify(participantsLoaded);
+    //     this.participants = participantsLoaded;
+    //     chatData.calculateRequestsNumberToUpdate = true;
+    //     chatData.checkOpenedDialogToUpdate = true;
+    //   }
+
+    //   if (
+    //     window.localStorage.pahChat_userData !== JSON.stringify(userDataLoaded)
+    //   ) {
+    //     window.localStorage.pahChat_userData = JSON.stringify(userDataLoaded);
+    //     this.userData = userDataLoaded;
+    //     chatData.conversationsListToUpdate = true;
+    //   }
     // }).done(chatData.updateUserData);
 
-    $("#userName").html(`<b>${chatData.userName}</b>`);
+        $.ajax({url: "/conversation/get-list", method: "GET"}).done((data) => {
+    this.userId = $("#pah_user_id").attr("value");
+    let conversationsLoaded = data.payload.conversations;
+    let lastMessagesLoaded = data.payload.lastMessages;
+    let participantsLoaded = data.payload.participants;
+    let userDataLoaded = data.payload.userData;
+    if (
+      window.localStorage.pahChat_conversations !==
+      JSON.stringify(conversationsLoaded)
+    ) {
+      window.localStorage.pahChat_conversations =
+        JSON.stringify(conversationsLoaded);
+      this.conversations = conversationsLoaded;
+      chatData.conversationsListToUpdate = true;
+    }
 
-        $.ajax({url: "/conversation/get-list", method: "GET", ifModified: true}).done((data) => {
-          this.userId = $("#pah_user_id").attr("value");
-          this.conversations = data.payload.conversations;
-    this.lastMessages = data.payload.lastMessages;
-    this.participants = data.payload.participants;
-    this.userData = data.payload.userData;
+    if (
+      window.localStorage.pahChat_lastMessages !==
+      JSON.stringify(lastMessagesLoaded)
+    ) {
+      window.localStorage.pahChat_lastMessages =
+        JSON.stringify(lastMessagesLoaded);
+      this.lastMessages = lastMessagesLoaded;
+      chatData.conversationsListToUpdate = true;
+    }
+
+    if (
+      window.localStorage.pahChat_participants !==
+      JSON.stringify(participantsLoaded)
+    ) {
+      window.localStorage.pahChat_participants =
+        JSON.stringify(participantsLoaded);
+      this.participants = participantsLoaded;
+      chatData.calculateRequestsNumberToUpdate = true;
+      chatData.checkOpenedDialogToUpdate = true;
+    }
+
+    if (
+      window.localStorage.pahChat_userData !== JSON.stringify(userDataLoaded)
+    ) {
+      window.localStorage.pahChat_userData = JSON.stringify(userDataLoaded);
+      this.userData = userDataLoaded;
+      chatData.conversationsListToUpdate = true;
+    }
         }).done(chatData.updateUserData);
 
     if (chatData.updateTimerId) {
@@ -692,8 +813,27 @@ let chatData = {
   },
 
   updateUserData: function () {
-    chatData.updateConversationsList();
-    chatData.calculateRequestsNumber();
+    if (chatData.conversationsListToUpdate) {
+      chatData.updateConversationsList();
+    }
+    if (chatData.calculateRequestsNumberToUpdate) {
+      chatData.calculateRequestsNumber();
+    }
+    if (chatData.checkOpenedDialogToUpdate) {
+      chatData.checkOpenedDialog();
+    }
+  },
+
+  checkOpenedDialog: function () {
+    if (
+      ($(".message-window__manage-buttons").get(0) ||
+        $(".message-window__waiting-for-confirmation").get(0)) &&
+      chatData.conversations[chatData.selectedChat].status === 1
+    ) {
+      chatData.selectedContactsType = "primary";
+      chatData.showNewMessageBlock();
+      chatData.checkOpenedDialogToUpdate = false;
+    }
   },
 
   updateConversationsList: function () {
@@ -709,6 +849,7 @@ let chatData = {
         }
       }
     }
+    chatData.conversationsListToUpdate = false;
   },
 
   fulfillContactsList: function (id) {
@@ -787,7 +928,29 @@ let chatData = {
 
     $(".manage-buttons__accept-button").click(chatData.activateChat);
     $(".manage-buttons__delete-button").click(chatData.deleteChat);
-    chatData.showConversation();
+    chatData.loadConversation(true);
+  },
+
+  loadConversation: function (showNewConversation) {
+    // $.getJSON("./assets/get-messages.json", (data) => {
+    //   return data;
+    // })
+      $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}`)
+      .done(function (data) {
+        if (showNewConversation) {
+          chatData.messages = Object.values(data.payload.messages);
+          chatData.showConversation();
+        } else {
+          let loadedMessages = Object.values(data.payload.messages);
+          let i = loadedMessages.length - 1;
+
+          while (!chatData.messages[i]) {
+            i--;
+          }
+          chatData.messages = Object.values(data.payload.messages);
+          chatData.updateConversation(i + 1);
+        }
+      });
   },
 
   showConversation: function () {
@@ -796,51 +959,67 @@ let chatData = {
     //   chatData.participants[chatData.selectedChat]
     // );
 
-    // $.getJSON("./assets/get-messages.json", (data) => {
-    //   return data;
-    // })
-      $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}`)
-      .done(function (data) {
-        let messages = data.payload.messages;
-        $("#messageHistory").html("");
-        if (messages) {
-          for (let messageId in messages) {
-            $("#messageHistory").append(`
+    $("#messageHistory").html("");
+    if (chatData.messages) {
+      chatData.messages.forEach((item) => {
+        $("#messageHistory").append(`
             <div class="message-history__message message__${
-              messages[messageId].ownerId == chatData.userId
-                ? "output"
-                : "input"
+              item.ownerId == chatData.userId ? "output" : "input"
             }"><div class="message__message-date message__message-date_${
-              messages[messageId].ownerId == chatData.userId
-                ? "output"
-                : "input"
-            }"><p class="message-date__text">${chatData.formatMessageDate(
-              messages[messageId].createdAt
-            )}</p></div><div class="message__sender-image ${
-              messages[messageId].ownerId == chatData.userId
-                ? "message__sender-image_hidden"
-                : ""
-            }"><img src="${
-              messages[messageId].ownerId == chatData.userId
-                ? ""
-                : chatData.userData[messages[messageId].ownerId].avatar_src
-                    .length
-                ? chatData.userData[messages[messageId].ownerId].avatar_src
-                : "./assets/logo_sq.png"
-            }" class="img-responsive"></div><div class="message__text">${
-              messages[messageId].message
-            }</div></div>
+          item.ownerId == chatData.userId ? "output" : "input"
+        }"><p class="message-date__text">${chatData.formatMessageDate(
+          item.createdAt
+        )}</p></div><div class="message__sender-image ${
+          item.ownerId == chatData.userId ? "message__sender-image_hidden" : ""
+        }"><img src="${
+          item.ownerId == chatData.userId
+            ? ""
+            : chatData.userData[item.ownerId].avatar_src.length
+            ? chatData.userData[item.ownerId].avatar_src
+            : "./assets/logo_sq.png"
+        }" class="img-responsive"></div><div class="message__text">${
+          item.message
+        }</div></div>
             `);
-          }
-          $(".message-window__wrapper").scrollTop(
-            $(".message-history__message:last-child")[0].offsetTop
-          );
-        } else {
-          $("#messageHistory").html(
-            `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
-          );
-        }
       });
+      $(".message-window__wrapper").scrollTop(
+        $(".message-history__message:last-child")[0].offsetTop
+      );
+    } else {
+      $("#messageHistory").html(
+        `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
+      );
+    }
+  },
+
+  updateConversation: function (i) {
+    //add scroll down button
+    while (i < chatData.messages.length) {
+      console.log(chatData.messages[i])
+      console.log(chatData.messages)
+      $("#messageHistory").append(`
+      <div class="message-history__message message__${
+        chatData.messages[i].ownerId == chatData.userId ? "output" : "input"
+      }"><div class="message__message-date message__message-date_${
+        chatData.messages[i].ownerId == chatData.userId ? "output" : "input"
+      }"><p class="message-date__text">${chatData.formatMessageDate(
+        chatData.messages[i].createdAt
+      )}</p></div><div class="message__sender-image ${
+        chatData.messages[i].ownerId == chatData.userId
+          ? "message__sender-image_hidden"
+          : ""
+      }"><img src="${
+        chatData.messages[i].ownerId == chatData.userId
+          ? ""
+          : chatData.userData[chatData.messages[i].ownerId].avatar_src.length
+          ? chatData.userData[chatData.messages[i].ownerId].avatar_src
+          : "./assets/logo_sq.png"
+      }" class="img-responsive"></div><div class="message__text">${
+        chatData.messages[i].message
+      }</div></div>
+      `);
+      i++;
+    }
   },
 
   switchContactsType: function (event) {
@@ -869,6 +1048,7 @@ let chatData = {
       }
     }
     chatData.addRequestsBadge();
+    chatData.calculateRequestsNumberToUpdate = false;
   },
 
   addRequestsBadge: function () {
@@ -880,6 +1060,7 @@ let chatData = {
     } else {
       $("#requestsNumber").addClass("custom-badge_hidden");
     }
+    chatData.placeUnderline($("#primaryTab").get(0));
   },
 
   setNewMessageInputScrollHeight: function (target) {
@@ -910,17 +1091,31 @@ let chatData = {
       (!$("#sendMessageButton").get(0).style.display ||
         $("#sendMessageButton").get(0).style.display === "none")
     ) {
-      $("#sendPhotoIcon").fadeOut(100, function () {
-        $("#sendMessageButton").fadeIn(150);
-      });
+      $("#sendMessageButton").fadeIn(150);
     } else if (
       !target.value.trim().length &&
       $("#sendMessageButton").get(0).style.display
     ) {
-      $("#sendMessageButton").fadeOut(100, function () {
-        $("#sendPhotoIcon").fadeIn(150);
-      });
+      $("#sendMessageButton").fadeOut(100);
     }
+
+    // THIS IS THE VERSION OF SWITCHING BETWEEN PHOTO OR MESSAGE SEND BUTTONS
+    // if (
+    //   target.value.trim().length &&
+    //   (!$("#sendMessageButton").get(0).style.display ||
+    //     $("#sendMessageButton").get(0).style.display === "none")
+    // ) {
+    //   $("#sendPhotoIcon").fadeOut(100, function () {
+    //     $("#sendMessageButton").fadeIn(150);
+    //   });
+    // } else if (
+    //   !target.value.trim().length &&
+    //   $("#sendMessageButton").get(0).style.display
+    // ) {
+    //   $("#sendMessageButton").fadeOut(100, function () {
+    //     $("#sendPhotoIcon").fadeIn(150);
+    //   });
+    // }
   },
 
   defineDateFormat: function (date) {
@@ -1031,12 +1226,14 @@ let chatData = {
       });
   },
 
-  hideEmojiBlock: function () {
-    $(".message-window__emoji-block-wrapper").fadeOut();
+  hideEmojiBlock: function (e) {
+    if (e.target.id === "emojiBlockWrapper") {
+      $(".message-window__emoji-block-wrapper").fadeOut();
+    }
   },
 
   sendMessage: function () {
-    const dateNow = new Date();
+    // const dateNow = new Date();
     // chatData.conversations[chatData.selectedChat].messages.push({
     //   date: dateNow,
     //   message: $("#newMessageInput").val(),
@@ -1052,7 +1249,7 @@ let chatData = {
       dataType: "json",
     })
       .done(() => {
-        chatData.showConversation();
+        chatData.loadConversation(true);
         $("#newMessageInput").val("");
         chatData.controlInput($("#newMessageInput").get(0));
       })
@@ -1121,43 +1318,7 @@ let chatData = {
   updateData: function () {
     chatData.requestsNumber = 0;
     chatData.loadUserData();
-    $.ajax(
-      `/conversation/get-messages?conversationId=${chatData.selectedChat}`
-    ).done(function (data) {
-      let messages = data.payload.messages;
-      $("#messageHistory").html("");
-      if (messages) {
-        for (let messageId in messages) {
-          $("#messageHistory").append(`
-                <div class="message-history__message message__${
-                  messages[messageId].ownerId == chatData.userId
-                    ? "output"
-                    : "input"
-                }"><div class="message__message-date message__message-date_${
-            messages[messageId].ownerId == chatData.userId ? "output" : "input"
-          }"><p class="message-date__text">${chatData.formatMessageDate(
-            messages[messageId].createdAt
-          )}</p></div><div class="message__sender-image ${
-            messages[messageId].ownerId == chatData.userId
-              ? "message__sender-image_hidden"
-              : ""
-          }"><img src="${
-            messages[messageId].ownerId == chatData.userId
-              ? ""
-              : chatData.userData[messages[messageId].ownerId].avatar_src.length
-              ? chatData.userData[messages[messageId].ownerId].avatar_src
-              : "./assets/logo_sq.png"
-          }" class="img-responsive"></div><div class="message__text">${
-            messages[messageId].message
-          }</div></div>
-                `);
-        }
-      } else {
-        $("#messageHistory").html(
-          `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
-        );
-      }
-    });
+    chatData.loadConversation(false);
   },
 
   removeMessageWindow: function () {
@@ -1234,7 +1395,7 @@ let chatData = {
         chatData.participants[chatData.selectedChat][chatData.userId].role === 1
       ) {
         $(".message-window__new-message_wrapper").html(`
-        <div class="message-window__emoji-block-wrapper">
+        <div id="emojiBlockWrapper" class="message-window__emoji-block-wrapper">
         </div>
           <div
             class="message-window__new-message message-window__new-message_align-elements"
@@ -1264,22 +1425,6 @@ let chatData = {
           >
           Send
           </button>
-          <svg
-          id="sendPhotoIcon"
-          class="new-message__send-photo-icon"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512"
-        >
-          <!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
-          <path
-            d="M152 120c-26.51 0-48 21.49-48 48s21.49 48 48 48s48-21.49 48-48S178.5 120 152 120zM447.1 32h-384C28.65 32-.0091 60.65-.0091 96v320c0 35.35 28.65 64 63.1 64h384c35.35 0 64-28.65 64-64V96C511.1 60.65 483.3 32 447.1 32zM463.1 409.3l-136.8-185.9C323.8 218.8 318.1 216 312 216c-6.113 0-11.82 2.768-15.21 7.379l-106.6 144.1l-37.09-46.1c-3.441-4.279-8.934-6.809-14.77-6.809c-5.842 0-11.33 2.529-14.78 6.809l-75.52 93.81c0-.0293 0 .0293 0 0L47.99 96c0-8.822 7.178-16 16-16h384c8.822 0 16 7.178 16 16V409.3z"
-          />
-        </svg>
-        <input
-          type="file"
-          id="addPicture"
-          accept="image/*"
-          style="display:none" />
           </div>
           `);
       } else if (
