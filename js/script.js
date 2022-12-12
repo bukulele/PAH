@@ -316,18 +316,19 @@ let chatData = {
   checkForLinks: function (message) {
     const linkRegEx =
       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
-    if (message.match(linkRegEx)) {
-      let linksArr = message.match(linkRegEx);
-      let messageArr = message.split(" ");
-      let newMessage = "";
 
+    let newMessage = "";
+    let messageArr = message.split(" ");
+
+    if (message.match(linkRegEx)) {
       for (let i = 0; i < messageArr.length; i++) {
-        for (let link of linksArr) {
-          if (messageArr[i] === link) {
-            messageArr[
-              i
-            ] = `<a href="${link}" class="message__text_link">${link}</a>`;
-          }
+        let link = messageArr[i].match(linkRegEx);
+        if (link) {
+          console.log(messageArr[i]);
+          messageArr[i] = messageArr[i].replace(
+            linkRegEx,
+            `<a href="${link}" class="message__text_link">${link}</a>`
+          );
         }
       }
       newMessage = messageArr.join(" ");
