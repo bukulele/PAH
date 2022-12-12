@@ -313,6 +313,30 @@ let chatData = {
     return emojiRegEx.test(item.message);
   },
 
+  checkForLinks: function (message) {
+    const linkRegEx =
+      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
+    if (message.match(linkRegEx)) {
+      let linksArr = message.match(linkRegEx);
+      let messageArr = message.split(" ");
+      let newMessage = "";
+
+      for (let i = 0; i < messageArr.length; i++) {
+        for (let link of linksArr) {
+          if (messageArr[i] === link) {
+            messageArr[
+              i
+            ] = `<a href="${link}" class="message__text_link">${link}</a>`;
+          }
+        }
+      }
+      newMessage = messageArr.join(" ");
+      return newMessage;
+    } else {
+      return message;
+    }
+  },
+
   showConversation: function () {
     //add possibility for group chats
     // let participantsArray = Object.values(
@@ -341,7 +365,7 @@ let chatData = {
           chatData.checkForEmojis(item)
             ? "message__text_emoji"
             : "message__text_border"
-        }">${item.message}</div></div>
+        }">${chatData.checkForLinks(item.message)}</div></div>
             `);
       });
       chatData.messageHistoryScrollDown();

@@ -502,6 +502,11 @@
   font-size: 6rem;
 }
 
+.message__text_link {
+  color: #00b446;
+  font-weight: bold;
+}
+
 .message__message-date {
   position: absolute;
   top: 0;
