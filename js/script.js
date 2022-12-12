@@ -308,6 +308,11 @@ let chatData = {
     }
   },
 
+  checkForEmojis: function (item) {
+    const emojiRegEx = /^\p{Extended_Pictographic}+$/u;
+    return emojiRegEx.test(item.message);
+  },
+
   showConversation: function () {
     //add possibility for group chats
     // let participantsArray = Object.values(
@@ -332,9 +337,11 @@ let chatData = {
             : chatData.userData[item.ownerId].avatar_src.length
             ? chatData.userData[item.ownerId].avatar_src
             : "./assets/logo_sq.png"
-        }" class="img-responsive"></div><div class="message__text">${
-          item.message
-        }</div></div>
+        }" class="img-responsive"></div><div class="message__text ${
+          chatData.checkForEmojis(item)
+            ? "message__text_emoji"
+            : "message__text_border"
+        }">${item.message}</div></div>
             `);
       });
       chatData.messageHistoryScrollDown();
