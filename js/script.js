@@ -324,18 +324,47 @@ let chatData = {
       for (let i = 0; i < messageArr.length; i++) {
         let link = messageArr[i].match(linkRegEx);
         if (link) {
-          console.log(messageArr[i]);
           messageArr[i] = messageArr[i].replace(
             linkRegEx,
-            `<a href="${link}" class="message__text_link">${link}</a>`
+            `<span class="message__text_link">${link}</span>`
           );
         }
       }
+
       newMessage = messageArr.join(" ");
       return newMessage;
     } else {
       return message;
     }
+  },
+
+  checkLink: function (e) {
+    let urlString = e.target.innerText;
+
+    if (!/^(?:f|ht)tps?\:\/\//.test(urlString)) {
+      urlString = "http://" + urlString;
+    }
+
+    let externalUrl = new URL(urlString);
+    if (externalUrl.hostname.toLowerCase() !== "pimpandhost.com") {
+      chatData.showExternalLinkAlarm(urlString);
+    } else {
+      window.open(urlString, "newWindow");
+    }
+  },
+
+  showExternalLinkAlarm: function (link) {
+    $(".external-link-alert__wrapper").fadeIn(100, () => {
+      $("#externalLinkCancel").click(chatData.hideExternalLinkAlarm);
+      $("#externalLinkUnderstand").click(() => {
+        window.open(link, "newWindow");
+        chatData.hideExternalLinkAlarm();
+      });
+    });
+  },
+
+  hideExternalLinkAlarm: function () {
+    $(".external-link-alert__wrapper").fadeOut();
   },
 
   showConversation: function () {
@@ -369,6 +398,9 @@ let chatData = {
         }">${chatData.checkForLinks(item.message)}</div></div>
             `);
       });
+      if ($(".message__text_link").get().length) {
+        $(".message__text_link").click(chatData.checkLink);
+      }
       chatData.messageHistoryScrollDown();
     } else {
       $("#messageHistory").html(
