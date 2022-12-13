@@ -940,7 +940,7 @@ let chatData = {
       chatData.conversations[chatData.selectedChat].status === 1
     ) {
       chatData.selectedContactsType = "primary";
-      chatData.showNewMessageBlock();
+      chatData.showNewMessageBlock(chatData.selectedChat);
       chatData.checkOpenedDialogToUpdate = false;
     }
   },
