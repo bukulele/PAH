@@ -712,6 +712,7 @@ CSS);
               <div class="name-block__name">
                 <p id="userName" class="text-center user-name"></p>
               </div>
+              <button id="moreContacts">+</button>
               <div class="name-block__new-chat">
                 <span
                   class="glyphicon glyphicon-edit"
@@ -774,6 +775,8 @@ let chatData = {
   conversationToUpdate: false,
   lastMessageId: 0,
   lastMessageText: "",
+  moreContactsPossible: true,
+  contactsListPageLoaded: 1,
 
   init: function () {
     if (window.localStorage.pahChat_conversations) {
@@ -817,6 +820,7 @@ let chatData = {
 
     //remove later?
     $(".name-block__new-chat").click(chatData.createNewChat);
+    $("#moreContacts").click(chatData.loadMoreContacts);
   },
 
   loadUserData: function () {
@@ -867,7 +871,7 @@ let chatData = {
     //   }
     // }).done(chatData.updateUserData);
 
-        $.ajax({url: "/conversation/get-list", method: "GET"}).done((data) => {
+        $.ajax({url: "/conversation/get-list??sortBy=updated&page=0", method: "GET"}).done((data) => {
     this.userId = $("#pah_user_id").attr("value");
     let conversationsLoaded = data.payload.conversations;
     let lastMessagesLoaded = data.payload.lastMessages;
@@ -881,6 +885,7 @@ let chatData = {
         JSON.stringify(conversationsLoaded);
       this.conversations = conversationsLoaded;
       chatData.conversationsListToUpdate = true;
+    chatData.moreContactsPossible = true;
     }
 
     if (
@@ -911,13 +916,60 @@ let chatData = {
       this.userData = userDataLoaded;
       chatData.conversationsListToUpdate = true;
     }
-        }).done(chatData.updateUserData);
+        })
+    .done(() => {
+    chatData.loadMoreContacts();
+    })
+
+    // .done(chatData.updateUserData);
 
     if (chatData.updateTimerId) {
       clearTimeout(chatData.updateTimerId);
       this.updateTimerId = setTimeout(chatData.updateData, 15000);
     } else {
       this.updateTimerId = setTimeout(chatData.updateData, 15000);
+    }
+  },
+
+  loadMoreContacts: function () {
+    if (chatData.moreContactsPossible) {
+      $.ajax({
+        url: `/conversation/get-list??sortBy=updated&page=${chatData.contactsListPageLoaded}`,
+        method: "GET",
+      })
+        .done((data) => {
+          let conversations = data.payload.conversations;
+          let lastMessages = data.payload.lastMessages;
+          let participants = data.payload.participants;
+          let userData = data.payload.userData;
+          if (Object.keys(conversations).length > 0) {
+            chatData.conversations = {
+              ...chatData.conversations,
+              conversations,
+            };
+            chatData.contactsListPageLoaded++;
+          } else {
+            chatData.moreContactsPossible = false;
+            chatData.contactsListPageLoaded = 1;
+          }
+          if (Object.keys(lastMessages).length > 0) {
+            chatData.lastMessages = { ...chatData.lastMessages, lastMessages };
+          }
+          if (Object.keys(participants).length > 0) {
+            chatData.participants = { ...chatData.participants, participants };
+          }
+          if (Object.keys(userData).length > 0) {
+            chatData.userData = { ...chatData.userData, userData };
+          }
+        })
+        .done(() => {
+          chatData.loadMoreContacts();
+        });
+      } else {
+      chatData.conversationsListToUpdate = true;
+      chatData.calculateRequestsNumberToUpdate = true;
+      chatData.checkOpenedDialogToUpdate = true;
+      chatData.updateUserData();
     }
   },
 
@@ -1217,6 +1269,7 @@ let chatData = {
     } else if (event.target.id === "requestsTab") {
       chatData.selectedContactsType = "requests";
     }
+    $("#contactsList").html("");
     chatData.placeUnderline(event.target);
     chatData.updateConversationsList();
   },
@@ -1566,8 +1619,6 @@ let chatData = {
       alert("incorrect input!");
     }
   },
-
-  //
 
   showNewMessageBlock: function (id) {
     // add an option for group chat
