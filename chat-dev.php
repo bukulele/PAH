@@ -60,7 +60,7 @@ $this->registerCss(<<<CSS
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: 25% 75%;
   grid-template-rows: 100%;
 }
 
@@ -513,8 +513,80 @@ $this->registerCss(<<<CSS
 
 .message__text {
   padding: 1rem;
-  border: 1px solid #ddd;
   border-radius: 4px;
+}
+
+.message__text_border {
+  border: 1px solid #ddd;
+}
+
+.message__text_emoji {
+  font-size: 6rem;
+}
+
+.message__text_link {
+  color: #00b446;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.message__text_link:hover {
+  text-decoration: underline;
+}
+
+.external-link-alert__wrapper {
+  position: fixed;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.external-link-alert__container {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 350px;
+  height: fit-content;
+  padding: 1rem;
+  border-radius: 4px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+.external-link-alert__container p {
+  text-align: center;
+}
+
+.external-link-alert__button {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+}
+
+.button__cancel-button {
+  background-color: #00b446;
+}
+
+.button__cancel-button:hover {
+  background-color: #4dd681;
+}
+
+.button__risk-button {
+  background-color: #b40000;
+}
+
+.button__risk-button:hover {
+  background-color: #d64d4d;
 }
 
 .message__message-date {
@@ -560,7 +632,7 @@ $this->registerCss(<<<CSS
 
 @media screen and (max-width: 1200px) {
   .messages-panel {
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 34% 66%;
   }
 }
 
@@ -611,6 +683,7 @@ $this->registerCss(<<<CSS
 }
 
 
+
 CSS);
 ?>
 
@@ -653,6 +726,27 @@ CSS);
           <div class="message-window message-window_positioning">
             <div class="message-window__start-new-chat">
               <p class="start-new-chat__select-chat">Please select a chat</p>
+            </div>
+          </div>
+        </div>
+        <div class="external-link-alert__wrapper">
+          <div class="external-link-alert__container">
+            <p>
+              You are going to follow the external link, what could be risky!
+            </p>
+            <div class="external-link-alert__buttons-block">
+              <button
+                id="externalLinkCancel"
+                class="external-link-alert__button button__cancel-button"
+              >
+                Stay safe
+              </button>
+              <button
+                id="externalLinkUnderstand"
+                class="external-link-alert__button button__risk-button"
+              >
+                I understand risk
+              </button>
             </div>
           </div>
         </div>
@@ -970,6 +1064,65 @@ let chatData = {
     }
   },
 
+  checkForEmojis: function (item) {
+    const emojiRegEx = /^\p{Extended_Pictographic}+$/u;
+    return emojiRegEx.test(item.message);
+  },
+
+  checkForLinks: function (message) {
+    const linkRegEx =
+      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
+
+    let newMessage = "";
+    let messageArr = message.split(" ");
+
+    if (message.match(linkRegEx)) {
+      for (let i = 0; i < messageArr.length; i++) {
+        let link = messageArr[i].match(linkRegEx);
+        if (link) {
+          messageArr[i] = messageArr[i].replace(
+            linkRegEx,
+            `<span class="message__text_link">${link}</span>`
+          );
+        }
+      }
+
+      newMessage = messageArr.join(" ");
+      return newMessage;
+    } else {
+      return message;
+    }
+  },
+
+  checkLink: function (e) {
+    let urlString = e.target.innerText;
+
+    if (!/^(?:f|ht)tps?\:\/\//.test(urlString)) {
+      urlString = "http://" + urlString;
+    }
+
+    let externalUrl = new URL(urlString);
+    if (externalUrl.hostname.toLowerCase() !== "pimpandhost.com") {
+      chatData.showExternalLinkAlarm(urlString);
+    } else {
+      window.open(urlString, "newWindow");
+    }
+  },
+
+  showExternalLinkAlarm: function (link) {
+    $(".external-link-alert__wrapper").fadeIn(100, () => {
+      $("#externalLinkCancel").click(chatData.hideExternalLinkAlarm);
+      $("#externalLinkUnderstand").click(() => {
+        window.open(link, "newWindow");
+        chatData.hideExternalLinkAlarm();
+      });
+    });
+  },
+
+  hideExternalLinkAlarm: function () {
+    $(".external-link-alert__wrapper").fadeOut(100);
+  },
+
   showConversation: function () {
     //add possibility for group chats
     // let participantsArray = Object.values(
@@ -994,11 +1147,16 @@ let chatData = {
             : chatData.userData[item.ownerId].avatar_src.length
             ? chatData.userData[item.ownerId].avatar_src
             : "./assets/logo_sq.png"
-        }" class="img-responsive"></div><div class="message__text">${
-          item.message
-        }</div></div>
+        }" class="img-responsive"></div><div class="message__text ${
+          chatData.checkForEmojis(item)
+            ? "message__text_emoji"
+            : "message__text_border"
+        }">${chatData.checkForLinks(item.message)}</div></div>
             `);
       });
+      if ($(".message__text_link").get().length) {
+        $(".message__text_link").click(chatData.checkLink);
+      }
       chatData.messageHistoryScrollDown();
     } else {
       $("#messageHistory").html(

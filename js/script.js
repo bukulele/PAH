@@ -364,7 +364,7 @@ let chatData = {
   },
 
   hideExternalLinkAlarm: function () {
-    $(".external-link-alert__wrapper").fadeOut();
+    $(".external-link-alert__wrapper").fadeOut(100);
   },
 
   showConversation: function () {
