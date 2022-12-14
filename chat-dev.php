@@ -1101,8 +1101,9 @@ let chatData = {
   },
 
   loadConversation: function (showNewConversation) {
-    let latestMessageId = chatData.lastMessages[chatData.selectedChat].id + 1;
     if (chatData.selectedChat) {
+      let latestMessageId =
+        Number(chatData.lastMessages[chatData.selectedChat].id) + 1;
       // $.getJSON("./assets/get-messages.json", (data) => {
       //   return data;
       // })
@@ -1113,14 +1114,23 @@ let chatData = {
             chatData.lastSeenMessageId = data.payload.cursorLastSeenId;
             chatData.showConversation();
           } else {
-            let loadedMessages = Object.values(data.payload.messages);
-            let i = loadedMessages.length - 1;
-
-            while (!chatData.messages[i]) {
-              i--;
+            if (
+              data.payload.cursorLastSeenId - 1 >
+              chatData.messages[chatData.messages.length - 1].id
+            ) {
+              loadConversation(true);
             }
-            chatData.messages = Object.values(data.payload.messages);
-            chatData.updateConversation(i + 1);
+            
+            let loadedMessages = Object.values(data.payload.messages);
+            
+            let i = loadedMessages.findIndex(
+              (item) =>
+              item.id === chatData.messages[chatData.messages.length - 1].id
+              );
+              
+              let messagesToAppend = loadedMessages.slice(i + 1);
+              chatData.messages = [...chatData.messages, ...messagesToAppend]
+            chatData.updateConversation(messagesToAppend);
           }
         });
     }
@@ -1138,8 +1148,8 @@ let chatData = {
   },
 
   addHistoryToConverstion: function (messages) {
-    if (Object.values(messages).length > 0)
-      for (let i = messages.length - 1; i > 0; i--) {
+    if (messages.length > 0)
+      for (let i = messages.length - 1; i >= 0; i--) {
         $("#messageHistory").prepend(`
       <div class="message-history__message message__${
         messages[i].ownerId == chatData.userId ? "output" : "input"
@@ -1268,31 +1278,33 @@ let chatData = {
     }
   },
 
-  updateConversation: function (i) {
+  updateConversation: function (messages) {
     //add scroll down button
-    while (i < chatData.messages.length) {
+    messages.forEach((item) => {
       $("#messageHistory").append(`
-      <div class="message-history__message message__${
-        chatData.messages[i].ownerId == chatData.userId ? "output" : "input"
-      }"><div class="message__message-date message__message-date_${
-        chatData.messages[i].ownerId == chatData.userId ? "output" : "input"
+          <div class="message-history__message message__${
+            item.ownerId == chatData.userId ? "output" : "input"
+          }"><div class="message__message-date message__message-date_${
+        item.ownerId == chatData.userId ? "output" : "input"
       }"><p class="message-date__text">${chatData.formatMessageDate(
-        chatData.messages[i].createdAt
+        item.createdAt
       )}</p></div><div class="message__sender-image ${
-        chatData.messages[i].ownerId == chatData.userId
-          ? "message__sender-image_hidden"
-          : ""
+        item.ownerId == chatData.userId ? "message__sender-image_hidden" : ""
       }"><img src="${
-        chatData.messages[i].ownerId == chatData.userId
+        item.ownerId == chatData.userId
           ? ""
-          : chatData.userData[chatData.messages[i].ownerId].avatar_src.length
-          ? chatData.userData[chatData.messages[i].ownerId].avatar_src
+          : chatData.userData[item.ownerId].avatar_src.length
+          ? chatData.userData[item.ownerId].avatar_src
           : "./assets/logo_sq.png"
-      }" class="img-responsive"></div><div class="message__text">${
-        chatData.messages[i].message
-      }</div></div>
-      `);
-      i++;
+      }" class="img-responsive"></div><div class="message__text ${
+        chatData.checkForEmojis(item)
+          ? "message__text_emoji"
+          : "message__text_border"
+      }">${chatData.checkForLinks(item.message)}</div></div>
+          `);
+    });
+    if ($(".message__text_link").get().length) {
+      $(".message__text_link").click(chatData.checkLink);
     }
   },
 
@@ -1815,6 +1827,7 @@ let chatData = {
     );
   },
 };
+
 $(document).ready(chatData.init);
 JS, View::POS_READY);
 
