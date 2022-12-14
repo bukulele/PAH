@@ -712,7 +712,6 @@ CSS);
               <div class="name-block__name">
                 <p id="userName" class="text-center user-name"></p>
               </div>
-              <button id="moreContacts">+</button>
               <div class="name-block__new-chat">
                 <span
                   class="glyphicon glyphicon-edit"
@@ -775,7 +774,7 @@ let chatData = {
   conversationToUpdate: false,
   lastMessageId: 0,
   lastMessageText: "",
-  moreContactsPossible: true,
+  moreContactsPossible: false,
   contactsListPageLoaded: 1,
 
   init: function () {
@@ -811,6 +810,7 @@ let chatData = {
 
     chatData.conversationsListToUpdate = true;
     chatData.calculateRequestsNumberToUpdate = true;
+    chatData.moreContactsPossible = true;
 
     chatData.windowWidth = $(window).get(0).innerWidth;
     $(window).resize(chatData.handleWindowWidth);
@@ -820,7 +820,6 @@ let chatData = {
 
     //remove later?
     $(".name-block__new-chat").click(chatData.createNewChat);
-    $("#moreContacts").click(chatData.loadMoreContacts);
   },
 
   loadUserData: function () {
@@ -871,7 +870,7 @@ let chatData = {
     //   }
     // }).done(chatData.updateUserData);
 
-        $.ajax({url: "/conversation/get-list??sortBy=updated&page=0", method: "GET"}).done((data) => {
+        $.ajax({url: "/conversation/get-list?sortBy=updated&page=0", method: "GET"}).done((data) => {
     this.userId = $("#pah_user_id").attr("value");
     let conversationsLoaded = data.payload.conversations;
     let lastMessagesLoaded = data.payload.lastMessages;
@@ -885,7 +884,6 @@ let chatData = {
         JSON.stringify(conversationsLoaded);
       this.conversations = conversationsLoaded;
       chatData.conversationsListToUpdate = true;
-    chatData.moreContactsPossible = true;
     }
 
     if (
@@ -934,7 +932,7 @@ let chatData = {
   loadMoreContacts: function () {
     if (chatData.moreContactsPossible) {
       $.ajax({
-        url: `/conversation/get-list??sortBy=updated&page=${chatData.contactsListPageLoaded}`,
+        url: `/conversation/get-list?sortBy=updated&page=${chatData.contactsListPageLoaded}`,
         method: "GET",
       })
         .done((data) => {
@@ -945,7 +943,7 @@ let chatData = {
           if (Object.keys(conversations).length > 0) {
             chatData.conversations = {
               ...chatData.conversations,
-              conversations,
+              ...conversations,
             };
             chatData.contactsListPageLoaded++;
           } else {
@@ -953,22 +951,25 @@ let chatData = {
             chatData.contactsListPageLoaded = 1;
           }
           if (Object.keys(lastMessages).length > 0) {
-            chatData.lastMessages = { ...chatData.lastMessages, lastMessages };
+            chatData.lastMessages = {
+              ...chatData.lastMessages,
+              ...lastMessages,
+            };
           }
           if (Object.keys(participants).length > 0) {
-            chatData.participants = { ...chatData.participants, participants };
+            chatData.participants = {
+              ...chatData.participants,
+              ...participants,
+            };
           }
           if (Object.keys(userData).length > 0) {
-            chatData.userData = { ...chatData.userData, userData };
+            chatData.userData = { ...chatData.userData, ...userData };
           }
         })
         .done(() => {
           chatData.loadMoreContacts();
         });
-      } else {
-      chatData.conversationsListToUpdate = true;
-      chatData.calculateRequestsNumberToUpdate = true;
-      chatData.checkOpenedDialogToUpdate = true;
+    } else {
       chatData.updateUserData();
     }
   },
@@ -992,6 +993,7 @@ let chatData = {
       chatData.conversations[chatData.selectedChat].status === 1
     ) {
       chatData.selectedContactsType = "primary";
+      chatData.updateConversationsList();
       chatData.showNewMessageBlock(chatData.selectedChat);
       chatData.checkOpenedDialogToUpdate = false;
     }
@@ -1665,6 +1667,18 @@ let chatData = {
           </button>
           </div>
           `);
+
+        $("#newMessageInput").on("input", (e) =>
+          chatData.controlInput(e.target)
+        );
+        chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
+        $(".new-message__emoji").click(chatData.showEmojiBlock);
+        $(".message-window__emoji-block-wrapper").click(
+          chatData.hideEmojiBlock
+        );
+        $("#sendMessageButton").click(chatData.sendMessage);
+        $("#sendPhotoIcon").click(chatData.addPicture);
+        $("#addPicture").on("input", () => chatData.sendPicture());
         $(".message-window__scroll-down-button").click(
           chatData.messageHistoryScrollDown
         );
@@ -1742,15 +1756,6 @@ let chatData = {
 
     chatData.showNewMessageBlock(chatData.selectedChat);
 
-    if ($("#newMessageInput").get(0)) {
-      $("#newMessageInput").on("input", (e) => chatData.controlInput(e.target));
-      chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
-      $(".new-message__emoji").click(chatData.showEmojiBlock);
-      $(".message-window__emoji-block-wrapper").click(chatData.hideEmojiBlock);
-      $("#sendMessageButton").click(chatData.sendMessage);
-      $("#sendPhotoIcon").click(chatData.addPicture);
-      $("#addPicture").on("input", () => chatData.sendPicture());
-    }
     $("#backToContacts").click(chatData.backToContacts);
     $(".message-window__wrapper").on(
       "scroll",

@@ -63,7 +63,6 @@ let chatData = {
 
     //remove later?
     $(".name-block__new-chat").click(chatData.createNewChat);
-    $("#moreContacts").click(chatData.loadMoreContacts);
   },
 
   loadUserData: function () {
@@ -188,7 +187,7 @@ let chatData = {
           if (Object.keys(conversations).length > 0) {
             chatData.conversations = {
               ...chatData.conversations,
-              conversations,
+              ...conversations,
             };
             chatData.contactsListPageLoaded++;
           } else {
@@ -196,22 +195,25 @@ let chatData = {
             chatData.contactsListPageLoaded = 1;
           }
           if (Object.keys(lastMessages).length > 0) {
-            chatData.lastMessages = { ...chatData.lastMessages, lastMessages };
+            chatData.lastMessages = {
+              ...chatData.lastMessages,
+              ...lastMessages,
+            };
           }
           if (Object.keys(participants).length > 0) {
-            chatData.participants = { ...chatData.participants, participants };
+            chatData.participants = {
+              ...chatData.participants,
+              ...participants,
+            };
           }
           if (Object.keys(userData).length > 0) {
-            chatData.userData = { ...chatData.userData, userData };
+            chatData.userData = { ...chatData.userData, ...userData };
           }
         })
         .done(() => {
           chatData.loadMoreContacts();
         });
     } else {
-      chatData.conversationsListToUpdate = true;
-      chatData.calculateRequestsNumberToUpdate = true;
-      chatData.checkOpenedDialogToUpdate = true;
       chatData.updateUserData();
     }
   },
@@ -235,6 +237,7 @@ let chatData = {
       chatData.conversations[chatData.selectedChat].status === 1
     ) {
       chatData.selectedContactsType = "primary";
+      chatData.updateConversationsList();
       chatData.showNewMessageBlock(chatData.selectedChat);
       chatData.checkOpenedDialogToUpdate = false;
     }
@@ -908,6 +911,18 @@ let chatData = {
           </button>
           </div>
           `);
+
+        $("#newMessageInput").on("input", (e) =>
+          chatData.controlInput(e.target)
+        );
+        chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
+        $(".new-message__emoji").click(chatData.showEmojiBlock);
+        $(".message-window__emoji-block-wrapper").click(
+          chatData.hideEmojiBlock
+        );
+        $("#sendMessageButton").click(chatData.sendMessage);
+        $("#sendPhotoIcon").click(chatData.addPicture);
+        $("#addPicture").on("input", () => chatData.sendPicture());
         $(".message-window__scroll-down-button").click(
           chatData.messageHistoryScrollDown
         );
@@ -985,15 +1000,6 @@ let chatData = {
 
     chatData.showNewMessageBlock(chatData.selectedChat);
 
-    if ($("#newMessageInput").get(0)) {
-      $("#newMessageInput").on("input", (e) => chatData.controlInput(e.target));
-      chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
-      $(".new-message__emoji").click(chatData.showEmojiBlock);
-      $(".message-window__emoji-block-wrapper").click(chatData.hideEmojiBlock);
-      $("#sendMessageButton").click(chatData.sendMessage);
-      $("#sendPhotoIcon").click(chatData.addPicture);
-      $("#addPicture").on("input", () => chatData.sendPicture());
-    }
     $("#backToContacts").click(chatData.backToContacts);
     $(".message-window__wrapper").on(
       "scroll",
