@@ -20,6 +20,7 @@ let chatData = {
   lastMessageText: "",
   moreContactsPossible: false,
   contactsListPageLoaded: 1,
+  lastSeenMessageId: 0,
 
   init: function () {
     if (window.localStorage.pahChat_conversations) {
@@ -54,6 +55,7 @@ let chatData = {
 
     chatData.conversationsListToUpdate = true;
     chatData.calculateRequestsNumberToUpdate = true;
+    chatData.moreContactsPossible = true;
 
     chatData.windowWidth = $(window).get(0).innerWidth;
     $(window).resize(chatData.handleWindowWidth);
@@ -113,7 +115,7 @@ let chatData = {
       }
     }).done(chatData.updateUserData);
 
-    //     $.ajax({url: "/conversation/get-list??sortBy=updated&page=0", method: "GET"}).done((data) => {
+    //     $.ajax({url: "/conversation/get-list?sortBy=updated&page=0", method: "GET"}).done((data) => {
     // this.userId = $("#pah_user_id").attr("value");
     // let conversationsLoaded = data.payload.conversations;
     // let lastMessagesLoaded = data.payload.lastMessages;
@@ -176,7 +178,7 @@ let chatData = {
   loadMoreContacts: function () {
     if (chatData.moreContactsPossible) {
       $.ajax({
-        url: `/conversation/get-list??sortBy=updated&page=${chatData.contactsListPageLoaded}`,
+        url: `/conversation/get-list?sortBy=updated&page=${chatData.contactsListPageLoaded}`,
         method: "GET",
       })
         .done((data) => {
@@ -339,14 +341,16 @@ let chatData = {
   },
 
   loadConversation: function (showNewConversation) {
+    let latestMessageId = chatData.lastMessages[chatData.selectedChat].id + 1;
     if (chatData.selectedChat) {
       $.getJSON("./assets/get-messages.json", (data) => {
         return data;
       })
-        // $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}`)
+        // $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}&history=true&lastSeenMessageId=${latestMessageId}`)
         .done(function (data) {
           if (showNewConversation) {
             chatData.messages = Object.values(data.payload.messages);
+            chatData.lastSeenMessageId = data.payload.cursorLastSeenId;
             chatData.showConversation();
           } else {
             let loadedMessages = Object.values(data.payload.messages);
@@ -360,6 +364,47 @@ let chatData = {
           }
         });
     }
+  },
+
+  loadConversationHistory: function () {
+    if (chatData.selectedChat) {
+      $.ajax(
+        `/conversation/get-messages?conversationId=${chatData.selectedChat}&history=true&lastSeenMessageId=${chatData.lastSeenMessageId}`
+      ).done(function (data) {
+        chatData.lastSeenMessageId = data.payload.cursorLastSeenId;
+        chatData.addHistoryToConverstion(Object.values(data.payload.messages));
+      });
+    }
+  },
+
+  addHistoryToConverstion: function (messages) {
+    if (Object.values(messages).length > 0)
+      for (let i = messages.length - 1; i > 0; i--) {
+        $("#messageHistory").prepend(`
+      <div class="message-history__message message__${
+        messages[i].ownerId == chatData.userId ? "output" : "input"
+      }"><div class="message__message-date message__message-date_${
+          messages[i].ownerId == chatData.userId ? "output" : "input"
+        }"><p class="message-date__text">${chatData.formatMessageDate(
+          messages[i].createdAt
+        )}</p></div><div class="message__sender-image ${
+          messages[i].ownerId == chatData.userId
+            ? "message__sender-image_hidden"
+            : ""
+        }"><img src="${
+          messages[i].ownerId == chatData.userId
+            ? ""
+            : chatData.userData[messages[i].ownerId].avatar_src.length
+            ? chatData.userData[messages[i].ownerId].avatar_src
+            : "./assets/logo_sq.png"
+        }" class="img-responsive"></div><div class="message__text ${
+          chatData.checkForEmojis(messages[i])
+            ? "message__text_emoji"
+            : "message__text_border"
+        }">${chatData.checkForLinks(messages[i].message)}</div></div>
+      `);
+        chatData.messages = [...messages, ...chatData.messages];
+      }
   },
 
   checkForEmojis: function (item) {
@@ -953,7 +998,7 @@ let chatData = {
 
   showMessageWindow: function () {
     $(".message-window").html(`
-
+    <button id="moreMessages" class="moreMessages">+</button>
     <div
     class="message-window__current-contact message-window__current-contact_border-bottom message-window__current-contact_align-elements"
   >
@@ -997,6 +1042,9 @@ let chatData = {
     </div>
   </div>
     `);
+
+    //remove later
+    $("#moreMessages").click(chatData.loadConversationHistory);
 
     chatData.showNewMessageBlock(chatData.selectedChat);
 

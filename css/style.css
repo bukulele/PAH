@@ -64,6 +64,12 @@
   place-items: center;
 }
 
+.moreMessages {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 .message-window__start-new-chat {
   position: absolute;
   width: 100%;
