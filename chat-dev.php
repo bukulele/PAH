@@ -1096,8 +1096,15 @@ let chatData = {
         )}`
       );
     }
-
-    chatData.loadConversation(true);
+    if (sessionStorage.getItem(`PAH_messages_${chatData.selectedChat}`)) {
+      chatData.messages = JSON.parse(
+        sessionStorage.getItem(`PAH_messages_${chatData.selectedChat}`)
+      );
+      chatData.showConversation();
+      chatData.loadConversation(false);
+    } else {
+      chatData.loadConversation(true);
+    }
   },
 
   loadConversation: function (showNewConversation) {
@@ -1111,7 +1118,11 @@ let chatData = {
         .done(function (data) {
           if (showNewConversation) {
             chatData.messages = Object.values(data.payload.messages);
-            chatData.lastSeenMessageId = data.payload.cursorLastSeenId;
+            sessionStorage.setItem(
+              `PAH_messages_${chatData.selectedChat}`,
+              JSON.stringify(chatData.messages)
+            );
+            // chatData.lastSeenMessageId = data.payload.cursorLastSeenId;
             chatData.showConversation();
           } else {
             if (
@@ -1138,16 +1149,17 @@ let chatData = {
 
   loadConversationHistory: function () {
     if (chatData.selectedChat) {
+      chatData.lastSeenMessageId = chatData.messages[0].id;
       $.ajax(
         `/conversation/get-messages?conversationId=${chatData.selectedChat}&history=true&lastSeenMessageId=${chatData.lastSeenMessageId}`
       ).done(function (data) {
-        chatData.lastSeenMessageId = data.payload.cursorLastSeenId;
-        chatData.addHistoryToConverstion(Object.values(data.payload.messages));
+        // chatData.lastSeenMessageId = data.payload.cursorLastSeenId;
+        chatData.addHistoryToConversation(Object.values(data.payload.messages));
       });
     }
   },
 
-  addHistoryToConverstion: function (messages) {
+  addHistoryToConversation: function (messages) {
     if (messages.length > 0)
       for (let i = messages.length - 1; i >= 0; i--) {
         $("#messageHistory").prepend(`
@@ -1173,8 +1185,12 @@ let chatData = {
             : "message__text_border"
         }">${chatData.checkForLinks(messages[i].message)}</div></div>
       `);
-        chatData.messages = [...messages, ...chatData.messages];
       }
+    chatData.messages = [...messages, ...chatData.messages];
+    sessionStorage.setItem(
+      `PAH_messages_${chatData.selectedChat}`,
+      JSON.stringify(chatData.messages)
+    );
   },
 
   checkForEmojis: function (item) {
