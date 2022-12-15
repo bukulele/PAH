@@ -781,6 +781,7 @@ let chatData = {
   moreContactsPossible: false,
   contactsListPageLoaded: 1,
   lastSeenMessageId: 0,
+  latestMessageId: 0,
 
   init: function () {
     if (window.localStorage.pahChat_conversations) {
@@ -990,6 +991,7 @@ let chatData = {
     if (chatData.checkOpenedDialogToUpdate) {
       chatData.checkOpenedDialog();
     }
+    chatData.loadConversation(false);
   },
 
   checkOpenedDialog: function () {
@@ -1095,19 +1097,17 @@ let chatData = {
       );
     }
 
-    $(".manage-buttons__accept-button").click(chatData.activateChat);
-    $(".manage-buttons__delete-button").click(chatData.deleteChat);
     chatData.loadConversation(true);
   },
 
   loadConversation: function (showNewConversation) {
     if (chatData.selectedChat) {
-      let latestMessageId =
+      chatData.latestMessageId =
         Number(chatData.lastMessages[chatData.selectedChat].id) + 1;
       // $.getJSON("./assets/get-messages.json", (data) => {
       //   return data;
       // })
-        $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}&history=true&lastSeenMessageId=${latestMessageId}`)
+        $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}&history=true&lastSeenMessageId=${chatData.latestMessageId}`)
         .done(function (data) {
           if (showNewConversation) {
             chatData.messages = Object.values(data.payload.messages);
@@ -1120,16 +1120,16 @@ let chatData = {
             ) {
               loadConversation(true);
             }
-            
+
             let loadedMessages = Object.values(data.payload.messages);
-            
+
             let i = loadedMessages.findIndex(
               (item) =>
-              item.id === chatData.messages[chatData.messages.length - 1].id
-              );
-              
-              let messagesToAppend = loadedMessages.slice(i + 1);
-              chatData.messages = [...chatData.messages, ...messagesToAppend]
+                item.id === chatData.messages[chatData.messages.length - 1].id
+            );
+
+            let messagesToAppend = loadedMessages.slice(i + 1);
+            chatData.messages = [...chatData.messages, ...messagesToAppend];
             chatData.updateConversation(messagesToAppend);
           }
         });
@@ -1554,7 +1554,7 @@ let chatData = {
       dataType: "json",
     })
       .done(() => {
-        chatData.loadConversation(true);
+        chatData.loadUserData();
         $("#newMessageInput").val("");
         chatData.controlInput($("#newMessageInput").get(0));
       })
@@ -1620,7 +1620,6 @@ let chatData = {
   updateData: function () {
     chatData.requestsNumber = 0;
     chatData.loadUserData();
-    chatData.loadConversation(false);
   },
 
   removeMessageWindow: function () {
@@ -1753,6 +1752,8 @@ let chatData = {
           <button class="manage-buttons__button manage-buttons__delete-button">Decline</button>
           </div>
           `);
+        $(".manage-buttons__accept-button").click(chatData.activateChat);
+        $(".manage-buttons__delete-button").click(chatData.deleteChat);
       } else if (
         chatData.conversations[chatData.selectedChat].status === 0 &&
         chatData.participants[chatData.selectedChat][chatData.userId].role === 1
