@@ -298,6 +298,7 @@ let chatData = {
   },
 
   setSelectedChat: function (event) {
+    chatData.messageToReply = null;
     if (event.target.className.includes("contacts-list__contact")) {
       chatData.selectedChat = event.target.id;
       $(".contacts-list__contact").removeClass(
@@ -407,7 +408,7 @@ let chatData = {
       <div class="message-history__message message__${
         messages[i].ownerId == chatData.userId ? "output" : "input"
       }">
-      <div id="msg_${chatData.selectedChat}_${
+      <div id="btn_${chatData.selectedChat}_${
           item.id
         }" class="message-history__reply-button reply-button__${
           item.ownerId == chatData.userId ? "output" : "input"
@@ -518,7 +519,7 @@ let chatData = {
             <div class="message-history__message message__${
               item.ownerId == chatData.userId ? "output" : "input"
             }">
-            <div id="msg_${chatData.selectedChat}_${
+            <div id="btn_${chatData.selectedChat}_${
           item.id
         }" class="message-history__reply-button reply-button__${
           item.ownerId == chatData.userId ? "output" : "input"
@@ -566,7 +567,7 @@ let chatData = {
           <div class="message-history__message message__${
             item.ownerId == chatData.userId ? "output" : "input"
           }">
-          <div id="msg_${chatData.selectedChat}_${
+          <div id="btn_${chatData.selectedChat}_${
         item.id
       }" class="message-history__reply-button reply-button__${
         item.ownerId == chatData.userId ? "output" : "input"
@@ -844,6 +845,7 @@ let chatData = {
       data: {
         message: $("#newMessageInput").val(),
         conversationId: chatData.selectedChat,
+        replyOnId: chatData.messageToReply,
       },
       dataType: "json",
     })
@@ -977,7 +979,7 @@ let chatData = {
   },
 
   selectMessageToReply: function (e) {
-    if (e.target.id.includes(`msg_${chatData.selectedChat}`)) {
+    if (e.target.id.includes(`btn_${chatData.selectedChat}`)) {
       let arrayFromId = e.target.id.split("_");
       chatData.messageToReply = arrayFromId[2];
       let message = chatData.messages.find(
@@ -996,6 +998,7 @@ let chatData = {
   },
 
   removeMessageToReply: function () {
+    chatData.messageToReply = null;
     $(".message-reply-to__contact-name > p").html("");
     $(".message-reply-to__message > p").html("");
     $(".message-window__message-reply-to").css({ display: "none" });
