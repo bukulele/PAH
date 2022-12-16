@@ -950,6 +950,7 @@ let chatData = {
   latestMessageId: 0,
   messageToReply: null,
   messagesReplies: null,
+  heightToScrollAfterLoading: 0,
 
   init: function () {
     if (window.localStorage.pahChat_conversations) {
@@ -1333,7 +1334,7 @@ let chatData = {
   },
 
   addHistoryToConversation: function (messages) {
-    if (messages.length > 0)
+    if (messages.length > 0) {
       for (let i = messages.length - 1; i >= 0; i--) {
         $("#messageHistory").prepend(`
       <div class="message-history__message message__${
@@ -1388,11 +1389,16 @@ let chatData = {
           });
         }
       }
-    chatData.messages = [...messages, ...chatData.messages];
-    sessionStorage.setItem(
-      `PAH_messages_${chatData.selectedChat}`,
-      JSON.stringify(chatData.messages)
-    );
+      chatData.messages = [...messages, ...chatData.messages];
+      sessionStorage.setItem(
+        `PAH_messages_${chatData.selectedChat}`,
+        JSON.stringify(chatData.messages)
+      );
+      let newHeight = $("#messageHistory").height();
+      $(".message-window__wrapper").scrollTop(
+        newHeight - chatData.heightToScrollAfterLoading
+      );
+    }
   },
 
   checkForEmojis: function (item) {
@@ -1594,6 +1600,11 @@ let chatData = {
       $(".message-window__scroll-down-button").fadeIn();
     } else {
       $(".message-window__scroll-down-button").fadeOut();
+    }
+
+    if (scrollPosition === 0) {
+      chatData.heightToScrollAfterLoading = fullHeight;
+      chatData.loadConversationHistory();
     }
   },
 
@@ -2087,7 +2098,6 @@ let chatData = {
 
   showMessageWindow: function () {
     $(".message-window").html(`
-    <button id="moreMessages" class="moreMessages">+</button>
     <div
     class="message-window__current-contact message-window__current-contact_border-bottom message-window__current-contact_align-elements"
   >
@@ -2131,9 +2141,6 @@ let chatData = {
     </div>
   </div>
     `);
-
-    //remove later
-    $("#moreMessages").click(chatData.loadConversationHistory);
 
     chatData.showNewMessageBlock(chatData.selectedChat);
 
