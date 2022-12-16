@@ -291,13 +291,17 @@
 
 .message-reply-to__close-icon {
   fill: rgb(173, 173, 173);
-  width: 1rem;
-  height: 1rem;
+  width: 1.3rem;
+  height: 1.3rem;
   grid-row-start: 1;
   grid-row-end: 3;
   grid-column-start: 3;
   grid-column-end: 4;
   place-self: center;
+}
+
+.message-reply-to__close-icon * {
+  pointer-events: none;
 }
 
 .message-reply-to__contact-name {
@@ -552,6 +556,62 @@
   grid-template-rows: auto auto auto;
   grid-template-columns: auto auto;
   gap: 1rem;
+}
+
+.message-history__reply-button * {
+  pointer-events: none;
+}
+
+.message-history__reply-button {
+  position: absolute;
+  bottom: 0;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #ddd;
+  fill: #4dd681;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.reply-button__output {
+  left: -1.5rem;
+}
+
+.reply-button__input {
+  right: -2.5rem;
+}
+
+.message-history__reply-button_sizing {
+  width: 70%;
+  height: 70%;
+}
+
+.message-history__message-reply-to {
+  display: none;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: rgb(145, 145, 145);
+}
+
+.message-history__reply-to-name_styling {
+  color: white;
+  font-weight: bold;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.message-history__reply-to-message_styling {
+  color: white;
+  margin: 0;
 }
 
 .empty-chat__message,
