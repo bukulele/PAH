@@ -23,6 +23,7 @@ let chatData = {
   lastSeenMessageId: 0,
   latestMessageId: 0,
   messageToReply: null,
+  messagesReplies: null,
 
   init: function () {
     if (window.localStorage.pahChat_conversations) {
@@ -298,7 +299,7 @@ let chatData = {
   },
 
   setSelectedChat: function (event) {
-    chatData.messageToReply = null;
+    chatData.removeMessageToReply();
     if (event.target.className.includes("contacts-list__contact")) {
       chatData.selectedChat = event.target.id;
       $(".contacts-list__contact").removeClass(
@@ -383,6 +384,10 @@ let chatData = {
 
             let messagesToAppend = loadedMessages.slice(i + 1);
             chatData.messages = [...chatData.messages, ...messagesToAppend];
+            sessionStorage.setItem(
+              `PAH_messages_${chatData.selectedChat}`,
+              JSON.stringify(chatData.messages)
+            );
             chatData.updateConversation(messagesToAppend);
           }
         });
@@ -409,15 +414,17 @@ let chatData = {
         messages[i].ownerId == chatData.userId ? "output" : "input"
       }">
       <div id="btn_${chatData.selectedChat}_${
-          item.id
+          messages[i].id
         }" class="message-history__reply-button reply-button__${
-          item.ownerId == chatData.userId ? "output" : "input"
+          messages[i].ownerId == chatData.userId ? "output" : "input"
         }">
       <svg class="message-history__reply-button_sizing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>
       </div>
-      <div class="message-history__message-reply-to">
-      <div class="message-history__reply-to-name"><p class="small message-history__reply-to-name_styling">name name name name name name name name </p></div>
-      <div class="message-history__reply-to-message"><p class="small message-history__reply-to-message_styling">text text text text text text text text text text text </p></div>
+      <div id="msg_${chatData.selectedChat}_${
+          messages[i].id
+        }" class="message-history__message-reply-to">
+      <div class="message-history__reply-to-name"><p class="small message-history__reply-to-name_styling"></p></div>
+      <div class="message-history__reply-to-message"><p class="small message-history__reply-to-message_styling"></p></div>
     </div>
       <div class="message__message-date message__message-date_${
         messages[i].ownerId == chatData.userId ? "output" : "input"
@@ -439,6 +446,21 @@ let chatData = {
             : "message__text_border"
         }">${chatData.checkForLinks(messages[i].message)}</div></div>
       `);
+        if (messages[i].replyOnId) {
+          $.ajax(
+            `/conversation/get-message?messageId=${messages[i].replyOnId}`
+          ).done((data) => {
+            $(
+              `#msg_${chatData.selectedChat}_${messages[i].id} > .message-history__reply-to-name > p`
+            ).html(`${chatData.userData[data.payload.ownerId].username}`);
+            $(
+              `#msg_${chatData.selectedChat}_${messages[i].id} > .message-history__reply-to-message > p`
+            ).html(`${data.payload.message}`);
+            $(`#msg_${chatData.selectedChat}_${messages[i].id}`).css({
+              display: "block",
+            });
+          });
+        }
       }
     chatData.messages = [...messages, ...chatData.messages];
     sessionStorage.setItem(
@@ -526,9 +548,11 @@ let chatData = {
         }">
             <svg class="message-history__reply-button_sizing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>
             </div>
-            <div class="message-history__message-reply-to">
-            <div class="message-history__reply-to-name"><p class="small message-history__reply-to-name_styling">name name name name name name name name </p></div>
-            <div class="message-history__reply-to-message"><p class="small message-history__reply-to-message_styling">text text text text text text text text text text text </p></div>
+            <div id="msg_${chatData.selectedChat}_${
+          item.id
+        }" class="message-history__message-reply-to">
+            <div class="message-history__reply-to-name"><p class="small message-history__reply-to-name_styling"></p></div>
+            <div class="message-history__reply-to-message"><p class="small message-history__reply-to-message_styling"></p></div>
           </div>
             <div class="message__message-date message__message-date_${
               item.ownerId == chatData.userId ? "output" : "input"
@@ -548,6 +572,21 @@ let chatData = {
             : "message__text_border"
         }">${chatData.checkForLinks(item.message)}</div></div>
             `);
+        if (item.replyOnId) {
+          $.ajax(`/conversation/get-message?messageId=${item.replyOnId}`).done(
+            (data) => {
+              $(
+                `#msg_${chatData.selectedChat}_${item.id} > .message-history__reply-to-name > p`
+              ).html(`${chatData.userData[data.payload.ownerId].username}`);
+              $(
+                `#msg_${chatData.selectedChat}_${item.id} > .message-history__reply-to-message > p`
+              ).html(`${data.payload.message}`);
+              $(`#msg_${chatData.selectedChat}_${item.id}`).css({
+                display: "block",
+              });
+            }
+          );
+        }
       });
       if ($(".message__text_link").get().length) {
         $(".message__text_link").click(chatData.checkLink);
@@ -574,9 +613,11 @@ let chatData = {
       }">
           <svg class="message-history__reply-button_sizing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>
           </div>
-          <div class="message-history__message-reply-to">
-            <div class="message-history__reply-to-name"><p class="message-history__reply-to-name_styling">name name name name name name name name </p></div>
-            <div class="message-history__reply-to-message"><p class="message-history__reply-to-message_styling">text text text text text text text text text text text </p></div>
+          <div id="msg_${chatData.selectedChat}_${
+        item.id
+      }" class="message-history__message-reply-to">
+            <div class="message-history__reply-to-name"><p class="message-history__reply-to-name_styling"></p></div>
+            <div class="message-history__reply-to-message"><p class="message-history__reply-to-message_styling"></p></div>
           </div>
           <div class="message__message-date message__message-date_${
             item.ownerId == chatData.userId ? "output" : "input"
@@ -596,6 +637,21 @@ let chatData = {
           : "message__text_border"
       }">${chatData.checkForLinks(item.message)}</div></div>
           `);
+      if (item.replyOnId) {
+        $.ajax(`/conversation/get-message?messageId=${item.replyOnId}`).done(
+          (data) => {
+            $(
+              `#msg_${chatData.selectedChat}_${item.id} > .message-history__reply-to-name > p`
+            ).html(`${chatData.userData[data.payload.ownerId].username}`);
+            $(
+              `#msg_${chatData.selectedChat}_${item.id} > .message-history__reply-to-message > p`
+            ).html(`${data.payload.message}`);
+            $(`#msg_${chatData.selectedChat}_${item.id}`).css({
+              display: "block",
+            });
+          }
+        );
+      }
     });
 
     if ($(".message__text_link").get().length) {
@@ -850,6 +906,7 @@ let chatData = {
       dataType: "json",
     })
       .done(() => {
+        chatData.removeMessageToReply();
         chatData.loadUserData();
         $("#newMessageInput").val("");
         chatData.controlInput($("#newMessageInput").get(0));

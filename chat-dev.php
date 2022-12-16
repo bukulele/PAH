@@ -110,6 +110,10 @@ $this->registerCss(<<<CSS
 .current-contact__logo,
 .message__sender-image,
 .contact__image {
+  grid-row-start: 3;
+  grid-row-end: 4;
+  grid-column-start: 1;
+  grid-column-end: 2;
   border-radius: 50%;
   border: 1px solid #ddd;
   overflow: hidden;
@@ -278,9 +282,97 @@ $this->registerCss(<<<CSS
 .message-window__new-message_align-elements {
   display: grid;
   grid-template-columns: 10% 80% 10%;
-  grid-template-rows: 100%;
+  grid-template-rows: auto minmax(calc(100% - 6rem), 100%);
   place-items: center;
   padding: 0.5rem;
+}
+
+.message-window__message-reply-to {
+  width: 100%;
+  min-height: 0;
+  max-height: 6rem;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  grid-column-start: 1;
+  grid-column-end: 4;
+  display: none;
+  grid-template-columns: 10% 80% 10%;
+  grid-template-rows: 50% 50%;
+}
+
+.message-reply-to__icon {
+  fill: #4dd681;
+  width: 2rem;
+  height: 2rem;
+  grid-row-start: 1;
+  grid-row-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  place-self: center;
+}
+
+.message-reply-to__close-icon {
+  fill: rgb(173, 173, 173);
+  width: 1.3rem;
+  height: 1.3rem;
+  grid-row-start: 1;
+  grid-row-end: 3;
+  grid-column-start: 3;
+  grid-column-end: 4;
+  place-self: center;
+}
+
+.message-reply-to__close-icon * {
+  pointer-events: none;
+}
+
+.message-reply-to__contact-name {
+  width: 100%;
+  height: 100%;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  grid-column-start: 2;
+  grid-column-end: 3;
+}
+
+.message-reply-to__message {
+  width: 100%;
+  height: 100%;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 2;
+  grid-column-end: 3;
+}
+
+.message-reply-to__name-text_styling {
+  color: #00b446;
+  font-weight: bold;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.message-reply-to_text-styling {
+  color: rgb(173, 173, 173);
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.new-message__emoji {
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 2;
+}
+
+.new-message__send-message-photo {
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 3;
+  grid-column-end: 4;
 }
 
 .new-message__emoji,
@@ -302,6 +394,10 @@ $this->registerCss(<<<CSS
 }
 
 .new-message__input-field {
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 2;
+  grid-column-end: 3;
   width: 100%;
   border: none;
   resize: none;
@@ -473,15 +569,75 @@ $this->registerCss(<<<CSS
 
 .message-history__message {
   position: relative;
-  padding-top: 2rem;
+  padding-top: 1rem;
   min-height: 2rem;
   margin: 0.5rem;
   max-width: 300px;
   height: fit-content;
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-end;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  grid-template-columns: auto auto;
   gap: 1rem;
+}
+
+.message-history__reply-button * {
+  pointer-events: none;
+}
+
+.message-history__reply-button {
+  position: absolute;
+  bottom: 0;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  fill: #ddd;
+}
+
+.message-history__reply-button:hover {
+  fill: #4dd681;
+}
+
+.reply-button__output {
+  left: -1.5rem;
+}
+
+.reply-button__input {
+  right: -2.5rem;
+}
+
+.message-history__reply-button_sizing {
+  width: 70%;
+  height: 70%;
+}
+
+.message-history__message-reply-to {
+  display: none;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: rgb(145, 145, 145);
+}
+
+.message-history__reply-to-name_styling {
+  color: white;
+  font-weight: bold;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.message-history__reply-to-message_styling {
+  color: white;
+  margin: 0;
 }
 
 .empty-chat__message,
@@ -496,6 +652,7 @@ $this->registerCss(<<<CSS
 
 .message__output {
   align-self: flex-end;
+  place-items: end;
 }
 
 .message__input {
@@ -518,6 +675,10 @@ $this->registerCss(<<<CSS
 }
 
 .message__text {
+  grid-row-start: 3;
+  grid-row-end: 4;
+  grid-column-start: 2;
+  grid-column-end: 3;
   padding: 1rem;
   border-radius: 4px;
 }
@@ -596,16 +757,19 @@ $this->registerCss(<<<CSS
 }
 
 .message__message-date {
-  position: absolute;
-  top: 0;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  width: fit-content;
 }
 
 .message__message-date_output {
-  right: 0;
+  place-self: end;
 }
 
 .message__message-date_input {
-  left: 0;
+  place-self: start;
 }
 
 .message-date__text {
@@ -613,6 +777,7 @@ $this->registerCss(<<<CSS
   margin: 0;
   color: rgb(173, 173, 173);
   font-size: smaller;
+  width: fit-content;
 }
 
 .custom-badge {
@@ -687,6 +852,7 @@ $this->registerCss(<<<CSS
     padding: 0 1rem;
   }
 }
+
 
 CSS);
 ?>
@@ -782,6 +948,8 @@ let chatData = {
   contactsListPageLoaded: 1,
   lastSeenMessageId: 0,
   latestMessageId: 0,
+  messageToReply: null,
+  messagesReplies: null,
 
   init: function () {
     if (window.localStorage.pahChat_conversations) {
@@ -1057,6 +1225,7 @@ let chatData = {
   },
 
   setSelectedChat: function (event) {
+    chatData.removeMessageToReply();
     if (event.target.className.includes("contacts-list__contact")) {
       chatData.selectedChat = event.target.id;
       $(".contacts-list__contact").removeClass(
@@ -1141,6 +1310,10 @@ let chatData = {
 
             let messagesToAppend = loadedMessages.slice(i + 1);
             chatData.messages = [...chatData.messages, ...messagesToAppend];
+            sessionStorage.setItem(
+              `PAH_messages_${chatData.selectedChat}`,
+              JSON.stringify(chatData.messages)
+            );
             chatData.updateConversation(messagesToAppend);
           }
         });
@@ -1165,9 +1338,23 @@ let chatData = {
         $("#messageHistory").prepend(`
       <div class="message-history__message message__${
         messages[i].ownerId == chatData.userId ? "output" : "input"
-      }"><div class="message__message-date message__message-date_${
+      }">
+      <div id="btn_${chatData.selectedChat}_${
+          messages[i].id
+        }" class="message-history__reply-button reply-button__${
           messages[i].ownerId == chatData.userId ? "output" : "input"
-        }"><p class="message-date__text">${chatData.formatMessageDate(
+        }">
+      <svg class="message-history__reply-button_sizing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>
+      </div>
+      <div id="msg_${chatData.selectedChat}_${
+          messages[i].id
+        }" class="message-history__message-reply-to">
+      <div class="message-history__reply-to-name"><p class="small message-history__reply-to-name_styling"></p></div>
+      <div class="message-history__reply-to-message"><p class="small message-history__reply-to-message_styling"></p></div>
+    </div>
+      <div class="message__message-date message__message-date_${
+        messages[i].ownerId == chatData.userId ? "output" : "input"
+      }"><p class="message-date__text">${chatData.formatMessageDate(
           messages[i].createdAt
         )}</p></div><div class="message__sender-image ${
           messages[i].ownerId == chatData.userId
@@ -1185,6 +1372,21 @@ let chatData = {
             : "message__text_border"
         }">${chatData.checkForLinks(messages[i].message)}</div></div>
       `);
+        if (messages[i].replyOnId) {
+          $.ajax(
+            `/conversation/get-message?messageId=${messages[i].replyOnId}`
+          ).done((data) => {
+            $(
+              `#msg_${chatData.selectedChat}_${messages[i].id} > .message-history__reply-to-name > p`
+            ).html(`${chatData.userData[data.payload.ownerId].username}`);
+            $(
+              `#msg_${chatData.selectedChat}_${messages[i].id} > .message-history__reply-to-message > p`
+            ).html(`${data.payload.message}`);
+            $(`#msg_${chatData.selectedChat}_${messages[i].id}`).css({
+              display: "block",
+            });
+          });
+        }
       }
     chatData.messages = [...messages, ...chatData.messages];
     sessionStorage.setItem(
@@ -1264,9 +1466,23 @@ let chatData = {
         $("#messageHistory").append(`
             <div class="message-history__message message__${
               item.ownerId == chatData.userId ? "output" : "input"
-            }"><div class="message__message-date message__message-date_${
+            }">
+            <div id="btn_${chatData.selectedChat}_${
+          item.id
+        }" class="message-history__reply-button reply-button__${
           item.ownerId == chatData.userId ? "output" : "input"
-        }"><p class="message-date__text">${chatData.formatMessageDate(
+        }">
+            <svg class="message-history__reply-button_sizing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>
+            </div>
+            <div id="msg_${chatData.selectedChat}_${
+          item.id
+        }" class="message-history__message-reply-to">
+            <div class="message-history__reply-to-name"><p class="small message-history__reply-to-name_styling"></p></div>
+            <div class="message-history__reply-to-message"><p class="small message-history__reply-to-message_styling"></p></div>
+          </div>
+            <div class="message__message-date message__message-date_${
+              item.ownerId == chatData.userId ? "output" : "input"
+            }"><p class="message-date__text">${chatData.formatMessageDate(
           item.createdAt
         )}</p></div><div class="message__sender-image ${
           item.ownerId == chatData.userId ? "message__sender-image_hidden" : ""
@@ -1282,6 +1498,21 @@ let chatData = {
             : "message__text_border"
         }">${chatData.checkForLinks(item.message)}</div></div>
             `);
+        if (item.replyOnId) {
+          $.ajax(`/conversation/get-message?messageId=${item.replyOnId}`).done(
+            (data) => {
+              $(
+                `#msg_${chatData.selectedChat}_${item.id} > .message-history__reply-to-name > p`
+              ).html(`${chatData.userData[data.payload.ownerId].username}`);
+              $(
+                `#msg_${chatData.selectedChat}_${item.id} > .message-history__reply-to-message > p`
+              ).html(`${data.payload.message}`);
+              $(`#msg_${chatData.selectedChat}_${item.id}`).css({
+                display: "block",
+              });
+            }
+          );
+        }
       });
       if ($(".message__text_link").get().length) {
         $(".message__text_link").click(chatData.checkLink);
@@ -1300,9 +1531,23 @@ let chatData = {
       $("#messageHistory").append(`
           <div class="message-history__message message__${
             item.ownerId == chatData.userId ? "output" : "input"
-          }"><div class="message__message-date message__message-date_${
+          }">
+          <div id="btn_${chatData.selectedChat}_${
+        item.id
+      }" class="message-history__reply-button reply-button__${
         item.ownerId == chatData.userId ? "output" : "input"
-      }"><p class="message-date__text">${chatData.formatMessageDate(
+      }">
+          <svg class="message-history__reply-button_sizing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>
+          </div>
+          <div id="msg_${chatData.selectedChat}_${
+        item.id
+      }" class="message-history__message-reply-to">
+            <div class="message-history__reply-to-name"><p class="message-history__reply-to-name_styling"></p></div>
+            <div class="message-history__reply-to-message"><p class="message-history__reply-to-message_styling"></p></div>
+          </div>
+          <div class="message__message-date message__message-date_${
+            item.ownerId == chatData.userId ? "output" : "input"
+          }"><p class="message-date__text">${chatData.formatMessageDate(
         item.createdAt
       )}</p></div><div class="message__sender-image ${
         item.ownerId == chatData.userId ? "message__sender-image_hidden" : ""
@@ -1318,7 +1563,23 @@ let chatData = {
           : "message__text_border"
       }">${chatData.checkForLinks(item.message)}</div></div>
           `);
+      if (item.replyOnId) {
+        $.ajax(`/conversation/get-message?messageId=${item.replyOnId}`).done(
+          (data) => {
+            $(
+              `#msg_${chatData.selectedChat}_${item.id} > .message-history__reply-to-name > p`
+            ).html(`${chatData.userData[data.payload.ownerId].username}`);
+            $(
+              `#msg_${chatData.selectedChat}_${item.id} > .message-history__reply-to-message > p`
+            ).html(`${data.payload.message}`);
+            $(`#msg_${chatData.selectedChat}_${item.id}`).css({
+              display: "block",
+            });
+          }
+        );
+      }
     });
+
     if ($(".message__text_link").get().length) {
       $(".message__text_link").click(chatData.checkLink);
     }
@@ -1566,10 +1827,12 @@ let chatData = {
       data: {
         message: $("#newMessageInput").val(),
         conversationId: chatData.selectedChat,
+        replyOnId: chatData.messageToReply,
       },
       dataType: "json",
     })
       .done(() => {
+        chatData.removeMessageToReply();
         chatData.loadUserData();
         $("#newMessageInput").val("");
         chatData.controlInput($("#newMessageInput").get(0));
@@ -1698,6 +1961,32 @@ let chatData = {
     }
   },
 
+  selectMessageToReply: function (e) {
+    if (e.target.id.includes(`btn_${chatData.selectedChat}`)) {
+      let arrayFromId = e.target.id.split("_");
+      chatData.messageToReply = arrayFromId[2];
+      let message = chatData.messages.find(
+        (item) => item.id === chatData.messageToReply
+      );
+      chatData.setMessageToReply(message);
+    }
+  },
+
+  setMessageToReply: function (message) {
+    $(".message-window__message-reply-to").css({ display: "grid" });
+    $(".message-reply-to__contact-name > p").html(
+      chatData.userData[message.ownerId].username
+    );
+    $(".message-reply-to__message > p").html(message.message);
+  },
+
+  removeMessageToReply: function () {
+    chatData.messageToReply = null;
+    $(".message-reply-to__contact-name > p").html("");
+    $(".message-reply-to__message > p").html("");
+    $(".message-window__message-reply-to").css({ display: "none" });
+  },
+
   showNewMessageBlock: function (id) {
     // add an option for group chat
     let participantsArray = Object.keys(chatData.participants[id]).filter(
@@ -1716,6 +2005,16 @@ let chatData = {
           <div
             class="message-window__new-message message-window__new-message_align-elements"
           >
+          <div id="messageReplyTo" class="message-window__message-reply-to">
+          <div class="message-reply-to__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>
+          </div>
+          <div class="message-reply-to__contact-name"><p class="message-reply-to__name-text_styling">yo name yo name yo name yo name yo name yo name yo name yo name yo name yo name yo name yo name yo name yo name yo name </p></div>
+          <div class="message-reply-to__message"><p class="small message-reply-to_text-styling">hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan </p></div>
+          <div class="message-reply-to__close-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
+          </div>
+          </div>
         <button class="new-message__emoji">
         <svg class="emoji__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
@@ -1758,6 +2057,7 @@ let chatData = {
         $(".message-window__scroll-down-button").click(
           chatData.messageHistoryScrollDown
         );
+        $(".message-reply-to__close-icon").click(chatData.removeMessageToReply);
       } else if (
         chatData.conversations[chatData.selectedChat].status === 0 &&
         chatData.participants[chatData.selectedChat][chatData.userId].role === 9
@@ -1837,6 +2137,7 @@ let chatData = {
 
     chatData.showNewMessageBlock(chatData.selectedChat);
 
+    $("#messageHistory").click(chatData.selectMessageToReply);
     $("#backToContacts").click(chatData.backToContacts);
     $(".message-window__wrapper").on(
       "scroll",
