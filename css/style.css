@@ -568,11 +568,15 @@
   width: 2rem;
   height: 2rem;
   border: 1px solid #ddd;
-  fill: #4dd681;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
+  fill: #ddd;
+}
+
+.message-history__reply-button:hover {
+  fill: #4dd681;
 }
 
 .reply-button__output {
