@@ -637,7 +637,7 @@
   align-self: flex-start;
 }
 
-.message__input > .message__text {
+.message__text_bg {
   background-color: rgb(246, 246, 246);
 }
 

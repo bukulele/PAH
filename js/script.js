@@ -575,7 +575,7 @@ let chatData = {
         }" class="img-responsive"></div><div class="message__text ${
           chatData.checkForEmojis(item)
             ? "message__text_emoji"
-            : "message__text_border"
+            : "message__text_border message__text_bg"
         }">${chatData.checkForLinks(item.message)}</div></div>
             `);
         if (item.replyOnId) {
