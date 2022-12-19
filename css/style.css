@@ -346,6 +346,11 @@
   grid-column-end: 2;
 }
 
+.picmo-custom,
+.picmo-custom > .content > .emojiArea {
+  width: fit-content !important;
+}
+
 .new-message__send-message-photo {
   grid-row-start: 2;
   grid-row-end: 3;
@@ -393,7 +398,7 @@
 
 .message-window__emoji-block {
   position: absolute;
-  width: 288px;
+  width: fit-content;
   height: 319px;
 }
 

@@ -864,6 +864,7 @@ let chatData = {
       emojiSize: "2.5rem",
       rootElement: chatData.emojiTrigger,
       showPreview: false,
+      className: "picmo-custom",
     });
 
     emojiPicker.addEventListener("emoji:select", (selection) => {
