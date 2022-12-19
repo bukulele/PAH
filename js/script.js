@@ -287,8 +287,9 @@ let chatData = {
                     <div class="contact__name"><p class="name name_text-styling">${
                       chatData.userData[userId].username
                     }</p></div>
-                    <div class="contact__last-message-date"><p class="small last-message-date_text-styling">${chatData.defineDateFormat(
-                      chatData.lastMessages[id].createdAt
+                    <div class="contact__last-message-date"><p class="last-message-date_text-styling">${chatData.defineDateFormat(
+                      chatData.lastMessages[id].createdAt,
+                      "last message"
                     )}</p></div>
                     <div class="contact__last-message"><p class="small activity__activity-status_text-styling">
                       ${chatData.lastMessages[id].message}
@@ -336,7 +337,8 @@ let chatData = {
       );
       $("#currentContactActivity").html(
         `Active: ${chatData.defineDateFormat(
-          chatData.userData[userId].lastvisit_at
+          chatData.userData[userId].lastvisit_at,
+          "active"
         )}`
       );
     }
@@ -785,7 +787,7 @@ let chatData = {
     // }
   },
 
-  defineDateFormat: function (date) {
+  defineDateFormat: function (date, type) {
     if (date) {
       const today = new Date();
       const weekDays = {
@@ -797,37 +799,45 @@ let chatData = {
         5: "Fri",
         6: "Sat",
       };
-      let messageDate = new Date(date);
+      let activeDate = new Date(date);
       let formattedDate;
 
       if (
-        today.getDate() === messageDate.getDate() &&
-        Number(today) - Number(messageDate) < 24 * 60 * 60 * 1000
+        today.getDate() === activeDate.getDate() &&
+        Number(today) - Number(activeDate) < 24 * 60 * 60 * 1000
       ) {
         formattedDate = `${
-          messageDate.getHours() < 10
-            ? "0" + messageDate.getHours()
-            : messageDate.getHours()
+          activeDate.getHours() < 10
+            ? "0" + activeDate.getHours()
+            : activeDate.getHours()
         }:${
-          messageDate.getMinutes() < 10
-            ? "0" + messageDate.getMinutes()
-            : messageDate.getMinutes()
+          activeDate.getMinutes() < 10
+            ? "0" + activeDate.getMinutes()
+            : activeDate.getMinutes()
         }`;
       } else if (
-        Number(today) - Number(messageDate) > 24 * 60 * 60 * 1000 &&
-        Number(today) - Number(messageDate) < 24 * 60 * 60 * 1000 * 7
+        Number(today) - Number(activeDate) > 24 * 60 * 60 * 1000 &&
+        Number(today) - Number(activeDate) < 24 * 60 * 60 * 1000 * 7
       ) {
-        formattedDate = weekDays[messageDate.getDay()];
+        formattedDate = weekDays[activeDate.getDay()];
       } else {
-        formattedDate = `${
-          messageDate.getDate() < 10
-            ? "0" + messageDate.getDate()
-            : messageDate.getDate()
-        }/${
-          messageDate.getMonth() + 1 < 10
-            ? "0" + (messageDate.getMonth() + 1)
-            : messageDate.getMonth() + 1
-        }/${String(messageDate.getFullYear()).substring(2)}`;
+        formattedDate =
+          type === "active"
+            ? `${Math.floor(
+                (Number(today) - Number(activeDate)) / 24 / 60 / 60 / 1000
+              )} days ago`
+            : `${Math.floor(
+                (Number(today) - Number(activeDate)) / 24 / 60 / 60 / 1000
+              )} d. ago`;
+        // formattedDate = `${
+        //   activeDate.getDate() < 10
+        //     ? "0" + activeDate.getDate()
+        //     : activeDate.getDate()
+        // }/${
+        //   activeDate.getMonth() + 1 < 10
+        //     ? "0" + (activeDate.getMonth() + 1)
+        //     : activeDate.getMonth() + 1
+        // }/${String(activeDate.getFullYear()).substring(2)}`;
       }
       return formattedDate;
     } else {

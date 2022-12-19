@@ -180,6 +180,8 @@
 .last-message-date_text-styling {
   color: rgb(173, 173, 173);
   margin: 0;
+  white-space: nowrap;
+  font-size: 80%;
 }
 
 .message-window__current-contact_align-elements {
