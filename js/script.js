@@ -25,6 +25,7 @@ let chatData = {
   messageToReply: null,
   messagesReplies: null,
   heightToScrollAfterLoading: 0,
+  messageCanBeSent: false,
 
   init: function () {
     if (window.localStorage.pahChat_conversations) {
@@ -789,7 +790,22 @@ let chatData = {
 
   controlInput: function (target) {
     chatData.controlNewMessageInputHeight(target);
-    chatData.switchSendMessageButton(target);
+    if (
+      target.value.trim().length &&
+      (!$("#sendMessageButton").get(0).style.display ||
+        $("#sendMessageButton").get(0).style.display === "none")
+    ) {
+      chatData.switchSendMessageButton(true);
+      $("#sendMessageButton").fadeIn(150);
+      chatData.messageCanBeSent = true;
+    } else if (
+      !target.value.trim().length &&
+      $("#sendMessageButton").get(0).style.display
+    ) {
+      chatData.switchSendMessageButton(false);
+      $("#sendMessageButton").fadeOut(100);
+      chatData.messageCanBeSent = false;
+    }
   },
 
   controlNewMessageInputHeight: function (target) {
@@ -805,18 +821,13 @@ let chatData = {
     }
   },
 
-  switchSendMessageButton: function (target) {
-    if (
-      target.value.trim().length &&
-      (!$("#sendMessageButton").get(0).style.display ||
-        $("#sendMessageButton").get(0).style.display === "none")
-    ) {
+  switchSendMessageButton: function (showButton) {
+    if (showButton) {
       $("#sendMessageButton").fadeIn(150);
-    } else if (
-      !target.value.trim().length &&
-      $("#sendMessageButton").get(0).style.display
-    ) {
+      chatData.messageCanBeSent = true;
+    } else {
       $("#sendMessageButton").fadeOut(100);
+      chatData.messageCanBeSent = false;
     }
 
     // THIS IS THE VERSION OF SWITCHING BETWEEN PHOTO OR MESSAGE SEND BUTTONS
@@ -1134,6 +1145,24 @@ let chatData = {
     $(".message-window__message-reply-to").css({ display: "none" });
   },
 
+  textAreaKeyPressHandler: function (e) {
+    if (e.keyCode == 13 && e.shiftKey) {
+      e.preventDefault();
+      $("#newMessageInput").val(function (index, value) {
+        return value + "\r\n";
+      });
+      $("#newMessageInput").scrollTop(
+        $("#newMessageInput").get(0).scrollHeight
+      );
+      chatData.controlInput(e.target);
+    } else if (e.keyCode === 13 && !e.shiftKey && chatData.messageCanBeSent) {
+      e.preventDefault();
+      chatData.sendMessage();
+    } else if (e.keyCode === 13 && !e.shiftKey && !chatData.messageCanBeSent) {
+      e.preventDefault();
+    }
+  },
+
   showNewMessageBlock: function (id) {
     // add an option for group chat
     let participantsArray = Object.keys(chatData.participants[id]).filter(
@@ -1175,6 +1204,7 @@ let chatData = {
         placeholder="Message..."
         class="new-message__input-field"
         rows="1"
+        minlength="1"
         maxlength="750"
       ></textarea>
       <div
@@ -1190,6 +1220,7 @@ let chatData = {
           </div>
           `);
 
+        $("#newMessageInput").keypress(chatData.textAreaKeyPressHandler);
         $("#newMessageInput").on("input", (e) =>
           chatData.controlInput(e.target)
         );
