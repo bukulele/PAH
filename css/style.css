@@ -583,13 +583,9 @@
   height: 2rem;
   border: 1px solid #ddd;
   border-radius: 50%;
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
-  fill: #ddd;
-}
-
-.message-history__reply-button:hover {
   fill: #4dd681;
 }
 

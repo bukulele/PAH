@@ -202,6 +202,8 @@ $this->registerCss(<<<CSS
 .last-message-date_text-styling {
   color: rgb(173, 173, 173);
   margin: 0;
+  white-space: nowrap;
+  font-size: 80%;
 }
 
 .message-window__current-contact_align-elements {
@@ -368,6 +370,11 @@ $this->registerCss(<<<CSS
   grid-column-end: 2;
 }
 
+.picmo-custom,
+.picmo-custom > .content > .emojiArea {
+  width: fit-content !important;
+}
+
 .new-message__send-message-photo {
   grid-row-start: 2;
   grid-row-end: 3;
@@ -415,7 +422,7 @@ $this->registerCss(<<<CSS
 
 .message-window__emoji-block {
   position: absolute;
-  width: 288px;
+  width: fit-content;
   height: 319px;
 }
 
@@ -580,6 +587,13 @@ $this->registerCss(<<<CSS
   gap: 1rem;
 }
 
+.message-history__message-wrapper {
+  display: flex;
+  width: 100%;
+  height: fit-content;
+  align-items: center;
+}
+
 .message-history__reply-button * {
   pointer-events: none;
 }
@@ -591,13 +605,9 @@ $this->registerCss(<<<CSS
   height: 2rem;
   border: 1px solid #ddd;
   border-radius: 50%;
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
-  fill: #ddd;
-}
-
-.message-history__reply-button:hover {
   fill: #4dd681;
 }
 
@@ -650,16 +660,15 @@ $this->registerCss(<<<CSS
   font-weight: bold;
 }
 
-.message__output {
-  align-self: flex-end;
-  place-items: end;
+.message-history__output {
+  justify-content: end;
 }
 
-.message__input {
-  align-self: flex-start;
+.message-history__input {
+  justify-content: start;
 }
 
-.message__input > .message__text {
+.message__input > .message__text_bg {
   background-color: rgb(246, 246, 246);
 }
 
@@ -853,7 +862,6 @@ $this->registerCss(<<<CSS
   }
 }
 
-
 CSS);
 ?>
 
@@ -868,7 +876,7 @@ CSS);
                 <b>PRIMARY</b>
               </div>
               <div id="requestsTab" class="contacts-type__tab">
-                Requests
+                <b>REQUESTS</b>
                 <span
                   id="requestsNumber"
                   class="custom-badge custom-badge_hidden"
@@ -1213,8 +1221,9 @@ let chatData = {
                     <div class="contact__name"><p class="name name_text-styling">${
                       chatData.userData[userId].username
                     }</p></div>
-                    <div class="contact__last-message-date"><p class="small last-message-date_text-styling">${chatData.defineDateFormat(
-                      chatData.lastMessages[id].createdAt
+                    <div class="contact__last-message-date"><p class="last-message-date_text-styling">${chatData.defineDateFormat(
+                      chatData.lastMessages[id].createdAt,
+                      "last message"
                     )}</p></div>
                     <div class="contact__last-message"><p class="small activity__activity-status_text-styling">
                       ${chatData.lastMessages[id].message}
@@ -1262,7 +1271,8 @@ let chatData = {
       );
       $("#currentContactActivity").html(
         `Active: ${chatData.defineDateFormat(
-          chatData.userData[userId].lastvisit_at
+          chatData.userData[userId].lastvisit_at,
+          "active"
         )}`
       );
     }
@@ -1337,6 +1347,11 @@ let chatData = {
     if (messages.length > 0) {
       for (let i = messages.length - 1; i >= 0; i--) {
         $("#messageHistory").prepend(`
+        <div id="wrp_${chatData.selectedChat}_${
+          messages[i].id
+        }" class="message-history__message-wrapper message-history__${
+          messages[i].ownerId == chatData.userId ? "output" : "input"
+        }">
       <div class="message-history__message message__${
         messages[i].ownerId == chatData.userId ? "output" : "input"
       }">
@@ -1370,9 +1385,21 @@ let chatData = {
         }" class="img-responsive"></div><div class="message__text ${
           chatData.checkForEmojis(messages[i])
             ? "message__text_emoji"
-            : "message__text_border"
-        }">${chatData.checkForLinks(messages[i].message)}</div></div>
+            : "message__text_border message__text_bg"
+        }">${chatData.checkForLinks(messages[i].message)}</div></div></div>
       `);
+        $(`#wrp_${chatData.selectedChat}_${messages[i].id}`).hover(
+          () => {
+            $(`#btn_${chatData.selectedChat}_${messages[i].id}`).css({
+              display: "flex",
+            });
+          },
+          () => {
+            $(`#btn_${chatData.selectedChat}_${messages[i].id}`).css({
+              display: "none",
+            });
+          }
+        );
         if (messages[i].replyOnId) {
           $.ajax(
             `/conversation/get-message?messageId=${messages[i].replyOnId}`
@@ -1470,6 +1497,11 @@ let chatData = {
     if (chatData.messages) {
       chatData.messages.forEach((item) => {
         $("#messageHistory").append(`
+        <div id="wrp_${chatData.selectedChat}_${
+          item.id
+        }" class="message-history__message-wrapper message-history__${
+          item.ownerId == chatData.userId ? "output" : "input"
+        }">
             <div class="message-history__message message__${
               item.ownerId == chatData.userId ? "output" : "input"
             }">
@@ -1501,9 +1533,21 @@ let chatData = {
         }" class="img-responsive"></div><div class="message__text ${
           chatData.checkForEmojis(item)
             ? "message__text_emoji"
-            : "message__text_border"
-        }">${chatData.checkForLinks(item.message)}</div></div>
+            : "message__text_border message__text_bg"
+        }">${chatData.checkForLinks(item.message)}</div></div></div>
             `);
+        $(`#wrp_${chatData.selectedChat}_${item.id}`).hover(
+          () => {
+            $(`#btn_${chatData.selectedChat}_${item.id}`).css({
+              display: "flex",
+            });
+          },
+          () => {
+            $(`#btn_${chatData.selectedChat}_${item.id}`).css({
+              display: "none",
+            });
+          }
+        );
         if (item.replyOnId) {
           $.ajax(`/conversation/get-message?messageId=${item.replyOnId}`).done(
             (data) => {
@@ -1535,6 +1579,11 @@ let chatData = {
     //add scroll down button
     messages.forEach((item) => {
       $("#messageHistory").append(`
+      <div id="wrp_${chatData.selectedChat}_${
+        item.id
+      }" class="message-history__message-wrapper message-history__${
+        item.ownerId == chatData.userId ? "output" : "input"
+      }">
           <div class="message-history__message message__${
             item.ownerId == chatData.userId ? "output" : "input"
           }">
@@ -1566,9 +1615,21 @@ let chatData = {
       }" class="img-responsive"></div><div class="message__text ${
         chatData.checkForEmojis(item)
           ? "message__text_emoji"
-          : "message__text_border"
-      }">${chatData.checkForLinks(item.message)}</div></div>
+          : "message__text_border message__text_bg"
+      }">${chatData.checkForLinks(item.message)}</div></div></div>
           `);
+      $(`#wrp_${chatData.selectedChat}_${item.id}`).hover(
+        () => {
+          $(`#btn_${chatData.selectedChat}_${item.id}`).css({
+            display: "flex",
+          });
+        },
+        () => {
+          $(`#btn_${chatData.selectedChat}_${item.id}`).css({
+            display: "none",
+          });
+        }
+      );
       if (item.replyOnId) {
         $.ajax(`/conversation/get-message?messageId=${item.replyOnId}`).done(
           (data) => {
@@ -1610,7 +1671,7 @@ let chatData = {
 
   messageHistoryScrollDown: function () {
     $(".message-window__wrapper").scrollTop(
-      $(".message-history__message:last-child")[0].offsetTop
+      $(".message-history__message-wrapper:last-child")[0].offsetTop
     );
   },
 
@@ -1711,7 +1772,7 @@ let chatData = {
     // }
   },
 
-  defineDateFormat: function (date) {
+  defineDateFormat: function (date, type) {
     if (date) {
       const today = new Date();
       const weekDays = {
@@ -1723,37 +1784,45 @@ let chatData = {
         5: "Fri",
         6: "Sat",
       };
-      let messageDate = new Date(date);
+      let activeDate = new Date(date);
       let formattedDate;
 
       if (
-        today.getDate() === messageDate.getDate() &&
-        Number(today) - Number(messageDate) < 24 * 60 * 60 * 1000
+        today.getDate() === activeDate.getDate() &&
+        Number(today) - Number(activeDate) < 24 * 60 * 60 * 1000
       ) {
         formattedDate = `${
-          messageDate.getHours() < 10
-            ? "0" + messageDate.getHours()
-            : messageDate.getHours()
+          activeDate.getHours() < 10
+            ? "0" + activeDate.getHours()
+            : activeDate.getHours()
         }:${
-          messageDate.getMinutes() < 10
-            ? "0" + messageDate.getMinutes()
-            : messageDate.getMinutes()
+          activeDate.getMinutes() < 10
+            ? "0" + activeDate.getMinutes()
+            : activeDate.getMinutes()
         }`;
       } else if (
-        Number(today) - Number(messageDate) > 24 * 60 * 60 * 1000 &&
-        Number(today) - Number(messageDate) < 24 * 60 * 60 * 1000 * 7
+        Number(today) - Number(activeDate) > 24 * 60 * 60 * 1000 &&
+        Number(today) - Number(activeDate) < 24 * 60 * 60 * 1000 * 7
       ) {
-        formattedDate = weekDays[messageDate.getDay()];
+        formattedDate = weekDays[activeDate.getDay()];
       } else {
-        formattedDate = `${
-          messageDate.getDate() < 10
-            ? "0" + messageDate.getDate()
-            : messageDate.getDate()
-        }/${
-          messageDate.getMonth() + 1 < 10
-            ? "0" + (messageDate.getMonth() + 1)
-            : messageDate.getMonth() + 1
-        }/${String(messageDate.getFullYear()).substring(2)}`;
+        formattedDate =
+          type === "active"
+            ? `${Math.floor(
+                (Number(today) - Number(activeDate)) / 24 / 60 / 60 / 1000
+              )} days ago`
+            : `${Math.floor(
+                (Number(today) - Number(activeDate)) / 24 / 60 / 60 / 1000
+              )} d. ago`;
+        // formattedDate = `${
+        //   activeDate.getDate() < 10
+        //     ? "0" + activeDate.getDate()
+        //     : activeDate.getDate()
+        // }/${
+        //   activeDate.getMonth() + 1 < 10
+        //     ? "0" + (activeDate.getMonth() + 1)
+        //     : activeDate.getMonth() + 1
+        // }/${String(activeDate.getFullYear()).substring(2)}`;
       }
       return formattedDate;
     } else {
@@ -1790,6 +1859,7 @@ let chatData = {
       emojiSize: "2.5rem",
       rootElement: chatData.emojiTrigger,
       showPreview: false,
+      className: "picmo-custom",
     });
 
     emojiPicker.addEventListener("emoji:select", (selection) => {
