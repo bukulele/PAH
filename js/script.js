@@ -413,6 +413,9 @@ let chatData = {
     if (messages.length > 0) {
       for (let i = messages.length - 1; i >= 0; i--) {
         $("#messageHistory").prepend(`
+        <div class="message-history__message-wrapper message-history__${
+          messages[i].ownerId == chatData.userId ? "output" : "input"
+        }">
       <div class="message-history__message message__${
         messages[i].ownerId == chatData.userId ? "output" : "input"
       }">
@@ -447,7 +450,7 @@ let chatData = {
           chatData.checkForEmojis(messages[i])
             ? "message__text_emoji"
             : "message__text_border message__text_bg"
-        }">${chatData.checkForLinks(messages[i].message)}</div></div>
+        }">${chatData.checkForLinks(messages[i].message)}</div></div></div>
       `);
         if (messages[i].replyOnId) {
           $.ajax(
@@ -546,6 +549,9 @@ let chatData = {
     if (chatData.messages) {
       chatData.messages.forEach((item) => {
         $("#messageHistory").append(`
+        <div class="message-history__message-wrapper message-history__${
+          item.ownerId == chatData.userId ? "output" : "input"
+        }">
             <div class="message-history__message message__${
               item.ownerId == chatData.userId ? "output" : "input"
             }">
@@ -578,7 +584,7 @@ let chatData = {
           chatData.checkForEmojis(item)
             ? "message__text_emoji"
             : "message__text_border message__text_bg"
-        }">${chatData.checkForLinks(item.message)}</div></div>
+        }">${chatData.checkForLinks(item.message)}</div></div></div>
             `);
         if (item.replyOnId) {
           $.ajax(`/conversation/get-message?messageId=${item.replyOnId}`).done(
@@ -611,6 +617,9 @@ let chatData = {
     //add scroll down button
     messages.forEach((item) => {
       $("#messageHistory").append(`
+      <div class="message-history__message-wrapper message-history__${
+        item.ownerId == chatData.userId ? "output" : "input"
+      }">
           <div class="message-history__message message__${
             item.ownerId == chatData.userId ? "output" : "input"
           }">
@@ -643,7 +652,7 @@ let chatData = {
         chatData.checkForEmojis(item)
           ? "message__text_emoji"
           : "message__text_border message__text_bg"
-      }">${chatData.checkForLinks(item.message)}</div></div>
+      }">${chatData.checkForLinks(item.message)}</div></div></div>
           `);
       if (item.replyOnId) {
         $.ajax(`/conversation/get-message?messageId=${item.replyOnId}`).done(

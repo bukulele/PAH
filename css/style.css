@@ -565,6 +565,13 @@
   gap: 1rem;
 }
 
+.message-history__message-wrapper {
+  display: flex;
+  width: 100%;
+  height: fit-content;
+  align-items: center;
+}
+
 .message-history__reply-button * {
   pointer-events: none;
 }
@@ -635,16 +642,15 @@
   font-weight: bold;
 }
 
-.message__output {
-  align-self: flex-end;
-  place-items: end;
+.message-history__output {
+  justify-content: end;
 }
 
-.message__input {
-  align-self: flex-start;
+.message-history__input {
+  justify-content: start;
 }
 
-.message__text_bg {
+.message__input > .message__text_bg {
   background-color: rgb(246, 246, 246);
 }
 
