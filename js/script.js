@@ -303,6 +303,10 @@ let chatData = {
 
   setSelectedChat: function (event) {
     chatData.removeMessageToReply();
+    if (chatData.windowWidth <= 680) {
+      $(".contacts-block").css({ display: "none" });
+      $(".message-window").css({ display: "grid" });
+    }
     if (event.target.className.includes("contacts-list__contact")) {
       chatData.selectedChat = event.target.id;
       $(".contacts-list__contact").removeClass(
@@ -312,12 +316,7 @@ let chatData = {
       chatData.showMessageWindow();
       chatData.showContactData();
     }
-    if (chatData.windowWidth <= 680) {
-      $(".contacts-block").css({ display: "none" });
-      $(".message-window").css({ display: "grid" });
-    }
     chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
-    chatData.messageHistoryScrollDown();
   },
 
   showContactData: function () {
@@ -633,6 +632,8 @@ let chatData = {
           );
         }
       });
+      chatData.messageHistoryScrollDown();
+
       if ($(".message__text_link").get().length) {
         $(".message__text_link").click(chatData.checkLink);
       }
@@ -738,6 +739,7 @@ let chatData = {
   },
 
   messageHistoryScrollDown: function () {
+    console.log($(".message-history__message-wrapper:last-child")[0].offsetTop);
     $(".message-window__wrapper").scrollTop(
       $(".message-history__message-wrapper:last-child")[0].offsetTop
     );

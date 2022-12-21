@@ -704,6 +704,7 @@ $this->registerCss(<<<CSS
   color: #00b446;
   font-weight: bold;
   cursor: pointer;
+  word-break: break-word;
 }
 
 .message__text_link:hover {
@@ -860,7 +861,21 @@ $this->registerCss(<<<CSS
   .message-window__message-history {
     padding: 0 1rem;
   }
+
+  .message__text {
+    max-width: 220px;
+  }
+
+  .message-history__reply-button {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .reply-button__input {
+    right: -3rem;
+  }
 }
+
 
 CSS);
 ?>
@@ -1250,6 +1265,8 @@ let chatData = {
       $(".contacts-block").css({ display: "none" });
       $(".message-window").css({ display: "grid" });
     }
+    chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
+    chatData.messageHistoryScrollDown();
   },
 
   showContactData: function () {
@@ -1568,7 +1585,6 @@ let chatData = {
       if ($(".message__text_link").get().length) {
         $(".message__text_link").click(chatData.checkLink);
       }
-      chatData.messageHistoryScrollDown();
     } else {
       $("#messageHistory").html(
         `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
@@ -1797,12 +1813,6 @@ let chatData = {
       };
       let activeDate = new Date(date);
       let formattedDate;
-      // console.log(Number(today) - Number(activeDate));
-      console.log(
-        today.getDate() === activeDate.getDate() ||
-          Number(today) - Number(activeDate) < 24 * 60 * 60 * 1000
-      );
-
       if (
         today.getDate() === activeDate.getDate() &&
         Number(today) - Number(activeDate) < 24 * 60 * 60 * 1000
@@ -2091,7 +2101,11 @@ let chatData = {
   },
 
   textAreaKeyPressHandler: function (e) {
-    if (e.keyCode == 13 && e.shiftKey) {
+    let mobileDevice =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
+        navigator.userAgent
+      );
+    if (e.keyCode == 13 && (e.shiftKey || mobileDevice)) {
       e.preventDefault();
       $("#newMessageInput").val(function (index, value) {
         return value + "\r\n";
@@ -2169,7 +2183,6 @@ let chatData = {
         $("#newMessageInput").on("input", (e) =>
           chatData.controlInput(e.target)
         );
-        chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
         $(".new-message__emoji").click(chatData.showEmojiBlock);
         $(".message-window__emoji-block-wrapper").click(
           chatData.hideEmojiBlock
