@@ -317,6 +317,7 @@ let chatData = {
       $(".message-window").css({ display: "grid" });
     }
     chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
+    chatData.messageHistoryScrollDown();
   },
 
   showContactData: function () {
@@ -635,7 +636,6 @@ let chatData = {
       if ($(".message__text_link").get().length) {
         $(".message__text_link").click(chatData.checkLink);
       }
-      chatData.messageHistoryScrollDown();
     } else {
       $("#messageHistory").html(
         `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
