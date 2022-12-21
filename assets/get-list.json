@@ -3,12 +3,20 @@
   "errorMessage": null,
   "payload": {
     "conversations": {
+      "49": {
+        "conversationId": 49,
+        "status": 1,
+        "type": 0,
+        "createdAt": "2022-12-20 14:47:06",
+        "updatedAt": "2022-12-20 14:47:49",
+        "title": null
+      },
       "48": {
         "conversationId": 48,
         "status": 1,
         "type": 0,
         "createdAt": "2022-12-14 07:45:30",
-        "updatedAt": "2022-12-16 13:21:30",
+        "updatedAt": "2022-12-20 13:13:12",
         "title": null
       },
       "47": {
@@ -104,20 +112,34 @@
         "message": "привет"
       },
       "48": {
-        "id": "142",
+        "id": "145",
         "conversationId": 48,
         "ownerId": 284408,
         "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-16 13:21:30",
+        "replyOnId": "138",
+        "createdAt": "2022-12-20 13:13:12",
         "updatedAt": null,
-        "message": "да, так и есть"
+        "message": "            проверочка                         \n\n"
+      },
+      "49": {
+        "id": "148",
+        "conversationId": 49,
+        "ownerId": 284408,
+        "type": 0,
+        "replyOnId": null,
+        "createdAt": "2022-12-20 14:47:49",
+        "updatedAt": null,
+        "message": "вообще норм"
       }
     },
     "participants": {
+      "49": {
+        "284408": { "userId": 284408, "role": 1, "lastSeenMessageId": "148" },
+        "285627": { "userId": 285627, "role": 1, "lastSeenMessageId": "148" }
+      },
       "48": {
-        "284408": { "userId": 284408, "role": 1, "lastSeenMessageId": "142" },
-        "285627": { "userId": 285627, "role": 1, "lastSeenMessageId": "139" }
+        "284408": { "userId": 284408, "role": 1, "lastSeenMessageId": "145" },
+        "285627": { "userId": 285627, "role": 1, "lastSeenMessageId": "145" }
       },
       "47": {
         "284408": { "userId": 284408, "role": 1, "lastSeenMessageId": "100" },
@@ -152,7 +174,7 @@
         "id": 285627,
         "username": "dirty_lele",
         "created_at": "2022-12-09 13:25:28",
-        "lastvisit_at": "2022-12-13 11:26:37",
+        "lastvisit_at": "2022-12-20 14:45:35",
         "avatar_src": "//www.gravatar.com/avatar/c4167ea596703fe74a7b0dcfc6c36043?s=50&d=mm&r=g"
       },
       "285319": {

@@ -450,7 +450,7 @@
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: 20% minmax(60%, auto) minmax(10%, auto);
+  grid-template-columns: 20% minmax(50%, auto) minmax(10%, auto);
   grid-template-rows: 50% 50%;
   column-gap: 0.5rem;
   padding: 0 1rem;
@@ -682,6 +682,7 @@
   color: #00b446;
   font-weight: bold;
   cursor: pointer;
+  word-break: break-word;
 }
 
 .message__text_link:hover {
@@ -800,7 +801,7 @@
   }
 
   .contact__container {
-    grid-template-columns: 15% minmax(65%, auto) minmax(10%, auto);
+    grid-template-columns: 15% minmax(50%, auto) minmax(10%, auto);
     padding: 0 0.5rem;
   }
 

@@ -863,6 +863,11 @@ let chatData = {
       };
       let activeDate = new Date(date);
       let formattedDate;
+      // console.log(Number(today) - Number(activeDate));
+      console.log(
+        today.getDate() === activeDate.getDate() ||
+          Number(today) - Number(activeDate) < 24 * 60 * 60 * 1000
+      );
 
       if (
         today.getDate() === activeDate.getDate() &&
@@ -877,6 +882,12 @@ let chatData = {
             ? "0" + activeDate.getMinutes()
             : activeDate.getMinutes()
         }`;
+      } else if (
+        today.getDate() !== activeDate.getDate() &&
+        Number(today) - Number(activeDate) < 24 * 60 * 60 * 1000
+      ) {
+        formattedDate = formattedDate =
+          type === "active" ? `yesterday` : `1 d. ago`;
       } else if (
         Number(today) - Number(activeDate) > 24 * 60 * 60 * 1000 &&
         Number(today) - Number(activeDate) < 24 * 60 * 60 * 1000 * 7
@@ -1146,7 +1157,11 @@ let chatData = {
   },
 
   textAreaKeyPressHandler: function (e) {
-    if (e.keyCode == 13 && e.shiftKey) {
+    let mobileDevice =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
+        navigator.userAgent
+      );
+    if (e.keyCode == 13 && (e.shiftKey || mobileDevice)) {
       e.preventDefault();
       $("#newMessageInput").val(function (index, value) {
         return value + "\r\n";

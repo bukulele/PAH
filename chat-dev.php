@@ -472,7 +472,7 @@ $this->registerCss(<<<CSS
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: 20% minmax(60%, auto) minmax(10%, auto);
+  grid-template-columns: 20% minmax(50%, auto) minmax(10%, auto);
   grid-template-rows: 50% 50%;
   column-gap: 0.5rem;
   padding: 0 1rem;
@@ -822,7 +822,7 @@ $this->registerCss(<<<CSS
   }
 
   .contact__container {
-    grid-template-columns: 15% minmax(65%, auto) minmax(10%, auto);
+    grid-template-columns: 15% minmax(50%, auto) minmax(10%, auto);
     padding: 0 0.5rem;
   }
 
@@ -1797,6 +1797,11 @@ let chatData = {
       };
       let activeDate = new Date(date);
       let formattedDate;
+      // console.log(Number(today) - Number(activeDate));
+      console.log(
+        today.getDate() === activeDate.getDate() ||
+          Number(today) - Number(activeDate) < 24 * 60 * 60 * 1000
+      );
 
       if (
         today.getDate() === activeDate.getDate() &&
@@ -1811,6 +1816,12 @@ let chatData = {
             ? "0" + activeDate.getMinutes()
             : activeDate.getMinutes()
         }`;
+      } else if (
+        today.getDate() !== activeDate.getDate() &&
+        Number(today) - Number(activeDate) < 24 * 60 * 60 * 1000
+      ) {
+        formattedDate = formattedDate =
+          type === "active" ? `yesterday` : `1 d. ago`;
       } else if (
         Number(today) - Number(activeDate) > 24 * 60 * 60 * 1000 &&
         Number(today) - Number(activeDate) < 24 * 60 * 60 * 1000 * 7

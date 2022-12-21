@@ -1,129 +1,68 @@
 {
-  "user": {
-    "id": 132,
-    "username": "john doe",
-    "last_login": "2022-11-20T16:18:18.000",
-    "photo": "./assets/images/cat1.jpeg"
-  },
-  "conversations": {
-    "14653": {
-      "following": false,
-      "username": "kisa",
-      "settings": "accepted",
-      "photo": "./assets/images/cat2.jpeg",
-      "messages": [
-        {
-          "date": "2022-11-20T16:10:18.000",
-          "message": "Hi!",
-          "sender": "14653"
-        },
-        {
-          "date": "2022-11-20T16:11:18.000",
-          "message": "hi. great to see you",
-          "sender": "132"
-        },
-        {
-          "date": "2022-11-20T16:12:18.000",
-          "message": "me too",
-          "sender": "14653"
-        },
-        {
-          "date": "2022-11-20T16:13:18.000",
-          "message": "cool",
-          "sender": "132"
-        },
-        {
-          "date": "2022-11-20T16:14:18.000",
-          "message": "where are you from?",
-          "sender": "14653"
-        }
-      ],
-      "last_login": "2022-11-20T16:18:18.000"
-    },
-    "1234": {
-      "following": true,
-      "username": "Ivan",
-      "settings": "restricted",
-      "photo": "./assets/images/cat3.jpeg",
-      "messages": [
-        {
-          "date": "2022-11-20T16:10:18.000",
-          "message": "nice photos!",
-          "sender": "132"
-        },
-        {
-          "date": "2022-11-20T16:11:18.000",
-          "message": "yeah, thanks!",
-          "sender": "1234"
-        },
-        {
-          "date": "2022-11-28T16:12:18.000",
-          "message": "send me something special ;)",
-          "sender": "132"
-        },
-        {
-          "date": "2022-11-28T16:13:18.000",
-          "message": "not today...",
-          "sender": "1234"
-        }
-      ],
-      "last_login": "2022-11-20T16:18:18.000"
-    },
-    "132425": {
-      "following": true,
-      "username": "Кирилл Петрович",
-      "settings": "mutual",
-      "photo": "./assets/images/cat4.jpeg",
-      "messages": [
-        {
-          "date": "2022-11-20T16:10:18.000",
-          "message": "Привет",
-          "sender": "132425"
-        },
-        {
-          "date": "2022-11-29T16:11:18.000",
-          "message": "даров",
-          "sender": "132"
-        },
-        {
-          "date": "2022-11-29T16:12:18.000",
-          "message": "как ты меня нашёл?",
-          "sender": "132425"
-        }
-      ],
-      "last_login": "2022-11-20T16:18:18.000"
-    },
-    "234": {
-      "following": true,
-      "username": "gangsta",
-      "settings": "restricted",
-      "photo": "./assets/images/cat5.jpeg",
-      "messages": [],
-      "last_login": "2022-11-20T16:18:18.000"
-    },
-    "23552": {
-      "following": false,
-      "username": "Super Mario",
-      "settings": "accepted",
-      "photo": "",
-      "messages": [
-        {
-          "date": "2022-11-20T16:10:18.000",
-          "message": "Hi!",
-          "sender": "23552"
-        },
-        {
-          "date": "2022-11-20T16:11:18.000",
-          "message": "I'm Mario, and you?",
-          "sender": "23552"
-        },
-        {
-          "date": "2022-11-20T16:12:18.000",
-          "message": "Why you are not answering?",
-          "sender": "23552"
-        }
-      ],
-      "last_login": "2022-11-20T16:18:18.000"
+  "originalEvent": { "isTrusted": true },
+  "type": "keypress",
+  "target": {
+    "jQuery3610245751367694035381": {
+      "events": {
+        "keypress": [
+          {
+            "type": "keypress",
+            "origType": "keypress",
+            "data": null,
+            "guid": 5,
+            "namespace": ""
+          }
+        ],
+        "input": [
+          { "type": "input", "origType": "input", "guid": 6, "namespace": "" }
+        ]
+      }
     }
-  }
+  },
+  "currentTarget": {
+    "jQuery3610245751367694035381": {
+      "events": {
+        "keypress": [
+          {
+            "type": "keypress",
+            "origType": "keypress",
+            "data": null,
+            "guid": 5,
+            "namespace": ""
+          }
+        ],
+        "input": [
+          { "type": "input", "origType": "input", "guid": 6, "namespace": "" }
+        ]
+      }
+    }
+  },
+  "timeStamp": 1671616809627,
+  "jQuery361024575136769403538": true,
+  "delegateTarget": {
+    "jQuery3610245751367694035381": {
+      "events": {
+        "keypress": [
+          {
+            "type": "keypress",
+            "origType": "keypress",
+            "data": null,
+            "guid": 5,
+            "namespace": ""
+          }
+        ],
+        "input": [
+          { "type": "input", "origType": "input", "guid": 6, "namespace": "" }
+        ]
+      }
+    }
+  },
+  "handleObj": {
+    "type": "keypress",
+    "origType": "keypress",
+    "data": null,
+    "guid": 5,
+    "namespace": ""
+  },
+  "data": null
 }
