@@ -316,6 +316,7 @@ let chatData = {
       $(".contacts-block").css({ display: "none" });
       $(".message-window").css({ display: "grid" });
     }
+    chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
   },
 
   showContactData: function () {
@@ -863,12 +864,6 @@ let chatData = {
       };
       let activeDate = new Date(date);
       let formattedDate;
-      // console.log(Number(today) - Number(activeDate));
-      console.log(
-        today.getDate() === activeDate.getDate() ||
-          Number(today) - Number(activeDate) < 24 * 60 * 60 * 1000
-      );
-
       if (
         today.getDate() === activeDate.getDate() &&
         Number(today) - Number(activeDate) < 24 * 60 * 60 * 1000
@@ -1239,7 +1234,6 @@ let chatData = {
         $("#newMessageInput").on("input", (e) =>
           chatData.controlInput(e.target)
         );
-        chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
         $(".new-message__emoji").click(chatData.showEmojiBlock);
         $(".message-window__emoji-block-wrapper").click(
           chatData.hideEmojiBlock
