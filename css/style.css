@@ -839,4 +839,17 @@
   .message-window__message-history {
     padding: 0 1rem;
   }
+
+  .message__text {
+    max-width: 220px;
+  }
+
+  .message-history__reply-button {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .reply-button__input {
+    right: -3rem;
+  }
 }
