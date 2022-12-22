@@ -1058,13 +1058,13 @@ let chatData = {
   },
 
   showEmojiBlock: function () {
-    const emojiButtonPosition = $(".new-message__emoji").offset();
+    const messageInputPosition = $(".message-window__new-message").offset();
 
     $(".message-window__emoji-block-wrapper")
       .html(
         `<div class="message-window__emoji-block" style="top: ${
-          emojiButtonPosition.top - 319
-        }px; left: ${emojiButtonPosition.left}px">
+          messageInputPosition.top - 319
+        }px; left: ${messageInputPosition.left}px">
     </div>`
       )
       .fadeIn(200, function () {
