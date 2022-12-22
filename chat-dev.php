@@ -1352,6 +1352,7 @@ let chatData = {
           chatData.checkMessageHistoryScrollPosition();
           if (chatData.scrollAfterMessageSent) {
             chatData.messageHistoryScrollDown();
+            chatData.scrollAfterMessageSent = false;
           }
         });
     }
