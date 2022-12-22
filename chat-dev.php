@@ -20,6 +20,8 @@ $this->registerMetaTag([
 $this->registerMetaTag(['property' => 'og:title', 'content' => 'dev chat page']);
 
 $this->registerCss(<<<CSS
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
 .allContent {
   width: 100%;
   height: calc(100vh - 100px);
@@ -27,6 +29,7 @@ $this->registerCss(<<<CSS
   justify-content: center;
   align-items: center;
   padding: 2rem;
+  font-family: 'Lato', sans-serif;
 }
 
 .createNewMessage__wrapper {
@@ -1344,6 +1347,7 @@ let chatData = {
             );
             chatData.updateConversation(messagesToAppend);
           }
+          chatData.checkMessageHistoryScrollPosition();
         });
     }
   },
@@ -1582,7 +1586,6 @@ let chatData = {
         }
       });
       chatData.messageHistoryScrollDown();
-
       if ($(".message__text_link").get().length) {
         $(".message__text_link").click(chatData.checkLink);
       }
@@ -1688,7 +1691,6 @@ let chatData = {
   },
 
   messageHistoryScrollDown: function () {
-    console.log($(".message-history__message-wrapper:last-child")[0].offsetTop);
     $(".message-window__wrapper").scrollTop(
       $(".message-history__message-wrapper:last-child")[0].offsetTop
     );

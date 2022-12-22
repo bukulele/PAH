@@ -395,6 +395,7 @@ let chatData = {
             );
             chatData.updateConversation(messagesToAppend);
           }
+          chatData.checkMessageHistoryScrollPosition();
         });
     }
   },
@@ -633,7 +634,6 @@ let chatData = {
         }
       });
       chatData.messageHistoryScrollDown();
-
       if ($(".message__text_link").get().length) {
         $(".message__text_link").click(chatData.checkLink);
       }
@@ -739,7 +739,6 @@ let chatData = {
   },
 
   messageHistoryScrollDown: function () {
-    console.log($(".message-history__message-wrapper:last-child")[0].offsetTop);
     $(".message-window__wrapper").scrollTop(
       $(".message-history__message-wrapper:last-child")[0].offsetTop
     );
