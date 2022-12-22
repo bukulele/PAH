@@ -26,6 +26,7 @@ let chatData = {
   messagesReplies: null,
   heightToScrollAfterLoading: 0,
   messageCanBeSent: false,
+  scrollAfterMessageSent: false,
 
   init: function () {
     if (window.localStorage.pahChat_conversations) {
@@ -396,6 +397,9 @@ let chatData = {
             chatData.updateConversation(messagesToAppend);
           }
           chatData.checkMessageHistoryScrollPosition();
+          if (chatData.scrollAfterMessageSent) {
+            chatData.messageHistoryScrollDown();
+          }
         });
     }
   },
@@ -997,6 +1001,7 @@ let chatData = {
       dataType: "json",
     })
       .done(() => {
+        chatData.scrollAfterMessageSent = true;
         chatData.removeMessageToReply();
         chatData.loadUserData();
         $("#newMessageInput").val("");
