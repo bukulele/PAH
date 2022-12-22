@@ -556,16 +556,14 @@
 }
 
 .message-history__message {
-  position: relative;
-  padding-top: 1rem;
   min-height: 2rem;
-  margin: 0.5rem;
+  margin: 2px;
   max-width: 300px;
   height: fit-content;
   display: grid;
   grid-template-rows: auto auto auto;
   grid-template-columns: auto auto;
-  gap: 1rem;
+  column-gap: 4px;
 }
 
 .message-history__message-wrapper {
@@ -593,7 +591,7 @@
 }
 
 .reply-button__output {
-  left: -1.5rem;
+  left: -2.5rem;
 }
 
 .reply-button__input {
@@ -605,16 +603,53 @@
   height: 70%;
 }
 
-.message-history__message-reply-to {
-  display: none;
-  grid-row-start: 1;
-  grid-row-end: 2;
+.message-history__message-reply-to-wrapper {
+  grid-row-start: 2;
+  grid-row-end: 3;
   grid-column-start: 1;
   grid-column-end: 3;
+  width: fit-content;
+  height: fit-content;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.message-history__message-reply-to-line {
+  width: 2px;
+  border-radius: 2px;
+  background-color: rgb(145, 145, 145);
+}
+
+.message-history__message-reply-to-wrapper_input {
+  flex-direction: row-reverse;
+}
+
+.message-history__message-reply-to-wrapper_output {
+  flex-direction: row;
+  place-self: end;
+}
+
+.message-history__message-reply-to {
+  display: none;
   padding: 1rem;
   border-radius: 4px;
   border: 1px solid #ddd;
   background-color: rgb(145, 145, 145);
+}
+
+.reply-to-name__icon {
+  width: 1rem;
+  height: 1rem;
+  fill: white;
+}
+
+.message-history__reply-to-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: flex-start;
 }
 
 .message-history__reply-to-name_styling {
@@ -665,6 +700,7 @@
 }
 
 .message__text {
+  position: relative;
   grid-row-start: 3;
   grid-row-end: 4;
   grid-column-start: 2;
@@ -748,11 +784,12 @@
 }
 
 .message__message-date {
-  grid-row-start: 2;
-  grid-row-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
   grid-column-start: 1;
   grid-column-end: 3;
   width: fit-content;
+  margin-top: 2px;
 }
 
 .message__message-date_output {
@@ -854,5 +891,9 @@
 
   .reply-button__input {
     right: -3rem;
+  }
+
+  .reply-button__output {
+    left: -3rem;
   }
 }
