@@ -1020,6 +1020,7 @@ let chatData = {
   heightToScrollAfterLoading: 0,
   messageCanBeSent: false,
   scrollAfterMessageSent: false,
+  mobileDevice: false,
 
   init: function () {
     if (window.localStorage.pahChat_conversations) {
@@ -1064,6 +1065,10 @@ let chatData = {
 
     //remove later?
     $(".name-block__new-chat").click(chatData.createNewChat);
+    chatData.mobileDevice =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
+        navigator.userAgent
+      );
   },
 
   loadUserData: function () {
@@ -1485,18 +1490,27 @@ let chatData = {
             <svg class="message-history__reply-button_sizing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>
             </div>
         ${chatData.checkForLinks(messages[i].message)}</div></div></div>`);
-        $(`#wrp_${chatData.selectedChat}_${messages[i].id}`).hover(
-          () => {
-            $(`#btn_${chatData.selectedChat}_${messages[i].id}`).css({
-              display: "flex",
-            });
-          },
-          () => {
-            $(`#btn_${chatData.selectedChat}_${messages[i].id}`).css({
-              display: "none",
-            });
-          }
-        );
+        if (chatData.mobileDevice) {
+          // $(`#wrp_${chatData.selectedChat}_${messages[i].id}`).click(() => {
+          //   $(".message-history__reply-button").css({ display: "none" });
+          //   $(`#btn_${chatData.selectedChat}_${messages[i].id}`).css({
+          //     display: "flex",
+          //   });
+          // });
+        } else {
+          $(`#wrp_${chatData.selectedChat}_${messages[i].id}`).hover(
+            () => {
+              $(`#btn_${chatData.selectedChat}_${messages[i].id}`).css({
+                display: "flex",
+              });
+            },
+            () => {
+              $(`#btn_${chatData.selectedChat}_${messages[i].id}`).css({
+                display: "none",
+              });
+            }
+          );
+        }
         if (messages[i].replyOnId) {
           $.ajax(
             `/conversation/get-message?messageId=${messages[i].replyOnId}`
@@ -1665,18 +1679,27 @@ let chatData = {
             </div>
         ${chatData.checkForLinks(item.message)}</div></div></div>
             `);
-        $(`#wrp_${chatData.selectedChat}_${item.id}`).hover(
-          () => {
-            $(`#btn_${chatData.selectedChat}_${item.id}`).css({
-              display: "flex",
-            });
-          },
-          () => {
-            $(`#btn_${chatData.selectedChat}_${item.id}`).css({
-              display: "none",
-            });
-          }
-        );
+        if (chatData.mobileDevice) {
+          // $(`#wrp_${chatData.selectedChat}_${item.id}`).on("click", () => {
+          //   $(".message-history__reply-button").css({ display: "none" });
+          // });
+          // $(`#btn_${chatData.selectedChat}_${item.id}`).css({
+          //   display: "flex",
+          // });
+        } else {
+          $(`#wrp_${chatData.selectedChat}_${item.id}`).hover(
+            () => {
+              $(`#btn_${chatData.selectedChat}_${item.id}`).css({
+                display: "flex",
+              });
+            },
+            () => {
+              $(`#btn_${chatData.selectedChat}_${item.id}`).css({
+                display: "none",
+              });
+            }
+          );
+        }
         if (item.replyOnId) {
           $.ajax(`/conversation/get-message?messageId=${item.replyOnId}`).done(
             (data) => {
@@ -1779,18 +1802,27 @@ let chatData = {
           </div>
       ${chatData.checkForLinks(item.message)}</div></div></div>
           `);
-      $(`#wrp_${chatData.selectedChat}_${item.id}`).hover(
-        () => {
-          $(`#btn_${chatData.selectedChat}_${item.id}`).css({
-            display: "flex",
-          });
-        },
-        () => {
-          $(`#btn_${chatData.selectedChat}_${item.id}`).css({
-            display: "none",
-          });
-        }
-      );
+      if (chatData.mobileDevice) {
+        // $(`#wrp_${chatData.selectedChat}_${item.id}`).click(() => {
+        //   $(".message-history__reply-button").css({ display: "none" });
+        //   $(`#btn_${chatData.selectedChat}_${item.id}`).css({
+        //     display: "flex",
+        //   });
+        // });
+      } else {
+        $(`#wrp_${chatData.selectedChat}_${item.id}`).hover(
+          () => {
+            $(`#btn_${chatData.selectedChat}_${item.id}`).css({
+              display: "flex",
+            });
+          },
+          () => {
+            $(`#btn_${chatData.selectedChat}_${item.id}`).css({
+              display: "none",
+            });
+          }
+        );
+      }
       if (item.replyOnId) {
         $.ajax(`/conversation/get-message?messageId=${item.replyOnId}`).done(
           (data) => {
@@ -2051,13 +2083,13 @@ let chatData = {
   },
 
   showEmojiBlock: function () {
-    const emojiButtonPosition = $(".new-message__emoji").offset();
+    const messageInputPosition = $(".message-window__new-message").offset();
 
     $(".message-window__emoji-block-wrapper")
       .html(
         `<div class="message-window__emoji-block" style="top: ${
-          emojiButtonPosition.top - 319
-        }px; left: ${emojiButtonPosition.left}px">
+          messageInputPosition.top - 319
+        }px; left: ${messageInputPosition.left}px">
     </div>`
       )
       .fadeIn(200, function () {
@@ -2246,11 +2278,7 @@ let chatData = {
   },
 
   textAreaKeyPressHandler: function (e) {
-    let mobileDevice =
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
-        navigator.userAgent
-      );
-    if (e.keyCode == 13 && (e.shiftKey || mobileDevice)) {
+    if (e.keyCode == 13 && (e.shiftKey || chatData.mobileDevice)) {
       e.preventDefault();
       $("#newMessageInput").val(function (index, value) {
         return value + "\r\n";
