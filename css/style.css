@@ -89,7 +89,7 @@
 }
 
 .current-contact__logo,
-.message__sender-image,
+.message__sender-image_styling,
 .contact__image {
   grid-row-start: 3;
   grid-row-end: 4;
@@ -693,6 +693,15 @@
   min-height: 4rem;
   max-width: 4rem;
   max-height: 4rem;
+  align-self: end;
+}
+
+.message__sender-image_hole {
+  min-width: 4rem;
+  min-height: 4rem;
+  max-width: 4rem;
+  max-height: 4rem;
+  align-self: end;
 }
 
 .message__sender-image_hidden {
