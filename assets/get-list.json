@@ -8,15 +8,7 @@
         "status": 1,
         "type": 0,
         "createdAt": "2022-12-20 14:47:06",
-        "updatedAt": "2022-12-20 14:47:49",
-        "title": null
-      },
-      "48": {
-        "conversationId": 48,
-        "status": 1,
-        "type": 0,
-        "createdAt": "2022-12-14 07:45:30",
-        "updatedAt": "2022-12-20 13:13:12",
+        "updatedAt": "2022-12-28 16:48:04",
         "title": null
       },
       "47": {
@@ -24,7 +16,23 @@
         "status": 1,
         "type": 0,
         "createdAt": "2022-12-13 11:27:27",
-        "updatedAt": "2022-12-14 07:22:16",
+        "updatedAt": "2022-12-28 15:48:25",
+        "title": null
+      },
+      "48": {
+        "conversationId": 48,
+        "status": 1,
+        "type": 0,
+        "createdAt": "2022-12-14 07:45:30",
+        "updatedAt": "2022-12-28 15:35:02",
+        "title": null
+      },
+      "44": {
+        "conversationId": 44,
+        "status": 1,
+        "type": 0,
+        "createdAt": "2022-12-12 09:53:15",
+        "updatedAt": "2022-12-23 08:35:52",
         "title": null
       },
       "46": {
@@ -41,14 +49,6 @@
         "type": 0,
         "createdAt": "2022-12-13 08:00:55",
         "updatedAt": "2022-12-13 11:09:13",
-        "title": null
-      },
-      "44": {
-        "conversationId": 44,
-        "status": 1,
-        "type": 0,
-        "createdAt": "2022-12-12 09:53:15",
-        "updatedAt": "2022-12-13 07:25:09",
         "title": null
       },
       "3": {
@@ -71,16 +71,6 @@
         "updatedAt": null,
         "message": "yo"
       },
-      "44": {
-        "id": "88",
-        "conversationId": 44,
-        "ownerId": 284408,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-13 07:25:09",
-        "updatedAt": null,
-        "message": "🙃"
-      },
       "45": {
         "id": "97",
         "conversationId": 45,
@@ -101,49 +91,63 @@
         "updatedAt": null,
         "message": "ну привет"
       },
-      "47": {
-        "id": "100",
-        "conversationId": 47,
-        "ownerId": 285627,
+      "44": {
+        "id": "203",
+        "conversationId": 44,
+        "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-13 11:27:27",
+        "createdAt": "2022-12-23 08:35:52",
         "updatedAt": null,
-        "message": "привет"
+        "message": "совпадает?"
       },
       "48": {
-        "id": "145",
+        "id": "231",
         "conversationId": 48,
         "ownerId": 284408,
         "type": 0,
-        "replyOnId": "138",
-        "createdAt": "2022-12-20 13:13:12",
+        "replyOnId": null,
+        "createdAt": "2022-12-28 15:35:02",
         "updatedAt": null,
-        "message": "            проверочка                         \n\n"
+        "message": "шик"
       },
-      "49": {
-        "id": "148",
-        "conversationId": 49,
+      "47": {
+        "id": "235",
+        "conversationId": 47,
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-20 14:47:49",
+        "createdAt": "2022-12-28 15:48:25",
         "updatedAt": null,
-        "message": "вообще норм"
+        "message": "проверяем формат данных"
+      },
+      "49": {
+        "id": "238",
+        "conversationId": 49,
+        "ownerId": 285627,
+        "type": 0,
+        "replyOnId": null,
+        "createdAt": "2022-12-28 16:48:04",
+        "updatedAt": null,
+        "message": "ну и как?"
       }
     },
     "participants": {
       "49": {
-        "284408": { "userId": 284408, "role": 1, "lastSeenMessageId": "148" },
-        "285627": { "userId": 285627, "role": 1, "lastSeenMessageId": "148" }
-      },
-      "48": {
-        "284408": { "userId": 284408, "role": 1, "lastSeenMessageId": "145" },
-        "285627": { "userId": 285627, "role": 1, "lastSeenMessageId": "145" }
+        "284408": { "userId": 284408, "role": 1, "lastSeenMessageId": "238" },
+        "285627": { "userId": 285627, "role": 1, "lastSeenMessageId": "238" }
       },
       "47": {
-        "284408": { "userId": 284408, "role": 1, "lastSeenMessageId": "100" },
-        "285627": { "userId": 285627, "role": 1, "lastSeenMessageId": "100" }
+        "284408": { "userId": 284408, "role": 1, "lastSeenMessageId": "235" },
+        "285627": { "userId": 285627, "role": 1, "lastSeenMessageId": "235" }
+      },
+      "48": {
+        "284408": { "userId": 284408, "role": 1, "lastSeenMessageId": "231" },
+        "285627": { "userId": 285627, "role": 1, "lastSeenMessageId": "231" }
+      },
+      "44": {
+        "284408": { "userId": 284408, "role": 1, "lastSeenMessageId": "203" },
+        "285319": { "userId": 285319, "role": 1, "lastSeenMessageId": "87" }
       },
       "46": {
         "284408": { "userId": 284408, "role": 1, "lastSeenMessageId": "99" },
@@ -152,10 +156,6 @@
       "45": {
         "284408": { "userId": 284408, "role": 1, "lastSeenMessageId": "97" },
         "285319": { "userId": 285319, "role": 1, "lastSeenMessageId": "91" }
-      },
-      "44": {
-        "284408": { "userId": 284408, "role": 1, "lastSeenMessageId": "88" },
-        "285319": { "userId": 285319, "role": 1, "lastSeenMessageId": "87" }
       },
       "3": {
         "203134": { "userId": 203134, "role": 1, "lastSeenMessageId": "52" },
@@ -167,7 +167,7 @@
         "id": 284408,
         "username": "zonough",
         "created_at": "2022-11-23 14:20:33",
-        "lastvisit_at": "2022-12-19 09:09:14",
+        "lastvisit_at": "2022-12-23 07:04:18",
         "avatar_src": "//www.gravatar.com/avatar/50f5893fcb685fc314c2aa28dc9e935c?s=50&d=mm&r=g"
       },
       "285627": {
@@ -188,7 +188,7 @@
         "id": 203134,
         "username": "kon6diter",
         "created_at": "2019-08-01 00:38:55",
-        "lastvisit_at": "2022-12-05 14:11:46",
+        "lastvisit_at": "2022-12-27 12:07:09",
         "avatar_src": "http://dev3.pimpandhost.com/media/?thumb_50?/avatar/2/0/3/1/203134_6c1f7028ddb07c16085ddaf8da25a2aa.jpeg"
       }
     }

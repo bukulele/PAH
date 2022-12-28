@@ -1,0 +1,72 @@
+{
+  "3": {
+    "id": "52",
+    "conversationId": 3,
+    "ownerId": 203134,
+    "type": 0,
+    "replyOnId": null,
+    "createdAt": "2022-12-07 10:24:06",
+    "updatedAt": null,
+    "message": "yo"
+  },
+  "44": {
+    "id": "203",
+    "conversationId": 44,
+    "ownerId": 284408,
+    "type": 0,
+    "replyOnId": null,
+    "createdAt": "2022-12-23 08:35:52",
+    "updatedAt": null,
+    "message": "совпадает?"
+  },
+  "45": {
+    "id": "97",
+    "conversationId": 45,
+    "ownerId": 285319,
+    "type": 0,
+    "replyOnId": null,
+    "createdAt": "2022-12-13 11:09:13",
+    "updatedAt": null,
+    "message": "📄"
+  },
+  "46": {
+    "id": "99",
+    "conversationId": 46,
+    "ownerId": 285319,
+    "type": 0,
+    "replyOnId": null,
+    "createdAt": "2022-12-13 11:25:58",
+    "updatedAt": null,
+    "message": "ну привет"
+  },
+  "47": {
+    "id": "223",
+    "conversationId": 47,
+    "ownerId": 285627,
+    "type": 0,
+    "replyOnId": null,
+    "createdAt": "2022-12-28 12:34:19",
+    "updatedAt": null,
+    "message": "проверка индикатора"
+  },
+  "48": {
+    "id": "204",
+    "conversationId": 48,
+    "ownerId": 284408,
+    "type": 0,
+    "replyOnId": null,
+    "createdAt": "2022-12-23 08:44:03",
+    "updatedAt": null,
+    "message": "должно сработать"
+  },
+  "49": {
+    "id": "224",
+    "conversationId": 49,
+    "ownerId": 284408,
+    "type": 0,
+    "replyOnId": null,
+    "createdAt": "2022-12-28 13:08:11",
+    "updatedAt": null,
+    "message": "почему появляется индикатор на исходящих?"
+  }
+}

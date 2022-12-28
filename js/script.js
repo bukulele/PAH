@@ -113,6 +113,7 @@ let chatData = {
         window.localStorage.pahChat_participants =
           JSON.stringify(participantsLoaded);
         this.participants = participantsLoaded;
+        chatData.conversationsListToUpdate = true;
         chatData.calculateRequestsNumberToUpdate = true;
         chatData.checkOpenedDialogToUpdate = true;
       }
@@ -290,7 +291,8 @@ let chatData = {
                       chatData.userData[userId].avatar_src.length
                         ? chatData.userData[userId].avatar_src
                         : "./assets/logo_sq.png"
-                    }" class="img-responsive"></div>
+                    }" class="img-responsive">
+                    </div>
                     <div class="contact__name"><p class="name name_text-styling">${
                       chatData.userData[userId].username
                     }</p></div>
@@ -298,13 +300,23 @@ let chatData = {
                       chatData.lastMessages[id].createdAt,
                       "last message"
                     )}</p></div>
-                    <div class="contact__last-message"><p class="small activity__activity-status_text-styling">
+                      <div class="contact__last-message"><p class="small activity__activity-status_text-styling">
                       ${chatData.lastMessages[id].message}
-                    </p></div>
+                      </p></div>
+                      <div id="newMessageIndicator_${id}" class="contact__new-message-indicator"></div>
                   </div>
                 </li>
             `);
+      chatData.checkForNewMessages(id);
     }
+  },
+
+  showNewMessageIndicator: function (id) {
+    $(`#newMessageIndicator_${id}`).css({ display: "block" });
+  },
+
+  hideNewMessageIndicator: function (id) {
+    $(`#newMessageIndicator_${id}`).css({ display: "none" });
   },
 
   setSelectedChat: function (event) {
@@ -321,6 +333,15 @@ let chatData = {
       $(`#${event.target.id}`).addClass("contacts-list__contact_selected");
       chatData.showMessageWindow();
       chatData.showContactData();
+      if (sessionStorage.getItem(`PAH_messages_${chatData.selectedChat}`)) {
+        chatData.messages = JSON.parse(
+          sessionStorage.getItem(`PAH_messages_${chatData.selectedChat}`)
+        );
+        chatData.showConversation();
+        chatData.loadConversation(false);
+      } else {
+        chatData.loadConversation(true);
+      }
     }
     chatData.setNewMessageInputScrollHeight($("#newMessageInput").get(0));
   },
@@ -350,15 +371,6 @@ let chatData = {
         )}`
       );
     }
-    if (sessionStorage.getItem(`PAH_messages_${chatData.selectedChat}`)) {
-      chatData.messages = JSON.parse(
-        sessionStorage.getItem(`PAH_messages_${chatData.selectedChat}`)
-      );
-      chatData.showConversation();
-      chatData.loadConversation(false);
-    } else {
-      chatData.loadConversation(true);
-    }
   },
 
   loadConversation: function (showNewConversation) {
@@ -370,13 +382,22 @@ let chatData = {
       })
         // $.ajax(`/conversation/get-messages?conversationId=${chatData.selectedChat}&history=true&lastSeenMessageId=${chatData.latestMessageId}`)
         .done(function (data) {
+          let loadedMessages = Object.keys(data.payload.messages);
+          let lastMessageId = loadedMessages[loadedMessages.length - 1];
+          let chatId = data.payload.messages[lastMessageId].conversationId;
+          if (
+            chatData.participants[chatId][chatData.userId].lastSeenMessageId <=
+            lastMessageId
+          ) {
+            chatData.hideNewMessageIndicator(chatId);
+          }
+
           if (showNewConversation) {
             chatData.messages = Object.values(data.payload.messages);
             sessionStorage.setItem(
               `PAH_messages_${chatData.selectedChat}`,
               JSON.stringify(chatData.messages)
             );
-            // chatData.lastSeenMessageId = data.payload.cursorLastSeenId;
             chatData.showConversation();
           } else {
             if (
@@ -1161,7 +1182,11 @@ let chatData = {
       },
       dataType: "json",
     })
-      .done(() => {
+      .done((data) => {
+        let chatId = data.payload.message.conversationId;
+        let ownerId = data.payload.message.ownerId;
+        let messageId = data.payload.message.id;
+        chatData.participants[chatId][ownerId].lastSeenMessageId = messageId;
         chatData.scrollAfterMessageSent = true;
         chatData.removeMessageToReply();
         chatData.loadUserData();
@@ -1333,6 +1358,15 @@ let chatData = {
       chatData.sendMessage();
     } else if (e.keyCode === 13 && !e.shiftKey && !chatData.messageCanBeSent) {
       e.preventDefault();
+    }
+  },
+
+  checkForNewMessages: function (id) {
+    if (
+      chatData.participants[id][chatData.userId].lastSeenMessageId <
+      chatData.lastMessages[id].id
+    ) {
+      chatData.showNewMessageIndicator(id);
     }
   },
 

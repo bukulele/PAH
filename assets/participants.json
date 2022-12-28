@@ -1,0 +1,86 @@
+{
+  "3": {
+    "203134": {
+      "userId": 203134,
+      "role": 1,
+      "lastSeenMessageId": "52"
+    },
+    "284408": {
+      "userId": 284408,
+      "role": 1,
+      "lastSeenMessageId": "52"
+    }
+  },
+  "44": {
+    "284408": {
+      "userId": 284408,
+      "role": 1,
+      "lastSeenMessageId": "203"
+    },
+    "285319": {
+      "userId": 285319,
+      "role": 1,
+      "lastSeenMessageId": "87"
+    }
+  },
+  "45": {
+    "284408": {
+      "userId": 284408,
+      "role": 1,
+      "lastSeenMessageId": "97"
+    },
+    "285319": {
+      "userId": 285319,
+      "role": 1,
+      "lastSeenMessageId": "91"
+    }
+  },
+  "46": {
+    "284408": {
+      "userId": 284408,
+      "role": 1,
+      "lastSeenMessageId": "99"
+    },
+    "285319": {
+      "userId": 285319,
+      "role": 1,
+      "lastSeenMessageId": "99"
+    }
+  },
+  "47": {
+    "284408": {
+      "userId": 284408,
+      "role": 1,
+      "lastSeenMessageId": "222"
+    },
+    "285627": {
+      "userId": 285627,
+      "role": 1,
+      "lastSeenMessageId": "223"
+    }
+  },
+  "48": {
+    "284408": {
+      "userId": 284408,
+      "role": 1,
+      "lastSeenMessageId": "204"
+    },
+    "285627": {
+      "userId": 285627,
+      "role": 1,
+      "lastSeenMessageId": "204"
+    }
+  },
+  "49": {
+    "284408": {
+      "userId": 284408,
+      "role": 1,
+      "lastSeenMessageId": "219"
+    },
+    "285627": {
+      "userId": 285627,
+      "role": 1,
+      "lastSeenMessageId": "219"
+    }
+  }
+}
