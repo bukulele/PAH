@@ -501,11 +501,7 @@ let chatData = {
           messageDate && prevMessageDate
             ? Number(messageDate) - Number(prevMessageDate) > 300 * 1000
               ? `<div class="message__sender-image_hole"></div>`
-              : `<div class="message__sender-image ${
-                  messages[i].ownerId == chatData.userId
-                    ? "message__sender-image_hidden"
-                    : "message__sender-image_styling"
-                }"><img src="${
+              : `<div class="message__sender-image message__sender-image_styling"><img src="${
                   messages[i].ownerId == chatData.userId
                     ? ""
                     : chatData.userData[messages[i].ownerId].avatar_src.length
@@ -698,19 +694,16 @@ let chatData = {
         </div>
         ${
           messageDate && prevMessageDate
-            ? Number(messageDate) - Number(prevMessageDate) > 300 * 1000
-              ? `<div class="message__sender-image_hole"></div>`
-              : `<div class="message__sender-image ${
-                  item.ownerId == chatData.userId
-                    ? "message__sender-image_hidden"
-                    : "message__sender-image_styling"
-                }"><img src="${
+            ? Number(messageDate) - Number(prevMessageDate) > 300 * 1000 ||
+              messageOwnerId !== prevMessageOwnerId
+              ? `<div class="message__sender-image message__sender-image_styling"><img src="${
                   item.ownerId == chatData.userId
                     ? ""
                     : chatData.userData[item.ownerId].avatar_src.length
                     ? chatData.userData[item.ownerId].avatar_src
                     : "./assets/logo_sq.png"
                 }" class="img-responsive"></div>`
+              : `<div class="message__sender-image_hole"></div>`
             : `<div class="message__sender-image_hole"></div>`
         }
         <div class="message__text ${
@@ -836,11 +829,7 @@ let chatData = {
           messageDate && prevMessageDate
             ? Number(messageDate) - Number(prevMessageDate) > 300 * 1000
               ? `<div class="message__sender-image_hole"></div>`
-              : `<div class="message__sender-image ${
-                  item.ownerId == chatData.userId
-                    ? "message__sender-image_hidden"
-                    : "message__sender-image_styling"
-                }"><img src="${
+              : `<div class="message__sender-image message__sender-image_styling"><img src="${
                   item.ownerId == chatData.userId
                     ? ""
                     : chatData.userData[item.ownerId].avatar_src.length

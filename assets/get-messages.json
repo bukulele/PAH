@@ -3,247 +3,77 @@
   "errorMessage": null,
   "payload": {
     "messages": {
-      "46": {
-        "id": "46",
-        "conversationId": 36,
+      "238": {
+        "id": "238",
+        "conversationId": 49,
+        "ownerId": 285627,
+        "type": 0,
+        "replyOnId": null,
+        "createdAt": "2022-12-28 16:29:04",
+        "updatedAt": null,
+        "message": "ну и как?"
+      },
+      "237": {
+        "id": "237",
+        "conversationId": 49,
+        "ownerId": 285627,
+        "type": 0,
+        "replyOnId": null,
+        "createdAt": "2022-12-28 16:27:31",
+        "updatedAt": null,
+        "message": "м?"
+      },
+      "236": {
+        "id": "236",
+        "conversationId": 49,
+        "ownerId": 285627,
+        "type": 0,
+        "replyOnId": null,
+        "createdAt": "2022-12-28 16:05:58",
+        "updatedAt": null,
+        "message": "и чего"
+      },
+      "233": {
+        "id": "233",
+        "conversationId": 49,
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-07 09:57:09",
+        "createdAt": "2022-12-28 15:37:22",
         "updatedAt": null,
-        "message": "Test message"
+        "message": "норм"
       },
-      "47": {
-        "id": "47",
-        "conversationId": 36,
-        "ownerId": 285319,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-07 09:57:37",
-        "updatedAt": null,
-        "message": "hi there!"
-      },
-      "48": {
-        "id": "48",
-        "conversationId": 36,
+      "232": {
+        "id": "232",
+        "conversationId": 49,
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-07 09:58:07",
+        "createdAt": "2022-12-28 15:37:01",
         "updatedAt": null,
-        "message": "😁"
+        "message": "уже не появляется"
       },
-      "49": {
-        "id": "49",
-        "conversationId": 36,
-        "ownerId": 285319,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-07 09:58:51",
-        "updatedAt": null,
-        "message": "hmm.. the update seems to be not really good"
-      },
-      "50": {
-        "id": "50",
-        "conversationId": 36,
+      "224": {
+        "id": "224",
+        "conversationId": 49,
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-07 10:11:10",
+        "createdAt": "2022-12-28 13:08:11",
         "updatedAt": null,
-        "message": "what about now?"
+        "message": "почему появляется индикатор на исходящих?"
       },
-      "51": {
-        "id": "51",
-        "conversationId": 36,
-        "ownerId": 285319,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-09 08:57:38",
-        "updatedAt": null,
-        "message": "looks better"
-      },
-      "61": {
-        "id": "61",
-        "conversationId": 36,
-        "ownerId": 285319,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-09 08:58:20",
-        "updatedAt": null,
-        "message": "hey there"
-      },
-      "62": {
-        "id": "62",
-        "conversationId": 36,
+      "219": {
+        "id": "219",
+        "conversationId": 49,
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-09 08:59:01",
+        "createdAt": "2022-12-23 09:48:07",
         "updatedAt": null,
-        "message": "doesn't work"
-      },
-      "63": {
-        "id": "63",
-        "conversationId": 36,
-        "ownerId": 284408,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-09 09:06:10",
-        "updatedAt": null,
-        "message": "kot kot kot khoch khoch khoch"
-      },
-      "64": {
-        "id": "64",
-        "conversationId": 36,
-        "ownerId": 284408,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-09 12:14:27",
-        "updatedAt": null,
-        "message": "pspsps"
-      },
-      "65": {
-        "id": "65",
-        "conversationId": 36,
-        "ownerId": 284408,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-09 12:14:44",
-        "updatedAt": null,
-        "message": "lapke ne"
-      },
-      "66": {
-        "id": "66",
-        "conversationId": 36,
-        "ownerId": 284408,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-09 12:16:11",
-        "updatedAt": null,
-        "message": "ushki hmm"
-      },
-      "67": {
-        "id": "67",
-        "conversationId": 36,
-        "ownerId": 284408,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-09 12:19:54",
-        "updatedAt": null,
-        "message": "brodka mozhe"
-      },
-      "68": {
-        "id": "68",
-        "conversationId": 36,
-        "ownerId": 284408,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-09 12:22:18",
-        "updatedAt": null,
-        "message": "prikhodish do pokoyu"
-      },
-      "69": {
-        "id": "69",
-        "conversationId": 36,
-        "ownerId": 284408,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-09 12:27:04",
-        "updatedAt": null,
-        "message": "a tam"
-      },
-      "70": {
-        "id": "70",
-        "conversationId": 36,
-        "ownerId": 285319,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-09 12:27:22",
-        "updatedAt": null,
-        "message": "😁"
-      },
-      "79": {
-        "id": "79",
-        "conversationId": 36,
-        "ownerId": 284408,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-12 08:13:02",
-        "updatedAt": null,
-        "message": "pagination test"
-      },
-      "80": {
-        "id": "80",
-        "conversationId": 36,
-        "ownerId": 284408,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-12 08:13:12",
-        "updatedAt": null,
-        "message": "понадобавляю сообщений"
-      },
-      "81": {
-        "id": "81",
-        "conversationId": 36,
-        "ownerId": 284408,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-12 08:13:21",
-        "updatedAt": null,
-        "message": "😁🫠"
-      },
-      "82": {
-        "id": "82",
-        "conversationId": 36,
-        "ownerId": 284408,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-12 08:13:28",
-        "updatedAt": null,
-        "message": "🌐"
-      },
-      "83": {
-        "id": "83",
-        "conversationId": 36,
-        "ownerId": 284408,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-12 08:13:40",
-        "updatedAt": null,
-        "message": "20"
-      },
-      "84": {
-        "id": "84",
-        "conversationId": 36,
-        "ownerId": 284408,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-12 08:13:49",
-        "updatedAt": null,
-        "message": "лорем ипсум"
-      },
-      "85": {
-        "id": "85",
-        "conversationId": 36,
-        "ownerId": 284408,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-12 08:13:55",
-        "updatedAt": null,
-        "message": "сит амет"
-      },
-      "86": {
-        "id": "86",
-        "conversationId": 36,
-        "ownerId": 285319,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-12 08:16:08",
-        "updatedAt": null,
-        "message": "тут уже больше 20 сообщений, https://pornhub-.com/id/user/io123 а загружается всё равно pimpandhost.com с первого"
+        "message": "Вроде да"
       }
     },
-    "cursorLastSeenId": 86
+    "cursorLastSeenId": 219
   }
 }

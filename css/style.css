@@ -703,6 +703,10 @@
   background-color: rgb(246, 246, 246);
 }
 
+.message__output > .message__sender-image {
+  display: none;
+}
+
 .message__sender-image {
   min-width: 4rem;
   min-height: 4rem;
