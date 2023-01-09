@@ -729,12 +729,19 @@
 
 .message__text {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   grid-row-start: 3;
   grid-row-end: 4;
   grid-column-start: 2;
   grid-column-end: 3;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   border-radius: 4px;
+}
+
+.message__text > p {
+  margin: 0;
 }
 
 .message__text_border {
