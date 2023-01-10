@@ -1431,7 +1431,7 @@ let chatData = {
               data.payload.cursorLastSeenId - 1 >
               chatData.messages[chatData.messages.length - 1].id
             ) {
-              loadConversation(true);
+              chatData.loadConversation(true);
             }
 
             let loadedMessages = Object.values(data.payload.messages);
@@ -1777,7 +1777,7 @@ let chatData = {
       }
         </div>
       </div>
-    `).insertBefore(`#wrp_${chatData.selectedChat}_${chatData.messages[i].id}`);
+    `).insertBefore(`#wrp_${chatData.selectedChat}_${chatData.messages[0].id}`);
     }
 
     if (chatData.messages.length > 1) {
