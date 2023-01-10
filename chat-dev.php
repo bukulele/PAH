@@ -1568,7 +1568,8 @@ let chatData = {
   },
 
   checkForEmojis: function (item) {
-    const emojiRegEx = /^\p{Extended_Pictographic}+$/u;
+    const emojiRegEx =
+      /^(\p{Extended_Pictographic}|\p{Emoji_Presentation}\p{Emoji_Modifier}*)+$/gu;
     return emojiRegEx.test(item.message);
   },
 

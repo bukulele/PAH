@@ -3,77 +3,77 @@
   "errorMessage": null,
   "payload": {
     "messages": {
-      "240": {
-        "id": "240",
-        "conversationId": 48,
+      "252": {
+        "id": "252",
+        "conversationId": 49,
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-28 17:25:44",
+        "createdAt": "2023-01-10 11:33:26",
         "updatedAt": null,
-        "message": "да,  вроде починил"
+        "message": "👼🏿"
       },
-      "239": {
-        "id": "239",
-        "conversationId": 48,
-        "ownerId": 285627,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-28 17:21:54",
-        "updatedAt": null,
-        "message": "вероятно, почини индикатор"
-      },
-      "231": {
-        "id": "231",
-        "conversationId": 48,
+      "251": {
+        "id": "251",
+        "conversationId": 49,
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-28 15:35:02",
+        "createdAt": "2023-01-10 11:32:53",
         "updatedAt": null,
-        "message": "шик"
+        "message": "👩🏼"
       },
-      "230": {
-        "id": "230",
-        "conversationId": 48,
+      "250": {
+        "id": "250",
+        "conversationId": 49,
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-28 15:34:24",
+        "createdAt": "2023-01-10 11:31:04",
         "updatedAt": null,
-        "message": "так, проверяем индикатор"
+        "message": "👼"
       },
-      "229": {
-        "id": "229",
-        "conversationId": 48,
+      "249": {
+        "id": "249",
+        "conversationId": 49,
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-28 15:17:26",
+        "createdAt": "2023-01-10 11:30:16",
         "updatedAt": null,
-        "message": "скроллится, ок"
+        "message": "🙀"
       },
-      "228": {
-        "id": "228",
-        "conversationId": 48,
+      "248": {
+        "id": "248",
+        "conversationId": 49,
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-28 15:17:20",
+        "createdAt": "2023-01-10 11:30:02",
         "updatedAt": null,
-        "message": "а чего не скроллится?"
+        "message": "😸"
       },
-      "227": {
-        "id": "227",
-        "conversationId": 48,
+      "247": {
+        "id": "247",
+        "conversationId": 49,
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-28 15:17:04",
+        "createdAt": "2023-01-10 11:29:38",
         "updatedAt": null,
-        "message": "так, пока он загорается и исчезает"
+        "message": ":-)"
+      },
+      "246": {
+        "id": "246",
+        "conversationId": 49,
+        "ownerId": 284408,
+        "type": 0,
+        "replyOnId": null,
+        "createdAt": "2023-01-10 11:29:33",
+        "updatedAt": null,
+        "message": ":)"
       }
     },
-    "cursorLastSeenId": 227
+    "cursorLastSeenId": 246
   }
 }
