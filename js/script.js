@@ -704,32 +704,13 @@ let chatData = {
   },
 
   controlSenderAvatar: function () {
-    let messageOwnerId;
-    let prevMessageOwnerId;
-
     for (let i = 0; i < chatData.messages.length; i++) {
-      console.log(chatData.messages[i]);
       if (chatData.messages[i].ownerId === chatData.userId) {
-        $(
-          `#wrp_${chatData.selectedChat}_${chatData.messages[i].id} > .message-history__message`
-        ).append(`
-        <div class="message__sender-image message__sender-image_styling"><img src="${
-          chatData.userData[chatData.messages[i].ownerId].avatar_src.length
-            ? chatData.userData[chatData.messages[i].ownerId].avatar_src
-            : "./assets/logo_sq.png"
-        }" class="img-responsive"></div>
-        `);
-      } else {
         if (
-          chatData.messages[i + 1] &&
-          chatData.messages[i].ownerId === chatData.messages[i + 1].ownerId
+          !$(
+            `#wrp_${chatData.selectedChat}_${chatData.messages[i].id} > .message-history__message > .message__sender-image`
+          ).get(0)
         ) {
-          $(
-            `#wrp_${chatData.selectedChat}_${chatData.messages[i].id} > .message-history__message`
-          ).append(`
-          <div class="message__sender-image_hole"></div>
-          `);
-        } else {
           $(
             `#wrp_${chatData.selectedChat}_${chatData.messages[i].id} > .message-history__message`
           ).append(`
@@ -740,48 +721,41 @@ let chatData = {
           }" class="img-responsive"></div>
           `);
         }
+      } else {
+        if (
+          chatData.messages[i + 1] &&
+          chatData.messages[i].ownerId === chatData.messages[i + 1].ownerId
+        ) {
+          if (
+            !$(
+              `#wrp_${chatData.selectedChat}_${chatData.messages[i].id} > .message-history__message > .message__sender-image_hole`
+            ).get(0)
+          ) {
+            $(
+              `#wrp_${chatData.selectedChat}_${chatData.messages[i].id} > .message-history__message`
+            ).append(`
+            <div class="message__sender-image_hole"></div>
+            `);
+          }
+        } else {
+          if (
+            !$(
+              `#wrp_${chatData.selectedChat}_${chatData.messages[i].id} > .message-history__message > .message__sender-image`
+            ).get(0)
+          ) {
+            $(
+              `#wrp_${chatData.selectedChat}_${chatData.messages[i].id} > .message-history__message`
+            ).append(`
+            <div class="message__sender-image message__sender-image_styling"><img src="${
+              chatData.userData[chatData.messages[i].ownerId].avatar_src.length
+                ? chatData.userData[chatData.messages[i].ownerId].avatar_src
+                : "./assets/logo_sq.png"
+            }" class="img-responsive"></div>
+            `);
+          }
+        }
       }
     }
-    // let messageOwnerId;
-    // let prevMessageOwnerId;
-
-    // if (messages[i - 1]) {
-    //   messageOwnerId = messages[i].ownerId;
-    //   prevMessageOwnerId = messages[i - 1].ownerId;
-
-    //   if (
-    //     messageOwnerId === prevMessageOwnerId &&
-    //     messageOwnerId !== chatData.userId
-    //   ) {
-    //     $(
-    //       `#wrp_${chatData.selectedChat}_${
-    //         messages[i - 1].id
-    //       } > .message-history__message > .message__sender-image`
-    //     ).remove();
-    //     $(
-    //       `#wrp_${chatData.selectedChat}_${
-    //         messages[i - 1].id
-    //       } > .message-history__message`
-    //     ).append('<div class="message__sender-image_hole"></div>');
-    //     return `<div class="message__sender-image message__sender-image_styling"><img src="${
-    //       chatData.userData[messages[i].ownerId].avatar_src.length
-    //         ? chatData.userData[messages[i].ownerId].avatar_src
-    //         : "./assets/logo_sq.png"
-    //     }" class="img-responsive"></div>`;
-    //   } else {
-    //     return `<div class="message__sender-image message__sender-image_styling"><img src="${
-    //       chatData.userData[messages[i].ownerId].avatar_src.length
-    //         ? chatData.userData[messages[i].ownerId].avatar_src
-    //         : "./assets/logo_sq.png"
-    //     }" class="img-responsive"></div>`;
-    //   }
-    // } else {
-    //   return `<div class="message__sender-image message__sender-image_styling"><img src="${
-    //     chatData.userData[messages[i].ownerId].avatar_src.length
-    //       ? chatData.userData[messages[i].ownerId].avatar_src
-    //       : "./assets/logo_sq.png"
-    //   }" class="img-responsive"></div>`;
-    // }
   },
 
   updateConversation: function (messages) {
