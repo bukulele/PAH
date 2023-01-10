@@ -28,6 +28,7 @@ let chatData = {
   messageCanBeSent: false,
   scrollAfterMessageSent: false,
   mobileDevice: false,
+  today: null,
 
   init: function () {
     if (window.localStorage.pahChat_conversations) {
@@ -69,6 +70,8 @@ let chatData = {
     chatData.loadUserData();
     $("#contactsList").click(chatData.setSelectedChat);
     $("#contactsTypeSwitcher").click(chatData.switchContactsType);
+
+    chatData.today = new Date();
 
     //remove later?
     $(".name-block__new-chat").click(chatData.createNewChat);
@@ -528,6 +531,7 @@ let chatData = {
       }
       chatData.messages = [...messages, ...chatData.messages];
       chatData.controlSenderAvatar();
+      chatData.controlMessageDate();
       sessionStorage.setItem(
         `PAH_messages_${chatData.selectedChat}`,
         JSON.stringify(chatData.messages)
@@ -692,10 +696,107 @@ let chatData = {
       if ($(".message__text_link").get().length) {
         $(".message__text_link").click(chatData.checkLink);
       }
+      chatData.controlMessageDate();
     } else {
       $("#messageHistory").html(
         `<div class="message-history__empty-chat"><p class="empty-chat__message">You have no messages yet...</p></div>`
       );
+    }
+  },
+
+  controlMessageDate: function () {
+    let months = {
+      0: "January",
+      1: "February",
+      2: "March",
+      3: "April",
+      4: "May",
+      5: "June",
+      6: "July",
+      7: "August",
+      8: "September",
+      9: "October",
+      10: "November",
+      11: "December",
+    };
+    let firstMessageDate = new Date(chatData.messages[0].createdAt);
+
+    if ($(".message-history__date").get(0)) {
+      $(".message-history__date").remove();
+    }
+
+    if (firstMessageDate.getFullYear() !== chatData.today.getFullYear()) {
+      $(`
+              <div class="message-history__message-wrapper message-history__date">
+                <div class="date__messages-date">
+                ${months[firstMessageDate.getMonth()]} ${
+        firstMessageDate.getDate() < 10
+          ? "0" + firstMessageDate.getDate()
+          : firstMessageDate.getDate()
+      }, ${firstMessageDate.getFullYear()}
+                </div>
+              </div>
+            `).insertBefore(
+        `#wrp_${chatData.selectedChat}_${chatData.messages[0].id}`
+      );
+    } else if (
+      firstMessageDate.getFullYear() === chatData.today.getFullYear()
+    ) {
+      $(`
+      <div class="message-history__message-wrapper message-history__date">
+        <div class="date__messages-date">
+          ${months[firstMessageDate.getMonth()]} ${
+        firstMessageDate.getDate() < 10
+          ? "0" + firstMessageDate.getDate()
+          : firstMessageDate.getDate()
+      }
+        </div>
+      </div>
+    `).insertBefore(`#wrp_${chatData.selectedChat}_${chatData.messages[i].id}`);
+    }
+
+    if (chatData.messages.length > 1) {
+      for (let i = 1; i < chatData.messages.length; i++) {
+        let messageDate = new Date(chatData.messages[i].createdAt);
+        let messageDateText = `${messageDate.getDate()}-${messageDate.getMonth()}-${messageDate.getFullYear()}`;
+        let prevMessageDate = new Date(chatData.messages[i - 1].createdAt);
+        let prevMessageDateText = `${prevMessageDate.getDate()}-${prevMessageDate.getMonth()}-${prevMessageDate.getFullYear()}`;
+        if (
+          messageDateText !== prevMessageDateText &&
+          messageDate.getFullYear() !== chatData.today.getFullYear()
+        ) {
+          $(`
+            <div class="message-history__message-wrapper message-history__date">
+              <div class="date__messages-date">
+                ${months[messageDate.getMonth()]} ${
+            messageDate.getDate() < 10
+              ? "0" + messageDate.getDate()
+              : messageDate.getDate()
+          }, ${messageDate.getFullYear()}
+              </div>
+            </div>
+          `).insertBefore(
+            `#wrp_${chatData.selectedChat}_${chatData.messages[i].id}`
+          );
+        } else if (
+          messageDateText !== prevMessageDateText &&
+          messageDate.getFullYear() === chatData.today.getFullYear()
+        ) {
+          $(`
+          <div class="message-history__message-wrapper message-history__date">
+            <div class="date__messages-date">
+              ${months[messageDate.getMonth()]} ${
+            messageDate.getDate() < 10
+              ? "0" + messageDate.getDate()
+              : messageDate.getDate()
+          }
+            </div>
+          </div>
+        `).insertBefore(
+            `#wrp_${chatData.selectedChat}_${chatData.messages[i].id}`
+          );
+        }
+      }
     }
   },
 
@@ -757,7 +858,7 @@ let chatData = {
   updateConversation: function (messages) {
     if (messages.length) {
       //add scroll down button
-      messages.forEach((item, i) => {
+      messages.forEach((item) => {
         $("#messageHistory").append(`
         <div id="wrp_${chatData.selectedChat}_${
           item.id
@@ -839,6 +940,7 @@ let chatData = {
         }
       });
       chatData.controlSenderAvatar();
+      chatData.controlMessageDate();
     }
 
     if ($(".message__text_link").get().length) {

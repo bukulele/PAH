@@ -584,6 +584,11 @@
   align-items: center;
 }
 
+.message-history__date {
+  justify-content: center;
+  padding: 0.5rem;
+}
+
 .message-history__reply-button * {
   pointer-events: none;
 }
@@ -685,6 +690,16 @@
   background-color: rgb(99, 99, 99);
   color: white;
   font-weight: bold;
+}
+
+.date__messages-date {
+  margin: 0;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: rgb(145, 145, 145);
+  color: white;
+  font-weight: bold;
+  font-size: smaller;
 }
 
 .message-history__output {

@@ -3,77 +3,77 @@
   "errorMessage": null,
   "payload": {
     "messages": {
-      "238": {
-        "id": "238",
-        "conversationId": 49,
+      "240": {
+        "id": "240",
+        "conversationId": 48,
+        "ownerId": 284408,
+        "type": 0,
+        "replyOnId": null,
+        "createdAt": "2022-12-28 17:25:44",
+        "updatedAt": null,
+        "message": "да,  вроде починил"
+      },
+      "239": {
+        "id": "239",
+        "conversationId": 48,
         "ownerId": 285627,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-28 16:29:04",
+        "createdAt": "2022-12-28 17:21:54",
         "updatedAt": null,
-        "message": "ну и как?"
+        "message": "вероятно, почини индикатор"
       },
-      "237": {
-        "id": "237",
-        "conversationId": 49,
-        "ownerId": 285627,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-28 16:27:31",
-        "updatedAt": null,
-        "message": "м?"
-      },
-      "236": {
-        "id": "236",
-        "conversationId": 49,
-        "ownerId": 285627,
-        "type": 0,
-        "replyOnId": null,
-        "createdAt": "2022-12-28 16:05:58",
-        "updatedAt": null,
-        "message": "и чего"
-      },
-      "233": {
-        "id": "233",
-        "conversationId": 49,
+      "231": {
+        "id": "231",
+        "conversationId": 48,
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-28 15:37:22",
+        "createdAt": "2022-12-28 15:35:02",
         "updatedAt": null,
-        "message": "норм"
+        "message": "шик"
       },
-      "232": {
-        "id": "232",
-        "conversationId": 49,
+      "230": {
+        "id": "230",
+        "conversationId": 48,
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-28 15:37:01",
+        "createdAt": "2022-12-28 15:34:24",
         "updatedAt": null,
-        "message": "уже не появляется"
+        "message": "так, проверяем индикатор"
       },
-      "224": {
-        "id": "224",
-        "conversationId": 49,
+      "229": {
+        "id": "229",
+        "conversationId": 48,
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-28 13:08:11",
+        "createdAt": "2022-12-28 15:17:26",
         "updatedAt": null,
-        "message": "почему появляется индикатор на исходящих?"
+        "message": "скроллится, ок"
       },
-      "219": {
-        "id": "219",
-        "conversationId": 49,
+      "228": {
+        "id": "228",
+        "conversationId": 48,
         "ownerId": 284408,
         "type": 0,
         "replyOnId": null,
-        "createdAt": "2022-12-23 09:48:07",
+        "createdAt": "2022-12-28 15:17:20",
         "updatedAt": null,
-        "message": "Вроде да"
+        "message": "а чего не скроллится?"
+      },
+      "227": {
+        "id": "227",
+        "conversationId": 48,
+        "ownerId": 284408,
+        "type": 0,
+        "replyOnId": null,
+        "createdAt": "2022-12-28 15:17:04",
+        "updatedAt": null,
+        "message": "так, пока он загорается и исчезает"
       }
     },
-    "cursorLastSeenId": 219
+    "cursorLastSeenId": 227
   }
 }
