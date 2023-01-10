@@ -748,7 +748,7 @@
   border: 1px solid #ddd;
 }
 
-.message__text_emoji {
+.message__text_emoji > .message__text_formatted {
   font-size: 6rem;
 }
 
