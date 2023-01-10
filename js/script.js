@@ -469,10 +469,6 @@ let chatData = {
             </div>
             <div class="message-history__message-reply-to-line"></div>
         </div>
-            <div class="message__message-date message__message-date_${
-              messages[i].ownerId == chatData.userId ? "output" : "input"
-            }">       
-        </div>
         <div class="message__text ${
           chatData.checkForEmojis(messages[i])
             ? "message__text_emoji"
@@ -634,10 +630,6 @@ let chatData = {
             </div>
             <div class="message-history__message-reply-to-line"></div>
         </div>
-            <div class="message__message-date message__message-date_${
-              item.ownerId == chatData.userId ? "output" : "input"
-            }">
-            </div>
         <div class="message__text ${
           chatData.checkForEmojis(item)
             ? "message__text_emoji"
@@ -789,10 +781,6 @@ let chatData = {
             </div>
             <div class="message-history__message-reply-to-line"></div>
         </div>
-            <div class="message__message-date message__message-date_${
-              item.ownerId == chatData.userId ? "output" : "input"
-            }">
-            </div>
         <div class="message__text ${
           chatData.checkForEmojis(item)
             ? "message__text_emoji"

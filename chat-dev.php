@@ -113,10 +113,6 @@ $this->registerCss(<<<CSS
 .current-contact__logo,
 .message__sender-image_styling,
 .contact__image {
-  grid-row-start: 3;
-  grid-row-end: 4;
-  grid-column-start: 1;
-  grid-column-end: 2;
   border-radius: 50%;
   border: 1px solid #ddd;
   overflow: hidden;
@@ -598,7 +594,7 @@ $this->registerCss(<<<CSS
   max-width: 300px;
   height: fit-content;
   display: grid;
-  grid-template-rows: auto auto auto;
+  grid-template-rows: auto auto;
   grid-template-columns: auto auto;
   column-gap: 4px;
 }
@@ -641,8 +637,8 @@ $this->registerCss(<<<CSS
 }
 
 .message-history__message-reply-to-wrapper {
-  grid-row-start: 2;
-  grid-row-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
   grid-column-start: 1;
   grid-column-end: 3;
   width: fit-content;
@@ -729,15 +725,12 @@ $this->registerCss(<<<CSS
   display: none;
 }
 
-.message__sender-image {
-  min-width: 4rem;
-  min-height: 4rem;
-  max-width: 4rem;
-  max-height: 4rem;
-  align-self: end;
-}
-
+.message__sender-image,
 .message__sender-image_hole {
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 2;
   min-width: 4rem;
   min-height: 4rem;
   max-width: 4rem;
@@ -754,8 +747,8 @@ $this->registerCss(<<<CSS
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  grid-row-start: 3;
-  grid-row-end: 4;
+  grid-row-start: 2;
+  grid-row-end: 3;
   grid-column-start: 2;
   grid-column-end: 3;
   padding: 0.5rem 1rem;
@@ -838,23 +831,6 @@ $this->registerCss(<<<CSS
 
 .button__risk-button:hover {
   background-color: #d64d4d;
-}
-
-.message__message-date {
-  grid-row-start: 1;
-  grid-row-end: 2;
-  grid-column-start: 1;
-  grid-column-end: 3;
-  width: fit-content;
-  margin-top: 2px;
-}
-
-.message__message-date_output {
-  place-self: end;
-}
-
-.message__message-date_input {
-  place-self: start;
 }
 
 .message-date__text {
@@ -954,6 +930,8 @@ $this->registerCss(<<<CSS
     left: -3rem;
   }
 }
+
+
 
 CSS);
 ?>
@@ -1496,10 +1474,6 @@ let chatData = {
             </div>
             <div class="message-history__message-reply-to-line"></div>
         </div>
-            <div class="message__message-date message__message-date_${
-              messages[i].ownerId == chatData.userId ? "output" : "input"
-            }">       
-        </div>
         <div class="message__text ${
           chatData.checkForEmojis(messages[i])
             ? "message__text_emoji"
@@ -1661,10 +1635,6 @@ let chatData = {
             </div>
             <div class="message-history__message-reply-to-line"></div>
         </div>
-            <div class="message__message-date message__message-date_${
-              item.ownerId == chatData.userId ? "output" : "input"
-            }">
-            </div>
         <div class="message__text ${
           chatData.checkForEmojis(item)
             ? "message__text_emoji"
@@ -1816,10 +1786,6 @@ let chatData = {
             </div>
             <div class="message-history__message-reply-to-line"></div>
         </div>
-            <div class="message__message-date message__message-date_${
-              item.ownerId == chatData.userId ? "output" : "input"
-            }">
-            </div>
         <div class="message__text ${
           chatData.checkForEmojis(item)
             ? "message__text_emoji"
@@ -2495,6 +2461,7 @@ let chatData = {
     );
   },
 };
+
 
 
 $(document).ready(chatData.init);
