@@ -128,6 +128,11 @@ $this->registerCss(<<<CSS
   max-height: 5rem;
 }
 
+.current-contact__logo > a {
+  width: 100%;
+  height: 100%;
+}
+
 .contacts-block__name-block {
   width: 100%;
   height: 100%;
@@ -1376,11 +1381,12 @@ let chatData = {
     if (participantsArray.length === 1) {
       let userId = participantsArray[0];
       $("#currentContactLogo").html(
-        `<img class="img-responsive" src="${
-          chatData.userData[userId].avatar_src.length
-            ? chatData.userData[userId].avatar_src
-            : "./assets/logo_sq.png"
-        }">`
+        `<a href="https://pimpandhost.com/album/user/${userId}" target="_blank">
+          <img class="img-responsive" src="${
+            chatData.userData[userId].avatar_src.length
+              ? chatData.userData[userId].avatar_src
+              : "./assets/logo_sq.png"
+          }"></a>`
       );
       $("#currentContactName").html(
         `<b>${chatData.userData[userId].username}</b>`
