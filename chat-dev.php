@@ -725,6 +725,10 @@ $this->registerCss(<<<CSS
   background-color: rgb(246, 246, 246);
 }
 
+.message__output > .message__sender-image {
+  display: none;
+}
+
 .message__sender-image {
   min-width: 4rem;
   min-height: 4rem;
@@ -747,12 +751,19 @@ $this->registerCss(<<<CSS
 
 .message__text {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   grid-row-start: 3;
   grid-row-end: 4;
   grid-column-start: 2;
   grid-column-end: 3;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   border-radius: 4px;
+}
+
+.message__text > p {
+  margin: 0;
 }
 
 .message__text_border {
@@ -943,6 +954,7 @@ $this->registerCss(<<<CSS
     left: -3rem;
   }
 }
+
 
 
 CSS);
@@ -1463,17 +1475,6 @@ let chatData = {
   addHistoryToConversation: function (messages) {
     if (messages.length > 0) {
       for (let i = messages.length - 1; i >= 0; i--) {
-        let messageDate;
-        let prevMessageDate;
-        let messageOwnerId;
-        let prevMessageOwnerId;
-
-        if (messages[i - 1]) {
-          messageDate = new Date(messages[i].createdAt);
-          prevMessageDate = new Date(messages[i - 1].createdAt);
-          messageOwnerId = messages[i].ownerId;
-          prevMessageOwnerId = messages[i - 1].ownerId;
-        }
         $("#messageHistory").prepend(`
         <div id="wrp_${chatData.selectedChat}_${
           messages[i].id
@@ -1499,39 +1500,8 @@ let chatData = {
         </div>
             <div class="message__message-date message__message-date_${
               messages[i].ownerId == chatData.userId ? "output" : "input"
-            }">
-            ${
-              messageDate && prevMessageDate
-                ? Number(messageDate) - Number(prevMessageDate) > 300 * 1000 ||
-                  messageOwnerId !== prevMessageOwnerId
-                  ? `<p class="message-date__text">${chatData.formatMessageDate(
-                      messages[i].createdAt
-                    )}</p>`
-                  : ""
-                : `<p class="message-date__text">${chatData.formatMessageDate(
-                    messages[i].createdAt
-                  )}</p>`
-            }        
+            }">       
         </div>
-        
-        ${
-          messageDate && prevMessageDate
-            ? Number(messageDate) - Number(prevMessageDate) > 300 * 1000
-              ? `<div class="message__sender-image_hole"></div>`
-              : `<div class="message__sender-image ${
-                  messages[i].ownerId == chatData.userId
-                    ? "message__sender-image_hidden"
-                    : "message__sender-image_styling"
-                }"><img src="${
-                  messages[i].ownerId == chatData.userId
-                    ? ""
-                    : chatData.userData[messages[i].ownerId].avatar_src.length
-                    ? chatData.userData[messages[i].ownerId].avatar_src
-                    : "./assets/logo_sq.png"
-                }" class="img-responsive"></div>`
-            : `<div class="message__sender-image_hole"></div>`
-        }
-        
         <div class="message__text ${
           chatData.checkForEmojis(messages[i])
             ? "message__text_emoji"
@@ -1544,7 +1514,12 @@ let chatData = {
         }">
             <svg class="message-history__reply-button_sizing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>
             </div>
-        ${chatData.checkForLinks(messages[i].message)}</div></div></div>`);
+        <p>${chatData.checkForLinks(messages[i].message)}</p>
+        <p class="message-date__text">${chatData.formatMessageDate(
+          messages[i].createdAt
+        )}</p>
+        </div></div></div>
+        `);
         if (chatData.mobileDevice) {
           // $(`#wrp_${chatData.selectedChat}_${messages[i].id}`).click(() => {
           //   $(".message-history__reply-button").css({ display: "none" });
@@ -1583,6 +1558,7 @@ let chatData = {
         }
       }
       chatData.messages = [...messages, ...chatData.messages];
+      chatData.controlSenderAvatar();
       sessionStorage.setItem(
         `PAH_messages_${chatData.selectedChat}`,
         JSON.stringify(chatData.messages)
@@ -1661,19 +1637,7 @@ let chatData = {
 
     $("#messageHistory").html("");
     if (chatData.messages) {
-      chatData.messages.forEach((item, idx, array) => {
-        let messageDate;
-        let prevMessageDate;
-        let messageOwnerId;
-        let prevMessageOwnerId;
-
-        if (array[idx - 1]) {
-          messageDate = new Date(item.createdAt);
-          prevMessageDate = new Date(array[idx - 1].createdAt);
-          messageOwnerId = item.ownerId;
-          prevMessageOwnerId = array[idx - 1].ownerId;
-        }
-
+      chatData.messages.forEach((item, i) => {
         $("#messageHistory").append(`
         <div id="wrp_${chatData.selectedChat}_${
           item.id
@@ -1700,36 +1664,7 @@ let chatData = {
             <div class="message__message-date message__message-date_${
               item.ownerId == chatData.userId ? "output" : "input"
             }">
-            ${
-              messageDate && prevMessageDate
-                ? Number(messageDate) - Number(prevMessageDate) > 300 * 1000 ||
-                  messageOwnerId !== prevMessageOwnerId
-                  ? `<p class="message-date__text">${chatData.formatMessageDate(
-                      item.createdAt
-                    )}</p>`
-                  : ""
-                : `<p class="message-date__text">${chatData.formatMessageDate(
-                    item.createdAt
-                  )}</p>`
-            }        
-        </div>
-        ${
-          messageDate && prevMessageDate
-            ? Number(messageDate) - Number(prevMessageDate) > 300 * 1000
-              ? `<div class="message__sender-image_hole"></div>`
-              : `<div class="message__sender-image ${
-                  item.ownerId == chatData.userId
-                    ? "message__sender-image_hidden"
-                    : "message__sender-image_styling"
-                }"><img src="${
-                  item.ownerId == chatData.userId
-                    ? ""
-                    : chatData.userData[item.ownerId].avatar_src.length
-                    ? chatData.userData[item.ownerId].avatar_src
-                    : "./assets/logo_sq.png"
-                }" class="img-responsive"></div>`
-            : `<div class="message__sender-image_hole"></div>`
-        }
+            </div>
         <div class="message__text ${
           chatData.checkForEmojis(item)
             ? "message__text_emoji"
@@ -1740,9 +1675,13 @@ let chatData = {
         }" class="message-history__reply-button reply-button__${
           item.ownerId == chatData.userId ? "output" : "input"
         }">
-            <svg class="message-history__reply-button_sizing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>
-            </div>
-        ${chatData.checkForLinks(item.message)}</div></div></div>
+        <svg class="message-history__reply-button_sizing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>
+        </div>
+        <p>${chatData.checkForLinks(item.message)}</p>
+        <p class="message-date__text">${chatData.formatMessageDate(
+          item.createdAt
+        )}</p>
+        </div></div></div>
             `);
         if (chatData.mobileDevice) {
           // $(`#wrp_${chatData.selectedChat}_${item.id}`).on("click", () => {
@@ -1781,6 +1720,7 @@ let chatData = {
           );
         }
       });
+      chatData.controlSenderAvatar();
       chatData.messageHistoryScrollDown();
       if ($(".message__text_link").get().length) {
         $(".message__text_link").click(chatData.checkLink);
@@ -1792,24 +1732,59 @@ let chatData = {
     }
   },
 
+  controlSenderAvatar: function () {
+    for (let i = 0; i < chatData.messages.length; i++) {
+      if (chatData.messages[i].ownerId === chatData.userId) {
+        if (!$(
+          `#wrp_${chatData.selectedChat}_${chatData.messages[i].id} > .message-history__message > .message__sender-image`
+        ).get(0)) {
+          $(
+            `#wrp_${chatData.selectedChat}_${chatData.messages[i].id} > .message-history__message`
+          ).append(`
+          <div class="message__sender-image message__sender-image_styling"><img src="${
+            chatData.userData[chatData.messages[i].ownerId].avatar_src.length
+              ? chatData.userData[chatData.messages[i].ownerId].avatar_src
+              : "./assets/logo_sq.png"
+          }" class="img-responsive"></div>
+          `);
+        }
+      } else {
+        if (
+          chatData.messages[i + 1] &&
+          chatData.messages[i].ownerId === chatData.messages[i + 1].ownerId
+        ) {
+          if (!$(
+            `#wrp_${chatData.selectedChat}_${chatData.messages[i].id} > .message-history__message > .message__sender-image_hole`
+          ).get(0)) {
+            $(
+              `#wrp_${chatData.selectedChat}_${chatData.messages[i].id} > .message-history__message`
+            ).append(`
+            <div class="message__sender-image_hole"></div>
+            `);
+          }
+        } else {
+          if (!$(
+            `#wrp_${chatData.selectedChat}_${chatData.messages[i].id} > .message-history__message > .message__sender-image`
+          ).get(0)) {
+            $(
+              `#wrp_${chatData.selectedChat}_${chatData.messages[i].id} > .message-history__message`
+            ).append(`
+            <div class="message__sender-image message__sender-image_styling"><img src="${
+              chatData.userData[chatData.messages[i].ownerId].avatar_src.length
+                ? chatData.userData[chatData.messages[i].ownerId].avatar_src
+                : "./assets/logo_sq.png"
+            }" class="img-responsive"></div>
+            `);
+          }
+        }
+      }
+    }
+  },
+
   updateConversation: function (messages) {
     if (messages.length) {
-      let firstMessageId = chatData.messages.findIndex(
-        (item) => item.id === messages[0].id
-      );
-      let messageToCompare = chatData.messages[firstMessageId - 1];
       //add scroll down button
-      messages.forEach((item, idx, array) => {
-        let messageDate;
-        let prevMessageDate;
-        let messageOwnerId;
-        let prevMessageOwnerId;
-
-        messageDate = new Date(item.createdAt);
-        prevMessageDate = new Date(messageToCompare.createdAt);
-        messageOwnerId = item.ownerId;
-        prevMessageOwnerId = messageToCompare.ownerId;
-
+      messages.forEach((item, i) => {
         $("#messageHistory").append(`
         <div id="wrp_${chatData.selectedChat}_${
           item.id
@@ -1836,36 +1811,7 @@ let chatData = {
             <div class="message__message-date message__message-date_${
               item.ownerId == chatData.userId ? "output" : "input"
             }">
-            ${
-              messageDate && prevMessageDate
-                ? Number(messageDate) - Number(prevMessageDate) > 300 * 1000 ||
-                  messageOwnerId !== prevMessageOwnerId
-                  ? `<p class="message-date__text">${chatData.formatMessageDate(
-                      item.createdAt
-                    )}</p>`
-                  : ""
-                : `<p class="message-date__text">${chatData.formatMessageDate(
-                    item.createdAt
-                  )}</p>`
-            }
-        </div>
-        ${
-          messageDate && prevMessageDate
-            ? Number(messageDate) - Number(prevMessageDate) > 300 * 1000
-              ? `<div class="message__sender-image_hole"></div>`
-              : `<div class="message__sender-image ${
-                  item.ownerId == chatData.userId
-                    ? "message__sender-image_hidden"
-                    : "message__sender-image_styling"
-                }"><img src="${
-                  item.ownerId == chatData.userId
-                    ? ""
-                    : chatData.userData[item.ownerId].avatar_src.length
-                    ? chatData.userData[item.ownerId].avatar_src
-                    : "./assets/logo_sq.png"
-                }" class="img-responsive"></div>`
-            : `<div class="message__sender-image_hole"></div>`
-        }
+            </div>
         <div class="message__text ${
           chatData.checkForEmojis(item)
             ? "message__text_emoji"
@@ -1876,9 +1822,13 @@ let chatData = {
         }" class="message-history__reply-button reply-button__${
           item.ownerId == chatData.userId ? "output" : "input"
         }">
-            <svg class="message-history__reply-button_sizing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>
-            </div>
-        ${chatData.checkForLinks(item.message)}</div></div></div>
+        <svg class="message-history__reply-button_sizing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>
+        </div>
+        <p>${chatData.checkForLinks(item.message)}</p>
+        <p class="message-date__text">${chatData.formatMessageDate(
+          item.createdAt
+        )}</p>
+        </div></div></div>
             `);
         if (chatData.mobileDevice) {
           // $(`#wrp_${chatData.selectedChat}_${item.id}`).click(() => {
@@ -1917,6 +1867,7 @@ let chatData = {
           );
         }
       });
+      chatData.controlSenderAvatar();
     }
 
     if ($(".message__text_link").get().length) {
@@ -2120,14 +2071,6 @@ let chatData = {
   formatMessageDate: function (date) {
     const messageDate = new Date(date);
     const formattedDate = `${
-      messageDate.getDate() < 10
-        ? "0" + messageDate.getDate()
-        : messageDate.getDate()
-    }/${
-      messageDate.getMonth() + 1 < 10
-        ? "0" + (messageDate.getMonth() + 1)
-        : messageDate.getMonth() + 1
-    }/${String(messageDate.getFullYear()).substring(2)} : ${
       messageDate.getHours() < 10
         ? "0" + messageDate.getHours()
         : messageDate.getHours()
@@ -2409,8 +2352,8 @@ let chatData = {
           <div class="message-reply-to__icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z"/></svg>
           </div>
-          <div class="message-reply-to__contact-name"><p class="message-reply-to__name-text_styling">yo name yo name yo name yo name yo name yo name yo name yo name yo name yo name yo name yo name yo name yo name yo name </p></div>
-          <div class="message-reply-to__message"><p class="small message-reply-to_text-styling">hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan hi maaan </p></div>
+          <div class="message-reply-to__contact-name"><p class="message-reply-to__name-text_styling"></p></div>
+          <div class="message-reply-to__message"><p class="small message-reply-to_text-styling"></p></div>
           <div class="message-reply-to__close-icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
           </div>
