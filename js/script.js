@@ -705,7 +705,7 @@ let chatData = {
 
   controlSenderAvatar: function () {
     for (let i = 0; i < chatData.messages.length; i++) {
-      if (chatData.messages[i].ownerId === chatData.userId) {
+      if (chatData.messages[i].ownerId == chatData.userId) {
         if (
           !$(
             `#wrp_${chatData.selectedChat}_${chatData.messages[i].id} > .message-history__message > .message__sender-image`
@@ -724,7 +724,7 @@ let chatData = {
       } else {
         if (
           chatData.messages[i + 1] &&
-          chatData.messages[i].ownerId === chatData.messages[i + 1].ownerId
+          chatData.messages[i].ownerId == chatData.messages[i + 1].ownerId
         ) {
           if (
             !$(
